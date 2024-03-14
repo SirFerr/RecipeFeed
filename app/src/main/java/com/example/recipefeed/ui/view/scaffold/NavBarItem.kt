@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.scaffold
+package com.example.recipefeed.ui.view.scaffold
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

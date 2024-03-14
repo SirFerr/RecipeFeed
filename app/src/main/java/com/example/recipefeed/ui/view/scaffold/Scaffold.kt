@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.scaffold
+package com.example.recipefeed.ui.view.scaffold
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
@@ -26,23 +26,20 @@ fun scaffold(
 ) {
 
     val list = listOf(
-        NavBarItem("Home", "homeScreen", Icons.Filled.Home),
+        NavBarItem("Home", "mainScreen", Icons.Filled.Home),
         NavBarItem("Search", "searchScreen", Icons.Filled.Search),
         NavBarItem("Favorite", "favoriteScreen", Icons.Filled.Star),
         NavBarItem("Account", "accountScreen", Icons.Filled.AccountCircle),
     )
 
-    var selectedItem by remember { mutableStateOf<Int>(0) }
+    var selectedItem by remember { mutableStateOf(0) }
 
     Scaffold(content = {
         screen(it)
-
     }, bottomBar = {
         NavigationBar {
-
             list.forEachIndexed { index, navBarItem ->
                 NavigationBarItem(
-
                     label = { Text(navBarItem.screenName) },
                     icon = {
                         Icon(
@@ -52,16 +49,11 @@ fun scaffold(
                     onClick = {
                         if (selectedItem != index)
                             navController?.navigate(navBarItem.route)
-
                         selectedItem = index
-
                     },
                     selected = selectedItem == index
                 )
             }
-
-
         }
-
     })
 }

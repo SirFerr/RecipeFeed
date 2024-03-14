@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.navigation
+package com.example.recipefeed.ui.view.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -7,18 +7,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipefeed.view.scaffold.scaffold
-import com.example.recipefeed.view.screen.mainMenu.accountScreen
-import com.example.recipefeed.view.screen.mainMenu.favoriteScreen
-import com.example.recipefeed.view.screen.mainMenu.mainScreen
-import com.example.recipefeed.view.screen.mainMenu.searchScreen
+import com.example.recipefeed.ui.view.scaffold.scaffold
+import com.example.recipefeed.ui.view.screen.mainMenu.accountScreen
+import com.example.recipefeed.ui.view.screen.mainMenu.favoriteScreen
+import com.example.recipefeed.ui.view.screen.mainMenu.mainsScreen.mainScreen
+import com.example.recipefeed.ui.view.screen.mainMenu.recipeScreen
+import com.example.recipefeed.ui.view.screen.mainMenu.searchScreen
 
 @Composable
 fun navigationMain(firstNavController: NavHostController): NavHostController {
     val navController = rememberNavController()
     scaffold(navController = navController, screen = {
         NavHost(
-            navController = navController, startDestination = "homeScreen",
+            navController = navController, startDestination = "mainScreen",
             modifier = Modifier.padding(it)
         ) {
             composable("mainScreen") {
@@ -33,6 +34,11 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
             }
             composable("searchScreen") {
                 searchScreen(
+                    navController = navController,
+                )
+            }
+            composable("recipeScreen") {
+                recipeScreen(
                     navController = navController,
                 )
             }

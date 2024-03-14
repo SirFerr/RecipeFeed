@@ -1,16 +1,17 @@
-package com.example.recipefeed.view.screen.mainMenu
+package com.example.recipefeed.ui.view.screen.mainMenu
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 
+
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun mainScreenPreview() {
-    mainScreen()
+fun searchScreenPreview() {
+    searchScreen()
 }
 
 @Composable
-fun mainScreen(navController: NavHostController?=null) {
+fun searchScreen(navController: NavHostController?=null){
 
 }

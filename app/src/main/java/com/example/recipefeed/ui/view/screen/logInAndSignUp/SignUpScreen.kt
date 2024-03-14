@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.screen.logInAndSignUp
+package com.example.recipefeed.ui.view.screen.logInAndSignUp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,32 +19,29 @@ import androidx.navigation.NavHostController
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun logInScreenPreview() {
-
-    logInScreen()
-
+fun signUpScreenPreview() {
+    signUpScreen()
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun logInScreen(navController: NavHostController? = null) {
+fun signUpScreen(navController: NavHostController? = null) {
+
 
     var textEmail by remember { mutableStateOf("") }
+    var textPhoneNumber by remember { mutableStateOf("") }
     var textPassword by remember { mutableStateOf("") }
-
-
-
     spacer {
 
 
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly
         )
         {
+
 
             TextField(
                 value = textEmail,
@@ -54,20 +51,13 @@ fun logInScreen(navController: NavHostController? = null) {
                 value = textPassword,
                 label = { Text(text = "Password") },
                 onValueChange = { textPassword = it })
-            Button(onClick = {
-                navController?.navigate("main") {
-                    popUpTo("loginScreen") {
-                        inclusive = true
-                    }
-                }
-            }) {
-                Text(text = "LogIn")
-            }
-            Button(onClick = { navController?.navigate("signupScreen") }) {
-                Text(text = "SignUp")
+
+
+
+            Button(onClick = { navController?.navigate("logInScreen") }) {
+                Text(text = "Complete")
             }
 
         }
-
     }
 }

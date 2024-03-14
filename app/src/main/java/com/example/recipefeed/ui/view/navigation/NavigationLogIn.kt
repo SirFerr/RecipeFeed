@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.navigation
+package com.example.recipefeed.ui.view.navigation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -10,8 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipefeed.view.screen.logInAndSignUp.logInScreen
-import com.example.recipefeed.view.screen.logInAndSignUp.signUpScreen
+import com.example.recipefeed.ui.view.screen.logInAndSignUp.logInScreen
+import com.example.recipefeed.ui.view.screen.logInAndSignUp.signUpScreen
 
 @Composable
 fun navigationLogIn(): NavHostController {
@@ -20,7 +20,7 @@ fun navigationLogIn(): NavHostController {
 
     val navController = rememberNavController()
     NavHost(navController = navController,
-        startDestination = "loginScreen",
+        startDestination = "main",
         modifier = Modifier.clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { focusManager.clearFocus() }) {

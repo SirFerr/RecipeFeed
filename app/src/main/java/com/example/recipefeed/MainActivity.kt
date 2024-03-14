@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.recipefeed.ui.theme.RecipeFeedTheme
-import com.example.recipefeed.view.navigation.navigationLogIn
+import com.example.recipefeed.ui.view.navigation.navigationLogIn
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
