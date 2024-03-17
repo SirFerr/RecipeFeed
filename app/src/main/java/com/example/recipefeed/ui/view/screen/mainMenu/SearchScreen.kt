@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.data.model.Recipe
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,9 +51,9 @@ fun searchScreen(navController: NavHostController? = null) {
             }
 
             items(10) {
-                listItem()
-                if(it!=9)
-                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+                listItem(navController = navController, recipe = Recipe(id = it))
+                if (it != 9)
+                    Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             }
         }
     }

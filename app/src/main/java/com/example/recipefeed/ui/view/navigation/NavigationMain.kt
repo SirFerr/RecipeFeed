@@ -1,12 +1,15 @@
 package com.example.recipefeed.ui.view.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.recipefeed.ui.view.scaffold.scaffold
 import com.example.recipefeed.ui.view.screen.mainMenu.accountScreen
 import com.example.recipefeed.ui.view.screen.mainMenu.favoriteScreen
@@ -37,16 +40,19 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
                     navController = navController,
                 )
             }
-            composable("recipeScreen") {
-                recipeScreen(
-                    navController = navController,
-                )
-            }
+
             composable("accountScreen") {
                 accountScreen(
                     navController,
                     firstNavController
                 )
+            }
+            composable("recipeScreen/{id}", listOf(navArgument("id") {
+                type = NavType.IntType
+            })) { backStackEntry ->
+                val id = backStackEntry.arguments?.getInt("id")
+                Log.d("recipe", id.toString())
+                recipeScreen(navController, id!!)
             }
         }
     })
