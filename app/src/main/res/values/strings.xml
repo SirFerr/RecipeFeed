@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">RecipeFeed</string>
+    <string name="home_title">Home</string>
+    <string name="search_title">Search</string>
+    <string name="favorite_title">Favorite</string>
+    <string name="account_title">Account</string>
+
+    <string name="email_field">Email</string>
+    <string name="password_field">Password</string>
+    <string name="login">LogIn</string>
+    <string name="signup">SignUp</string>
+
+    <string name="complete">Complete</string>
+
+
 </resources>

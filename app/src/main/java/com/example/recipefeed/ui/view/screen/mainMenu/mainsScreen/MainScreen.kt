@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
@@ -21,17 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun mainScreenPreview() {
-    mainScreen()
-}
 
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun mainScreen(navController: NavHostController? = null) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(dimensionResource(id = R.dimen.mainPadding)),
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -43,8 +39,7 @@ fun mainScreen(navController: NavHostController? = null) {
 
         Row(
             Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.mainPadding)),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(onClick = { /*TODO*/ }) {

@@ -14,10 +14,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.example.recipefeed.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,13 +29,29 @@ fun scaffold(
 ) {
 
     val list = listOf(
-        NavBarItem("Home", "mainScreen", Icons.Filled.Home),
-        NavBarItem("Search", "searchScreen", Icons.Filled.Search),
-        NavBarItem("Favorite", "favoriteScreen", Icons.Filled.Star),
-        NavBarItem("Account", "accountScreen", Icons.Filled.AccountCircle),
+        NavBarItem(
+            stringResource(id = R.string.home_title),
+            "mainScreen",
+            Icons.Filled.Home
+        ),
+        NavBarItem(
+            stringResource(id = R.string.search_title),
+            "searchScreen",
+            Icons.Filled.Search
+        ),
+        NavBarItem(
+            stringResource(id = R.string.favorite_title),
+            "favoriteScreen",
+            Icons.Filled.Star
+        ),
+        NavBarItem(
+            stringResource(id = R.string.account_title),
+            "accountScreen",
+            Icons.Filled.AccountCircle
+        ),
     )
 
-    var selectedItem by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableIntStateOf(0) }
 
     Scaffold(content = {
         screen(it)

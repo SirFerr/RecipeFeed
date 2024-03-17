@@ -7,10 +7,9 @@ import androidx.navigation.NavHostController
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun accountScreenPreview() {
-    accountScreen()
-}
-@Composable
-fun accountScreen(navController: NavHostController?=null, firstNavController: NavHostController?=null){
+fun accountScreen(
+    navController: NavHostController? = null,
+    firstNavController: NavHostController? = null
+) {
 
 }

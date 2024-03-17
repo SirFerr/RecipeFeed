@@ -55,7 +55,6 @@ fun mainScreenCard() {
     }
     Card(
         modifier = Modifier
-            .padding(dimensionResource(id = R.dimen.mainPadding))
     ) {
         Column(
             modifier = Modifier
@@ -70,7 +69,7 @@ fun mainScreenCard() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.Crop
                 )
             }
 

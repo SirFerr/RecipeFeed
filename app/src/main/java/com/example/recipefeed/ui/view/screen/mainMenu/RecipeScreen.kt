@@ -6,11 +6,6 @@ import androidx.navigation.NavHostController
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun recipeScreenPreview() {
-    favoriteScreen()
-}
-
-@Composable
-fun recipeScreen(navController: NavHostController?=null){
+fun recipeScreen(navController: NavHostController? = null) {
 
 }

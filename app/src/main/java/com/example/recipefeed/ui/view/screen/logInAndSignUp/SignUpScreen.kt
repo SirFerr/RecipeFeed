@@ -14,18 +14,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun signUpScreenPreview() {
-    signUpScreen()
-}
+import com.example.recipefeed.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview(showSystemUi = true, showBackground = true)
 fun signUpScreen(navController: NavHostController? = null) {
 
 
@@ -45,17 +42,17 @@ fun signUpScreen(navController: NavHostController? = null) {
 
             TextField(
                 value = textEmail,
-                label = { Text(text = "Email") },
+                label = { Text(text = stringResource(id = R.string.email_field)) },
                 onValueChange = { textEmail = it })
             TextField(
                 value = textPassword,
-                label = { Text(text = "Password") },
+                label = { Text(text = stringResource(id = R.string.password_field)) },
                 onValueChange = { textPassword = it })
 
 
 
             Button(onClick = { navController?.navigate("logInScreen") }) {
-                Text(text = "Complete")
+                Text(text = stringResource(id = R.string.complete))
             }
 
         }
