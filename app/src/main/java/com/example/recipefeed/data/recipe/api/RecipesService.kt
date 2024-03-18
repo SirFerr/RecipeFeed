@@ -1,6 +1,6 @@
-package com.example.recipefeed.data.api
+package com.example.recipefeed.data.recipe.api
 
-import com.example.recipefeed.data.model.Recipes
+import com.example.recipefeed.data.recipe.model.Recipes
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

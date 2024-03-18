@@ -32,8 +32,9 @@ fun mainScreen(navController: NavHostController? = null) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
-
-        mainScreenCard()
+        Column {
+            mainScreenCard()
+        }
 
         Spacer(modifier = Modifier.weight(1f))
 

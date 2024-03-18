@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -34,12 +33,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
-import com.example.recipefeed.data.model.Recipe
+import com.example.recipefeed.data.recipe.model.Recipe
 
 
 @Preview
 @Composable
-fun listItem(recipe: Recipe = Recipe(),navController: NavController ?= null) {
+fun listItem(recipe: Recipe = Recipe(), navController: NavController ?= null) {
     var imageURL by remember {
         mutableStateOf("https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png")
     }

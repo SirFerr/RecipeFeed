@@ -1,6 +1,6 @@
 package com.example.recipefeed.data
 
-import com.example.recipefeed.data.api.RecipesService
+import com.example.recipefeed.data.recipe.api.RecipesService
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
 

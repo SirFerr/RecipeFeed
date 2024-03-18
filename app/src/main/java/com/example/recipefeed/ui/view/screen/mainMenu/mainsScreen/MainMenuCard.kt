@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
-import com.example.recipefeed.data.model.Recipe
+import com.example.recipefeed.data.recipe.model.Recipe
 
 @Preview
 @Composable

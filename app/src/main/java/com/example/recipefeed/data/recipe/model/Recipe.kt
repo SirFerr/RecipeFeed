@@ -1,4 +1,4 @@
-package com.example.recipefeed.data.model
+package com.example.recipefeed.data.recipe.model
 
 data class Recipe(
     val id: Int = 1,

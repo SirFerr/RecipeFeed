@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.model.Recipe
+import com.example.recipefeed.data.recipe.model.Recipe
 
 
 @OptIn(ExperimentalMaterial3Api::class)

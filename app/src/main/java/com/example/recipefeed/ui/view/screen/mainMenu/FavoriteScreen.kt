@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.data.recipe.model.Recipe
 
 
 @Preview(showSystemUi = true, showBackground = true)
@@ -40,7 +41,7 @@ fun favoriteScreen(navController: NavHostController? = null) {
 
         LazyColumn {
             items(10) {
-                listItem()
+                listItem(navController = navController, recipe = Recipe(id = it))
                 if(it!=9)
                     Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             }
