@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
@@ -38,19 +40,11 @@ import com.example.recipefeed.data.recipe.model.Recipe
 
 @Preview
 @Composable
-fun listItem(recipe: Recipe = Recipe(), navController: NavController ?= null) {
+fun listItem(recipe: Recipe = Recipe(), navController: NavController? = null) {
     var imageURL by remember {
         mutableStateOf("https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png")
     }
-    var recipeName by remember {
-        mutableStateOf(recipe.recipeName)
-    }
-    var description by remember {
-        mutableStateOf(recipe.description)
-    }
-    var recipeRating by remember {
-        mutableStateOf(recipe.recipeRating.toString())
-    }
+
     Card(Modifier.clickable {
         navController?.navigate("recipeScreen/${recipe.id}")
     }) {
@@ -61,13 +55,16 @@ fun listItem(recipe: Recipe = Recipe(), navController: NavController ?= null) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(imageURL),
+            AsyncImage(
+                model = imageURL,
                 contentDescription = null,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .weight(1f)
-                    .clip(RoundedCornerShape(10.dp))
-                    .aspectRatio(1f),
+                    .aspectRatio(1f)
+                    .clip(
+                        RoundedCornerShape(10.dp)
+                    ),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
@@ -78,7 +75,7 @@ fun listItem(recipe: Recipe = Recipe(), navController: NavController ?= null) {
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = recipeName, fontSize = 14.sp)
+                Text(text = recipe.recipeName, fontSize = 14.sp)
             }
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             IconButton(modifier = Modifier
