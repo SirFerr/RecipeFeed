@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
@@ -54,54 +57,60 @@ fun mainScreenCard(navController: NavHostController? = null) {
         "https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png"
 
 
-    Card(modifier = Modifier.clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
+    Card(modifier = Modifier
+        .clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Column(
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.mainPadding)),
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.mainPadding)),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Column {
+
+            }
             AsyncImage(
                 model = imageURL,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
                     .clip(
                         RoundedCornerShape(10.dp)
                     ),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.FillWidth
 
             )
 
 
 
             Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
-
-            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = recipe.recipeName,
-                    modifier = Modifier,
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp
-                )
-            }
-            Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
-            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-
-                Text(text = recipe.description, modifier = Modifier, fontSize = 14.sp)
-                Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Column {
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = recipe.recipeRating.toString(), modifier = Modifier, fontSize = 14.sp
+                        text = recipe.recipeName,
+                        modifier = Modifier,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp
                     )
-                    Icon(imageVector = Icons.Filled.Star, contentDescription = null)
                 }
+                Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+
+                    Text(text = recipe.description, modifier = Modifier, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = recipe.recipeRating.toString(), modifier = Modifier, fontSize = 14.sp
+                        )
+                        Icon(imageVector = Icons.Filled.Star, contentDescription = null)
+                    }
 
 
+                }
             }
+
         }
     }
 
