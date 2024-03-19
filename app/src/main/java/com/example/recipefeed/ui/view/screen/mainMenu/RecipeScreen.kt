@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,9 +64,9 @@ fun recipeScreen(navController: NavHostController? = null, id: Int = -1) {
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
             Text(text = recipe.description)
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-            Text(text = "Time to cook: " + recipe.timeToCook)
+            Text(text = stringResource(id = R.string.timeToCook) + ": "+ recipe.timeToCook)
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-            Text(text = "Ingridients: " + recipe.ingredients)
+            Text(text = stringResource(id = R.string.ingridients) + ": " + recipe.ingredients)
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             Text(text = "Recipe: " + recipe.ingredients)
 

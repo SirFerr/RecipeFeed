@@ -13,4 +13,9 @@
     <string name="complete">Complete</string>
 
 
+    <string name="titleRecipe">Title</string>
+    <string name="descriptionRecipe">Description</string>
+    <string name="ingridients">Ingridients</string>
+    <string name="timeToCook">Time to cook</string>
+
 </resources>

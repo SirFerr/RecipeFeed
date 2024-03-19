@@ -74,7 +74,7 @@ fun mainScreenCard(navController: NavHostController? = null) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(
-                        RoundedCornerShape(10.dp)
+                        RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
                     ),
                 contentScale = ContentScale.FillWidth
 

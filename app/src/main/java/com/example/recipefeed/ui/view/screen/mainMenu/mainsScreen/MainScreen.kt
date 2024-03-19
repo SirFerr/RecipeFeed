@@ -45,7 +45,7 @@ fun mainScreen(navController: NavHostController? = null) {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /*TODO*/ }) {
+            Button(modifier = Modifier,onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
             }
             Button(onClick = { /*TODO*/ }) {

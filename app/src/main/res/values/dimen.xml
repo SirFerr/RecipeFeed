@@ -3,4 +3,5 @@
     <dimen name="mainPadding">16.dp</dimen>
     <dimen name="subPadding">8.dp</dimen>
     <dimen name="smallPadding">4.dp</dimen>
+    <dimen name="roundedCorner">10.dp</dimen>
 </resources>
