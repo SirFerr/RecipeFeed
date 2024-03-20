@@ -6,5 +6,6 @@ data class Recipe(
     val ingredients: String = "testIngredients",
     val description: String = "testDescription",
     val timeToCook: String = "TestTimeToCook",
-    val recipeRating: Float = 0f
+    val recipeRating: Float = 0f,
+    val imageData: String = ""
 )

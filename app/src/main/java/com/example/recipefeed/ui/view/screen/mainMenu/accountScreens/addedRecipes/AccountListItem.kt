@@ -1,4 +1,4 @@
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
+package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -46,9 +46,7 @@ fun accountListItem(recipe: Recipe = Recipe(), navController: NavController? = n
         mutableStateOf("https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png")
     }
 
-    Card(Modifier.clickable {
-        navController?.navigate("recipeScreen/${recipe.id}")
-    }) {
+    Card(Modifier) {
         Row(
             Modifier
                 .padding(dimensionResource(id = R.dimen.subPadding))
@@ -73,15 +71,19 @@ fun accountListItem(recipe: Recipe = Recipe(), navController: NavController? = n
                 Modifier
                     .weight(2.5f)
                     .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = recipe.recipeName, fontSize = 14.sp)
+                Text(text = recipe.recipeName, fontSize = 20.sp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = recipe.recipeRating.toString(), fontSize = 14.sp)
+                }
+
             }
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             IconButton(modifier = Modifier
                 .weight(1f)
-                .aspectRatio(1f), onClick = { /*TODO*/ }) {
+                .aspectRatio(1f), onClick = { navController?.navigate("editRecipeScreen") }) {
                 Icon(imageVector = Icons.Filled.Edit, contentDescription = null)
 
             }

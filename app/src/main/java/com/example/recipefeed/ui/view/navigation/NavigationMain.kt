@@ -12,7 +12,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipefeed.ui.view.scaffold.scaffold
 import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.accountScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipesScreen
+import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes.addedRecipesScreen
+import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes.editRecipeScreen
 import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.newRecipeScreen
 import com.example.recipefeed.ui.view.screen.mainMenu.favoriteScreen
 import com.example.recipefeed.ui.view.screen.mainMenu.mainsScreen.mainScreen
@@ -61,6 +62,9 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
             }
             composable("addedRecipesScreen") {
                 addedRecipesScreen(navController)
+            }
+            composable("editRecipeScreen") {
+                editRecipeScreen(navController)
             }
 
         }

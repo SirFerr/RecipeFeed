@@ -1,4 +1,4 @@
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
+package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +11,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
-import com.example.recipefeed.ui.view.screen.mainMenu.listItem
 
 @Composable
 fun addedRecipesScreen(navController: NavHostController) {

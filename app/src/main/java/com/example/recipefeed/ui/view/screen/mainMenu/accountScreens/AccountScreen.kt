@@ -53,7 +53,7 @@ fun accountListCard(accountScreenCards: AccountScreenCards) {
 //            if (accountScreenCards.route == "loginScreen")
 //                accountScreenCards?.navController.
 //            else
-                accountScreenCards.navController?.navigate(accountScreenCards.route)
+            accountScreenCards.navController?.navigate(accountScreenCards.route)
         }) {
         Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.mainPadding)))
 

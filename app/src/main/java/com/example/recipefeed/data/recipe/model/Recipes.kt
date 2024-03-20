@@ -1,5 +1,5 @@
 package com.example.recipefeed.data.recipe.model
 
 data class Recipes (
-    val recipes: List<Recipe> = listOf()
+    val recipes: List<Recipe> = listOf(Recipe())
 )

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
+package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -37,20 +37,23 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.recipefeed.R
+import com.example.recipefeed.data.recipe.model.Recipe
 
 @Composable
-fun newRecipeScreen(navController: NavHostController) {
+fun editRecipeScreen(navController: NavHostController, id: Int = -1) {
+
+    var recipe = Recipe()
     var title by remember {
-        mutableStateOf("")
+        mutableStateOf(recipe.recipeName)
     }
     var description by remember {
-        mutableStateOf("")
+        mutableStateOf(recipe.description)
     }
     var ingredients by remember {
-        mutableStateOf("")
+        mutableStateOf(recipe.ingredients)
     }
     var timeToCook by remember {
-        mutableStateOf("")
+        mutableStateOf(recipe.timeToCook)
     }
 
     var selectImages by remember { mutableStateOf<Uri?>(null) }
