@@ -47,4 +47,15 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
+
+    fun addRecipes(recipe: Recipe){
+        viewModelScope.launch {
+
+            try {
+                RetrofitObject.api.addRecipe(recipe)
+            } catch (e: Exception) {
+                Log.e("err",e.toString())
+            }
+        }
+    }
 }

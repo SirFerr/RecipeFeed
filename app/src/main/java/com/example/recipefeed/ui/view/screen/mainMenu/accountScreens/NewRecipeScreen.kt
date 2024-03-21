@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalEncodingApi::class
+)
 
 package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
 
@@ -38,7 +40,13 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.recipefeed.R
+import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.ui.view.screen.mainMenu.recipeScreen
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import kotlinx.coroutines.CoroutineStart
+import java.io.IOException
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Composable
 fun newRecipeScreen(
@@ -120,7 +128,20 @@ fun newRecipeScreen(
 
         Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
         Spacer(Modifier.weight(1f))
-        Button(modifier = Modifier.wrapContentSize(), onClick = { /*TODO*/ }) {
+        Button(
+            modifier = Modifier.wrapContentSize(),
+            onClick = {
+
+                recipeViewModel.addRecipes(
+                    Recipe(
+                        id = 1001,
+                        recipeName = title,
+                        ingredients = ingredients,
+                        timeToCook = timeToCook,
+                        description = description
+                    )
+                )
+            }) {
             Text(text = stringResource(id = R.string.complete))
         }
     }
