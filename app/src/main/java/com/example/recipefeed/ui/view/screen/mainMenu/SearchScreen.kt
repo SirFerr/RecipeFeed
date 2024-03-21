@@ -35,7 +35,6 @@ fun searchScreen(
     recipeViewModel: RecipeViewModel = hiltViewModel()
 ) {
     val recipes by recipeViewModel.recipes.collectAsState()
-    recipeViewModel.fetch()
     var text by remember {
         mutableStateOf("")
     }
@@ -61,6 +60,7 @@ fun searchScreen(
 
             items(recipes){
                 listItem(it,navController)
+                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             }
 
         }

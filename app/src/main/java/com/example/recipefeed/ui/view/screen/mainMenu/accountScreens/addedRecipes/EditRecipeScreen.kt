@@ -22,6 +22,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,94 +34,111 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun editRecipeScreen(navController: NavHostController, id: Int = -1) {
+fun editRecipeScreen(
+    navController: NavHostController,
+    id: Int = -1,
+    recipeViewModel: RecipeViewModel = hiltViewModel()
+) {
 
-    var recipe = Recipe()
-    var title by remember {
-        mutableStateOf(recipe.recipeName)
-    }
-    var description by remember {
-        mutableStateOf(recipe.description)
-    }
-    var ingredients by remember {
-        mutableStateOf(recipe.ingredients)
-    }
-    var timeToCook by remember {
-        mutableStateOf(recipe.timeToCook)
+
+    var recipe by remember { mutableStateOf<Recipe?>(null) }
+
+    LaunchedEffect(id) {
+        recipe = recipeViewModel.getById(id)
     }
 
-    var selectImages by remember { mutableStateOf<Uri?>(null) }
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-            selectImages = it
+    if (recipe != null) {
+        var title by remember {
+            mutableStateOf(recipe!!.recipeName)
+        }
+        var description by remember {
+            mutableStateOf(recipe!!.description)
+        }
+        var ingredients by remember {
+            mutableStateOf(recipe!!.ingredients)
+        }
+        var timeToCook by remember {
+            mutableStateOf(recipe!!.timeToCook)
         }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.mainPadding))
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
 
-        TextField(modifier = Modifier.fillMaxWidth(),
-            value = title,
-            onValueChange = { title = it },
-            label = { Text(text = stringResource(id = R.string.titleRecipe)) })
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+        var selectImages by remember { mutableStateOf<Uri?>(null) }
+        val galleryLauncher =
+            rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+                selectImages = it
+            }
 
-        Button(
-            onClick = { galleryLauncher.launch("image/*") },
-            modifier = Modifier
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.mainPadding))
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Pick Image From Gallery")
-        }
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-        if (selectImages != null) {
 
-            Image(
-                painter = rememberAsyncImagePainter(model = selectImages),
-                contentDescription = null,
+            TextField(modifier = Modifier.fillMaxWidth(),
+                value = title,
+                onValueChange = { title = it },
+                label = { Text(text = stringResource(id = R.string.titleRecipe)) })
+            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+
+            Button(
+                onClick = { galleryLauncher.launch("image/*") },
                 modifier = Modifier
+            ) {
+                Text(text = "Pick Image From Gallery")
+            }
+            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            if (selectImages != null) {
 
-                    .fillMaxSize()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
-                contentScale = ContentScale.Crop
-            )
+                Image(
+                    painter = rememberAsyncImagePainter(model = selectImages),
+                    contentDescription = null,
+                    modifier = Modifier
+
+                        .fillMaxSize()
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            }
+
+            TextField(modifier = Modifier.fillMaxWidth(),
+                value = description,
+                onValueChange = { description = it },
+                label = { Text(text = stringResource(id = R.string.descriptionRecipe)) })
+            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+
+            TextField(modifier = Modifier.fillMaxWidth(),
+                value = ingredients,
+                onValueChange = { ingredients = it },
+                label = { Text(text = stringResource(id = R.string.ingridients)) })
+            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+
+
+            TextField(modifier = Modifier.fillMaxWidth(),
+                value = timeToCook,
+                onValueChange = { timeToCook = it },
+                label = { Text(text = stringResource(id = R.string.timeToCook)) })
 
             Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-        }
-
-        TextField(modifier = Modifier.fillMaxWidth(),
-            value = description,
-            onValueChange = { description = it },
-            label = { Text(text = stringResource(id = R.string.descriptionRecipe)) })
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-
-        TextField(modifier = Modifier.fillMaxWidth(),
-            value = ingredients,
-            onValueChange = { ingredients = it },
-            label = { Text(text = stringResource(id = R.string.ingridients)) })
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-
-
-        TextField(modifier = Modifier.fillMaxWidth(),
-            value = timeToCook,
-            onValueChange = { timeToCook = it },
-            label = { Text(text = stringResource(id = R.string.timeToCook)) })
-
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-        Spacer(Modifier.weight(1f))
-        Button(modifier = Modifier.wrapContentSize(), onClick = { /*TODO*/ }) {
-            Text(text = stringResource(id = R.string.complete))
+            Spacer(Modifier.weight(1f))
+            Button(modifier = Modifier.wrapContentSize(), onClick = { /*TODO*/ }) {
+                Text(text = stringResource(id = R.string.complete))
+            }
         }
     }
 }

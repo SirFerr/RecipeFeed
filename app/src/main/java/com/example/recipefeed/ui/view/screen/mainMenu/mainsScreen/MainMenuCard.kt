@@ -84,7 +84,10 @@ fun mainScreenCard(navController: NavHostController? = null) {
 
             Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
             Column {
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Text(
                         text = recipe.recipeName,
                         modifier = Modifier,
@@ -97,15 +100,10 @@ fun mainScreenCard(navController: NavHostController? = null) {
 
                     Text(text = recipe.description, modifier = Modifier, fontSize = 14.sp)
                     Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = recipe.recipeRating.toString(), modifier = Modifier, fontSize = 14.sp
-                        )
-                        Icon(imageVector = Icons.Filled.Star, contentDescription = null)
-                    }
+
+                    Text(
+                        text = recipe.recipeRating.toString(), modifier = Modifier, fontSize = 14.sp
+                    )
 
 
                 }

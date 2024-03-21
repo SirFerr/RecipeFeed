@@ -8,12 +8,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 @Composable
-fun addedRecipesScreen(navController: NavHostController) {
+fun addedRecipesScreen(
+    navController: NavHostController, recipeViewModel: RecipeViewModel = hiltViewModel()
+) {
     Column(
         Modifier
             .fillMaxSize()
@@ -24,7 +28,7 @@ fun addedRecipesScreen(navController: NavHostController) {
         LazyColumn {
             items(10) {
                 accountListItem(navController = navController, recipe = Recipe(id = it))
-                if(it!=9)
+                if (it != 9)
                     Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             }
         }

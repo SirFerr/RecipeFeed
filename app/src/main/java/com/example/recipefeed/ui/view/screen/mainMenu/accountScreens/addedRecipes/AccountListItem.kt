@@ -46,7 +46,11 @@ fun accountListItem(recipe: Recipe = Recipe(), navController: NavController? = n
         mutableStateOf("https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png")
     }
 
-    Card(Modifier) {
+    Card(Modifier.clickable {
+        Modifier.clickable {
+            navController?.navigate("recipeScreen/${recipe.id}")
+        }
+    }) {
         Row(
             Modifier
                 .padding(dimensionResource(id = R.dimen.subPadding))

@@ -33,13 +33,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.recipefeed.R
+import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 @Composable
-fun newRecipeScreen(navController: NavHostController) {
+fun newRecipeScreen(
+    navController: NavHostController, recipeViewModel: RecipeViewModel = hiltViewModel()
+) {
     var title by remember {
         mutableStateOf("")
     }
