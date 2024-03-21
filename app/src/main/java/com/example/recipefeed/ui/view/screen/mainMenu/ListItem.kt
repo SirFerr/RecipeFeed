@@ -39,7 +39,6 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
-import com.example.recipefeed.utils.stringToImage
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 

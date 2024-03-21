@@ -40,7 +40,7 @@ fun searchScreen(
     }
     Column(
         Modifier
-            .padding(dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal =  dimensionResource(id = R.dimen.mainPadding))
             .fillMaxSize()
 
     ) {
@@ -48,6 +48,7 @@ fun searchScreen(
 
         LazyColumn {
             item {
+                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth(),

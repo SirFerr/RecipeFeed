@@ -74,11 +74,11 @@ fun newRecipeScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal =  dimensionResource(id = R.dimen.mainPadding))
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
         TextField(modifier = Modifier.fillMaxWidth(),
             value = title,
             onValueChange = { title = it },

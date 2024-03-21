@@ -42,7 +42,6 @@ import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
 import com.example.recipefeed.ui.view.screen.logInAndSignUp.spacer
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
-import com.example.recipefeed.utils.stringToImage
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -86,7 +85,7 @@ fun recipeScreen(
                     .clip(
                         RoundedCornerShape(10.dp)
                     )
-                    .background(Color.White),
+                    .background(Color.White).aspectRatio(1f),
                 contentScale = ContentScale.Crop
             )
 

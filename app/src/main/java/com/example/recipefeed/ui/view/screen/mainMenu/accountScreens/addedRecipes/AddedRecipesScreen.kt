@@ -21,11 +21,12 @@ fun addedRecipesScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal =  dimensionResource(id = R.dimen.mainPadding))
     ) {
 
 
         LazyColumn {
+            item { Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding))) }
             items(10) {
                 accountListItem(navController = navController, recipe = Recipe(id = it))
                 if (it != 9)

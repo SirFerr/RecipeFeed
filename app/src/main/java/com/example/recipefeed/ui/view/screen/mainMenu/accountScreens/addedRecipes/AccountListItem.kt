@@ -41,7 +41,7 @@ import com.example.recipefeed.data.recipe.model.Recipe
 
 @Preview
 @Composable
-fun accountListItem(recipe: Recipe = Recipe(), navController: NavController? = null) {
+fun accountListItem(recipe: Recipe = Recipe(id = -1), navController: NavController? = null) {
     var imageURL by remember {
         mutableStateOf("https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png")
     }

@@ -1,7 +1,7 @@
 package com.example.recipefeed.data.recipe.model
 
 data class Recipe(
-    val id: Int,
+    val id: Int = -1,
     val recipeName: String = "testRecipeName",
     val ingredients: String = "testIngredients",
     val description: String = "testDescription",

@@ -1,82 +1,67 @@
+@file:OptIn(ExperimentalEncodingApi::class)
+
 package com.example.recipefeed.ui.view.screen.mainMenu.mainsScreen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipe
-
-@Preview
-@Composable
-fun mainScreenCardPreview() {
-    mainScreenCard()
-}
+import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Composable
-fun mainScreenCard(navController: NavHostController? = null) {
-    val recipe = Recipe(id = 10)
+fun mainScreenCard(navController: NavHostController? = null,recipeViewModel: RecipeViewModel = hiltViewModel()) {
     var imageURL =
         "https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png"
-
+    val recipe by recipeViewModel.randomRecipe.collectAsState()
+    val imageBytes = Base64.decode(recipe.imageData)
+    val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
     Card(modifier = Modifier
         .clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Column(
             modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.mainPadding)),
+                .padding(dimensionResource(id = R.dimen.mainPadding)).fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column {
 
             }
+            if (image != null)
             AsyncImage(
-                model = imageURL,
+                model = image,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(
                         RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
-                    ),
-                contentScale = ContentScale.FillWidth
+                    ).aspectRatio(1f),
+                contentScale = ContentScale.Crop
 
             )
 
