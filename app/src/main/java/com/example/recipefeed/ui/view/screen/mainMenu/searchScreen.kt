@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipes
+import com.example.recipefeed.ui.view.screen.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 

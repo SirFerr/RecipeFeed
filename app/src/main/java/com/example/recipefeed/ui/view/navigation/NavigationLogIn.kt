@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.recipefeed.ui.view.screen.logInAndSignUp.logInScreen
 import com.example.recipefeed.ui.view.screen.logInAndSignUp.signUpScreen
 
+
 @Composable
 fun navigationLogIn(): NavHostController {
 

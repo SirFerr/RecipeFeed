@@ -13,6 +13,7 @@ fun scaffold(
     navController: NavHostController? = null, screen: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(content = {
+
         screen(it)
     }, bottomBar = {
         navController?.let { bottomNavigation(navController = it) }

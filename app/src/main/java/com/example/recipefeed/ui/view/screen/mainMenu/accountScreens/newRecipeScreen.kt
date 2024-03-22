@@ -1,10 +1,12 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
     ExperimentalEncodingApi::class
 )
 
 package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -14,7 +16,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,19 +35,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
-import com.example.recipefeed.ui.view.screen.mainMenu.recipeScreen
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
-import kotlinx.coroutines.CoroutineStart
-import java.io.IOException
-import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+
 
 @Composable
 fun newRecipeScreen(
@@ -74,7 +71,7 @@ fun newRecipeScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal =  dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -131,15 +128,16 @@ fun newRecipeScreen(
         Button(
             modifier = Modifier.wrapContentSize(),
             onClick = {
-
-                recipeViewModel.addRecipes(
-                    Recipe(
+                Log.d(
+                    "encode", Recipe(
                         id = 1001,
                         recipeName = title,
                         ingredients = ingredients,
                         timeToCook = timeToCook,
-                        description = description
-                    )
+                        description = description,
+                        imageData = java.util.Base64.getEncoder()
+                            .encodeToString(selectImages?.toFile()?.readBytes())
+                    ).toString()
                 )
             }) {
             Text(text = stringResource(id = R.string.complete))
