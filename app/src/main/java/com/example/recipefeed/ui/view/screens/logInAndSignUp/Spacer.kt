@@ -1,4 +1,4 @@
-package com.example.recipefeed.ui.view.screen.logInAndSignUp
+package com.example.recipefeed.ui.view.screens.logInAndSignUp
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

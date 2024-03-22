@@ -1,5 +1,6 @@
-package com.example.recipefeed.ui.view.screen.mainMenu
+package com.example.recipefeed.ui.view.screens.mainMenu
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,11 +19,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -36,6 +39,8 @@ import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -49,17 +54,14 @@ fun recipeScreen(
 ) {
     var recipe by remember { mutableStateOf<Recipe?>(null) }
 
-
-
-    LaunchedEffect(id) {
+    LaunchedEffect(true) {
         recipe = recipeViewModel.getById(id)
+
     }
 
 
-    if (recipe != null) {
-        val imageBytes = Base64.decode(recipe!!.imageData, 0)
-        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
+    if (recipe != null) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -72,15 +74,18 @@ fun recipeScreen(
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
             AsyncImage(
-                model = image,
+                model = if (recipe != null) {
+                    val imageBytes = Base64.decode(recipe!!.imageData)
+                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                } else null,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(
                         RoundedCornerShape(10.dp)
                     )
-                    .background(Color.White).aspectRatio(1f),
-                contentScale = ContentScale.Crop
+                    .background(Color.White)
+                    .aspectRatio(1f), contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))

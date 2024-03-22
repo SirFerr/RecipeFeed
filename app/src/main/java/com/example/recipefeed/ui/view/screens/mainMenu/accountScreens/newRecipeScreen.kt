@@ -3,7 +3,7 @@
     ExperimentalEncodingApi::class
 )
 
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
+package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens
 
 import android.net.Uri
 import android.util.Log

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalEncodingApi::class)
 
-package com.example.recipefeed.ui.view.screen.mainMenu.mainsScreen
+package com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
@@ -34,7 +34,10 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Composable
-fun mainScreenCard(navController: NavHostController? = null,recipeViewModel: RecipeViewModel = hiltViewModel()) {
+fun mainScreenCard(
+    navController: NavHostController? = null,
+    recipeViewModel: RecipeViewModel = hiltViewModel()
+) {
     var imageURL =
         "https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png"
     val recipe by recipeViewModel.randomRecipe.collectAsState()
@@ -45,7 +48,8 @@ fun mainScreenCard(navController: NavHostController? = null,recipeViewModel: Rec
         .clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Column(
             modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.mainPadding)).fillMaxSize(),
+                .padding(dimensionResource(id = R.dimen.mainPadding))
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -53,17 +57,18 @@ fun mainScreenCard(navController: NavHostController? = null,recipeViewModel: Rec
 
             }
             if (image != null)
-            AsyncImage(
-                model = image,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
-                    ).aspectRatio(1f),
-                contentScale = ContentScale.Crop
+                AsyncImage(
+                    model = image,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
+                        )
+                        .aspectRatio(1f),
+                    contentScale = ContentScale.Crop
 
-            )
+                )
 
 
 

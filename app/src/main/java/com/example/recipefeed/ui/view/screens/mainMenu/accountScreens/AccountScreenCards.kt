@@ -1,4 +1,4 @@
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
+package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens
 
 import androidx.navigation.NavHostController
 

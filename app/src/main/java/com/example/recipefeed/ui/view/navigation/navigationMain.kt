@@ -11,14 +11,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipefeed.ui.view.scaffold.scaffold
-import com.example.recipefeed.ui.view.screen.mainMenu.favoriteScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.recipeScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.searchScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.accountScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.newRecipeScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes.addedRecipesScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes.editRecipeScreen
-import com.example.recipefeed.ui.view.screen.mainMenu.mainsScreen.mainScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.favoriteScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.recipeScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.searchScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.accountScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.newRecipeScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.addedRecipes.addedRecipesScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.addedRecipes.editRecipeScreen
+import com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens.mainScreen
 
 @Composable
 fun navigationMain(firstNavController: NavHostController): NavHostController {

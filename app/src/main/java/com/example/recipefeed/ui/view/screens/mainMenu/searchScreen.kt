@@ -1,6 +1,8 @@
-package com.example.recipefeed.ui.view.screen.mainMenu
+package com.example.recipefeed.ui.view.screens.mainMenu
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,7 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.ui.view.screen.mainMenu.list.listItem
+import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 
@@ -40,15 +43,16 @@ fun searchScreen(
     }
     Column(
         Modifier
-            .padding(horizontal =  dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
             .fillMaxSize()
 
     ) {
 
-
-        LazyColumn {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
+            ) {
+            item {}
             item {
-                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
                 TextField(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -56,14 +60,11 @@ fun searchScreen(
                     onValueChange = { text = it },
                     label = { Text(stringResource(id = R.string.search_title)) }
                 )
-                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             }
-
-            items(recipes){
-                listItem(it,navController)
-                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            items(recipes, key = { it.idRandom }) {
+                listItem(it, navController)
             }
-
+            item {}
         }
     }
 }

@@ -10,8 +10,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipefeed.ui.view.screen.logInAndSignUp.logInScreen
-import com.example.recipefeed.ui.view.screen.logInAndSignUp.signUpScreen
+import com.example.recipefeed.ui.view.screens.logInAndSignUp.logInScreen
+import com.example.recipefeed.ui.view.screens.logInAndSignUp.signUpScreen
 
 
 @Composable

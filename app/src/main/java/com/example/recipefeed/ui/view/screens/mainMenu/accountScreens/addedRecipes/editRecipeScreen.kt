@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens.addedRecipes
+package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.addedRecipes
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

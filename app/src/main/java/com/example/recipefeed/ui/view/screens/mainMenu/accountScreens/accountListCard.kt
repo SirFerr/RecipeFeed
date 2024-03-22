@@ -1,4 +1,4 @@
-package com.example.recipefeed.ui.view.screen.mainMenu.accountScreens
+package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

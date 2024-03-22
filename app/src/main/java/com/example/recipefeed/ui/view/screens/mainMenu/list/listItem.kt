@@ -1,5 +1,6 @@
-package com.example.recipefeed.ui.view.screen.mainMenu.list
+package com.example.recipefeed.ui.view.screens.mainMenu.list
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +20,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +37,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.Recipe
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -45,21 +51,17 @@ fun listItem(
     navController: NavController? = null,
     icon: ImageVector = Icons.Filled.Favorite
 ) {
-    var imageURL by remember {
-        mutableStateOf("https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png")
-    }
     val imageBytes = Base64.decode(recipe.imageData)
-    val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-    val _icon by remember {
-        mutableStateOf(icon)
+    var image by rememberSaveable { mutableStateOf<Bitmap?>(null) }
+    val _icon by remember { mutableStateOf(icon) }
+
+    LaunchedEffect(imageBytes) {
+        image = withContext(Dispatchers.IO) {
+            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        }
     }
 
-
-    Card(Modifier.clickable {
-        navController?.navigate("recipeScreen/${recipe.id}")
-    }) {
-
-
+    Card(Modifier.clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Row(
             Modifier
                 .padding(dimensionResource(id = R.dimen.subPadding))
@@ -74,9 +76,7 @@ fun listItem(
                     .fillMaxWidth()
                     .weight(1f)
                     .aspectRatio(1f)
-                    .clip(
-                        RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
-                    ),
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
@@ -88,24 +88,19 @@ fun listItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = recipe.recipeName, fontSize = 14.sp)
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = recipe.recipeRating.toString(), fontSize = 12.sp)
-                }
-
+                Text(text = recipe.recipeRating.toString(), fontSize = 12.sp)
             }
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             IconButton(modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f), onClick = {
-                if (_icon == Icons.Filled.Favorite || _icon == Icons.Filled.FavoriteBorder) {
-                } else{
+                if (_icon != Icons.Filled.Favorite && _icon != Icons.Filled.FavoriteBorder) {
                     navController?.navigate("editRecipeScreen/${recipe.id}")
                 }
-
             }) {
                 Icon(imageVector = _icon, contentDescription = null)
-
             }
         }
     }
+
 }

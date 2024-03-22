@@ -1,4 +1,4 @@
-package com.example.recipefeed.ui.view.screen.mainMenu.mainsScreen
+package com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
