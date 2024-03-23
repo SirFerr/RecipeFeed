@@ -1,8 +1,9 @@
-@file:OptIn(ExperimentalEncodingApi::class)
+@file:OptIn(ExperimentalEncodingApi::class, ExperimentalEncodingApi::class)
 
 package com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,10 +26,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import kotlin.io.encoding.Base64
@@ -45,67 +48,73 @@ fun mainScreenCard(
     val imageBytes = Base64.decode(recipe.imageData)
     val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
-    Card(modifier = Modifier
-        .clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
-        Column(
+    if (image != null)
+        Card(
             modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.mainPadding))
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .clickable { navController?.navigate("recipeScreen/${recipe.id}") }
         ) {
-            Column {
-
-            }
-            if (image != null)
-                AsyncImage(
-                    model = image,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(
-                            RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
-                        )
-                        .aspectRatio(1f),
-                    contentScale = ContentScale.Crop
-
-                )
-
-
-
-            Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(dimensionResource(id = R.dimen.mainPadding))
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Column(
                     Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    AsyncImage(
+                        model = image,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(
+                                RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
+                            )
+                            .aspectRatio(1f),
+                        contentScale = ContentScale.Crop
+
+                    )
+
+                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
                     Text(
                         text = recipe.recipeName,
                         modifier = Modifier,
                         style = MaterialTheme.typography.headlineMedium
                     )
-                }
-                Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
 
-                    Text(
-                        text = recipe.description,
-                        modifier = Modifier,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+
+                }
+
+
+
+
+
+                Column {
+
                     Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
 
-                    Text(
-                        text = recipe.recipeRating.toString(),
-                        modifier = Modifier,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                        Text(
+                            text = recipe.description,
+                            modifier = Modifier,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+
+                        Text(
+                            text = recipe.recipeRating.toString(),
+                            modifier = Modifier,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
 
 
+                    }
                 }
-            }
 
+            }
         }
-    }
 
 }

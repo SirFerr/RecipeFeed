@@ -1,7 +1,6 @@
 package com.example.recipefeed.data.recipe.api
 
-import com.example.recipefeed.data.recipe.model.Recipe
-import com.example.recipefeed.data.recipe.model.Recipes
+import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -16,6 +15,5 @@ interface RecipesService {
 
     @POST("addRecipe")
     suspend fun addRecipe(@Body recipe: Recipe)
-
 
 }

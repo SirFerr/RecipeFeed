@@ -2,10 +2,10 @@
 
 package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.addedRecipes
 
-import android.net.Uri
+import android.graphics.BitmapFactory
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -19,8 +19,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,12 +35,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalEncodingApi::class)
 @Composable
 fun editRecipeScreen(
     navController: NavHostController,
@@ -55,7 +57,10 @@ fun editRecipeScreen(
         recipe = recipeViewModel.getById(id)
     }
 
+
+
     if (recipe != null) {
+
         var title by remember {
             mutableStateOf(recipe!!.recipeName)
         }
@@ -69,22 +74,33 @@ fun editRecipeScreen(
             mutableStateOf(recipe!!.timeToCook)
         }
 
+        val imageBytes = Base64.decode(recipe!!.imageData)
+        var selectImages by remember {
+            mutableStateOf<Any?>(
+                BitmapFactory.decodeByteArray(
+                    imageBytes,
+                    0,
+                    imageBytes.size
+                )
+            )
+        }
 
-        var selectImages by remember { mutableStateOf<Uri?>(null) }
+
         val galleryLauncher =
             rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
                 selectImages = it
             }
+
 
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
                 .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding))
         ) {
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-            TextField(modifier = Modifier.fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = title,
                 onValueChange = { title = it },
                 label = {
@@ -93,21 +109,15 @@ fun editRecipeScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 })
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-
             Button(
                 onClick = { galleryLauncher.launch("image/*") },
                 modifier = Modifier
             ) {
                 Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
             }
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             if (selectImages != null) {
-
-                Image(
-                    painter = rememberAsyncImagePainter(model = selectImages),
-                    contentDescription = null,
-                    modifier = Modifier
+                AsyncImage(
+                    model = selectImages, contentDescription = null, modifier = Modifier
 
                         .fillMaxSize()
                         .aspectRatio(1f)
@@ -115,10 +125,9 @@ fun editRecipeScreen(
                     contentScale = ContentScale.Crop
                 )
 
-                Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             }
 
-            TextField(modifier = Modifier.fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = description,
                 onValueChange = { description = it },
                 label = {
@@ -127,9 +136,8 @@ fun editRecipeScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 })
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
-            TextField(modifier = Modifier.fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = ingredients,
                 onValueChange = { ingredients = it },
                 label = {
@@ -138,10 +146,9 @@ fun editRecipeScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 })
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
 
-            TextField(modifier = Modifier.fillMaxWidth(),
+            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = timeToCook,
                 onValueChange = { timeToCook = it },
                 label = {
@@ -151,7 +158,6 @@ fun editRecipeScreen(
                     )
                 })
 
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             Spacer(Modifier.weight(1f))
             Button(modifier = Modifier.wrapContentSize(), onClick = { /*TODO*/ }) {
                 Text(
@@ -159,6 +165,7 @@ fun editRecipeScreen(
 
                 )
             }
+
         }
     }
 }

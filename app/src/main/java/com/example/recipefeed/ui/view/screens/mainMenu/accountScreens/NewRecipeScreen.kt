@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -23,8 +24,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +42,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import java.util.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
@@ -74,22 +76,26 @@ fun newRecipeScreen(
             .fillMaxSize()
             .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
             .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-        TextField(modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
+
+        ) {
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = title,
             onValueChange = { title = it },
-            label = { Text(text = stringResource(id = R.string.titleRecipe),style = MaterialTheme.typography.titleMedium) })
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            label = {
+                Text(
+                    text = stringResource(id = R.string.titleRecipe),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
 
         Button(
             onClick = { galleryLauncher.launch("image/*") },
             modifier = Modifier
         ) {
-            Text(text = "Pick Image From Gallery",style = MaterialTheme.typography.titleMedium)
+            Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
         }
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
         if (selectImages != null) {
 
             Image(
@@ -103,28 +109,39 @@ fun newRecipeScreen(
                 contentScale = ContentScale.Crop
             )
 
-            Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
         }
 
-        TextField(modifier = Modifier.fillMaxWidth(),
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = { description = it },
-            label = { Text(text = stringResource(id = R.string.descriptionRecipe),style = MaterialTheme.typography.titleMedium) })
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            label = {
+                Text(
+                    text = stringResource(id = R.string.descriptionRecipe),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
 
-        TextField(modifier = Modifier.fillMaxWidth(),
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = ingredients,
             onValueChange = { ingredients = it },
-            label = { Text(text = stringResource(id = R.string.ingridients),style = MaterialTheme.typography.titleMedium) })
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            label = {
+                Text(
+                    text = stringResource(id = R.string.ingridients),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
 
 
-        TextField(modifier = Modifier.fillMaxWidth(),
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = timeToCook,
             onValueChange = { timeToCook = it },
-            label = { Text(text = stringResource(id = R.string.timeToCook),style = MaterialTheme.typography.titleMedium) })
+            label = {
+                Text(
+                    text = stringResource(id = R.string.timeToCook),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
 
-        Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
         Spacer(Modifier.weight(1f))
         Button(
             modifier = Modifier.wrapContentSize(),
@@ -136,7 +153,7 @@ fun newRecipeScreen(
                         ingredients = ingredients,
                         timeToCook = timeToCook,
                         description = description,
-                        imageData = java.util.Base64.getEncoder()
+                        imageData = Base64.getEncoder()
                             .encodeToString(selectImages?.toFile()?.readBytes())
                     ).toString()
                 )

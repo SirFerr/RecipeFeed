@@ -2,8 +2,6 @@ package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.addedReci
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 

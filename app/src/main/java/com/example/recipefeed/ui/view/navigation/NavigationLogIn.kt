@@ -21,7 +21,7 @@ fun navigationLogIn(): NavHostController {
 
     val navController = rememberNavController()
     NavHost(navController = navController,
-        startDestination = "main",
+        startDestination = "loginScreen",
         modifier = Modifier.clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { focusManager.clearFocus() }) {

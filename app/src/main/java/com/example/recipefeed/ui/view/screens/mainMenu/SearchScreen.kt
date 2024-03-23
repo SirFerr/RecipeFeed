@@ -2,8 +2,6 @@ package com.example.recipefeed.ui.view.screens.mainMenu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,8 +9,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipe
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
@@ -51,21 +48,26 @@ fun searchScreen(
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
-            ) {
-            item {}
+        ) {
+            item { }
             item {
-                TextField(
+                OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = text,
                     onValueChange = { text = it },
-                    label = { Text(stringResource(id = R.string.search_title), style = MaterialTheme.typography.titleMedium) }
+                    label = {
+                        Text(
+                            stringResource(id = R.string.search_title),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
                 )
             }
             items(recipes, key = { it.idRandom }) {
                 listItem(it, navController)
             }
-            item {}
+            item { }
         }
     }
 }

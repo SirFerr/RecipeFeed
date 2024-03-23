@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,13 +32,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.Recipe
+import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -68,7 +65,7 @@ fun listItem(
                 .padding(dimensionResource(id = R.dimen.subPadding))
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.subPadding))
         ) {
             AsyncImage(
                 model = image,
@@ -80,7 +77,6 @@ fun listItem(
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             Column(
                 Modifier
                     .weight(2.5f)
@@ -91,7 +87,6 @@ fun listItem(
                 Text(text = recipe.recipeName, style =  MaterialTheme.typography.titleMedium)
                 Text(text = recipe.recipeRating.toString(), style =  MaterialTheme.typography.bodyMedium)
             }
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             IconButton(modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f), onClick = {

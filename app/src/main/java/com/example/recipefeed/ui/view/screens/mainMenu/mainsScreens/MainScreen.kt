@@ -38,14 +38,14 @@ fun mainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        Column(Modifier.weight(7f), verticalArrangement = Arrangement.Center) {
+        Column(Modifier.weight(10f), verticalArrangement = Arrangement.Center) {
             mainScreenCard(navController)
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         Row(
-            Modifier
+            Modifier.weight(1f)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
