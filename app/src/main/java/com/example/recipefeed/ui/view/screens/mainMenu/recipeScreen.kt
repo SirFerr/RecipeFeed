@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,7 +71,7 @@ fun recipeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Text(text = recipe!!.recipeName, fontSize = 30.sp, textAlign = TextAlign.Center)
+            Text(text = recipe!!.recipeName, style = MaterialTheme.typography.headlineLarge)
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
             AsyncImage(
@@ -90,13 +91,22 @@ fun recipeScreen(
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-                Text(text = recipe!!.description)
+                Text(text = recipe!!.description, style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-                Text(text = stringResource(id = R.string.timeToCook) + ": " + recipe!!.timeToCook)
+                Text(
+                    text = stringResource(id = R.string.timeToCook) + ": " + recipe!!.timeToCook,
+                    style = MaterialTheme.typography.bodyLarge
+                )
                 Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-                Text(text = stringResource(id = R.string.ingridients) + ": " + recipe!!.ingredients)
+                Text(
+                    text = stringResource(id = R.string.ingridients) + ": " + recipe!!.ingredients,
+                    style = MaterialTheme.typography.bodyLarge
+                )
                 Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
-                Text(text = "Recipe: " + recipe!!.ingredients)
+                Text(
+                    text = "Recipe: " + recipe!!.ingredients,
+                    style = MaterialTheme.typography.bodyLarge
+                )
 
             }
 

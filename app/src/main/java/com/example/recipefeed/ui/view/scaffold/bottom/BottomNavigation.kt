@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -49,7 +50,7 @@ fun bottomNavigation(navController: NavController) {
             NavigationBarItem(
                 selected = currentRoute == it.route,
                 onClick = { navController.navigate(it.route) },
-                label = { Text(it.screenName) },
+                label = { Text(it.screenName,style =  MaterialTheme.typography.bodyMedium) },
                 icon = { Icon(
                     it.icon, contentDescription = it.screenName
                 ) })

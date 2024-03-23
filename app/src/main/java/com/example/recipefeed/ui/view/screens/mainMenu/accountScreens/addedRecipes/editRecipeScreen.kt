@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -86,14 +87,19 @@ fun editRecipeScreen(
             TextField(modifier = Modifier.fillMaxWidth(),
                 value = title,
                 onValueChange = { title = it },
-                label = { Text(text = stringResource(id = R.string.titleRecipe)) })
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.titleRecipe),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                })
             Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
             Button(
                 onClick = { galleryLauncher.launch("image/*") },
                 modifier = Modifier
             ) {
-                Text(text = "Pick Image From Gallery")
+                Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
             }
             Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             if (selectImages != null) {
@@ -115,25 +121,43 @@ fun editRecipeScreen(
             TextField(modifier = Modifier.fillMaxWidth(),
                 value = description,
                 onValueChange = { description = it },
-                label = { Text(text = stringResource(id = R.string.descriptionRecipe)) })
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.descriptionRecipe),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                })
             Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
             TextField(modifier = Modifier.fillMaxWidth(),
                 value = ingredients,
                 onValueChange = { ingredients = it },
-                label = { Text(text = stringResource(id = R.string.ingridients)) })
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.ingridients),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                })
             Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
 
 
             TextField(modifier = Modifier.fillMaxWidth(),
                 value = timeToCook,
                 onValueChange = { timeToCook = it },
-                label = { Text(text = stringResource(id = R.string.timeToCook)) })
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.timeToCook),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                })
 
             Spacer(Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             Spacer(Modifier.weight(1f))
             Button(modifier = Modifier.wrapContentSize(), onClick = { /*TODO*/ }) {
-                Text(text = stringResource(id = R.string.complete))
+                Text(
+                    text = stringResource(id = R.string.complete)
+
+                )
             }
         }
     }

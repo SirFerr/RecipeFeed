@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -44,11 +45,11 @@ fun logInScreen(navController: NavHostController? = null) {
 
             TextField(
                 value = textEmail,
-                label = { Text(text = stringResource(id = R.string.email_field)) },
+                label = { Text(text = stringResource(id = R.string.email_field),style = MaterialTheme.typography.titleMedium) },
                 onValueChange = { textEmail = it })
             TextField(
                 value = textPassword,
-                label = { Text(text = stringResource(id = R.string.password_field)) },
+                label = { Text(text = stringResource(id = R.string.password_field),style = MaterialTheme.typography.titleMedium) },
                 onValueChange = { textPassword = it })
             Button(onClick = {
                 navController?.navigate("main") {

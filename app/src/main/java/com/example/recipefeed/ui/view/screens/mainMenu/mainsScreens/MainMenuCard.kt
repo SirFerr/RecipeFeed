@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -81,18 +82,23 @@ fun mainScreenCard(
                     Text(
                         text = recipe.recipeName,
                         modifier = Modifier,
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp
+                        style = MaterialTheme.typography.headlineMedium
                     )
                 }
                 Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
                 Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
 
-                    Text(text = recipe.description, modifier = Modifier, fontSize = 14.sp)
+                    Text(
+                        text = recipe.description,
+                        modifier = Modifier,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
                     Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
 
                     Text(
-                        text = recipe.recipeRating.toString(), modifier = Modifier, fontSize = 14.sp
+                        text = recipe.recipeRating.toString(),
+                        modifier = Modifier,
+                        style = MaterialTheme.typography.bodyLarge
                     )
 
 

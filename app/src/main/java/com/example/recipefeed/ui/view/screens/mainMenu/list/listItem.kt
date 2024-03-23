@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,8 +88,8 @@ fun listItem(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = recipe.recipeName, fontSize = 14.sp)
-                Text(text = recipe.recipeRating.toString(), fontSize = 12.sp)
+                Text(text = recipe.recipeName, style =  MaterialTheme.typography.titleMedium)
+                Text(text = recipe.recipeRating.toString(), style =  MaterialTheme.typography.bodyMedium)
             }
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
             IconButton(modifier = Modifier
