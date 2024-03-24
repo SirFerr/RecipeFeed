@@ -2,6 +2,7 @@ package com.example.recipefeed.ui.view.scaffold.bottom
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -49,7 +50,10 @@ fun bottomNavigation(navController: NavController) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
-    NavigationBar(Modifier.fillMaxWidth().size(70.dp)) {
+    NavigationBar(
+        Modifier
+            .fillMaxWidth()
+            .wrapContentSize()) {
         list.forEach {
             NavigationBarItem(
                 selected = currentRoute == it.route,

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -72,15 +73,13 @@ fun recipeScreen(
                 model = if (recipe != null) {
                     val imageBytes = Base64.decode(recipe!!.imageData)
                     BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                } else null,
-                contentDescription = null,
-                modifier = Modifier
+                } else null, contentDescription = null, modifier = Modifier
                     .fillMaxWidth()
                     .clip(
                         RoundedCornerShape(10.dp)
                     )
                     .background(Color.White)
-                    .aspectRatio(1f), contentScale = ContentScale.Crop
+                    .wrapContentSize(), contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))

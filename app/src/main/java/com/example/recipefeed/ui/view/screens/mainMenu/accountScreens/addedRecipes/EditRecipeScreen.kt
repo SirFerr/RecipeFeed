@@ -100,6 +100,7 @@ fun editRecipeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding))
         ) {
+            Spacer(modifier = Modifier)
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = title,
                 onValueChange = { title = it },
@@ -115,17 +116,12 @@ fun editRecipeScreen(
             ) {
                 Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
             }
-            if (selectImages != null) {
-                AsyncImage(
-                    model = selectImages, contentDescription = null, modifier = Modifier
-
-                        .fillMaxSize()
-                        .aspectRatio(1f)
-                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
-                    contentScale = ContentScale.Crop
-                )
-
-            }
+            AsyncImage(
+                model = selectImages, contentDescription = null, modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize()
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner)))
+            )
 
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = description,
@@ -165,6 +161,7 @@ fun editRecipeScreen(
 
                 )
             }
+            Spacer(modifier = Modifier)
 
         }
     }

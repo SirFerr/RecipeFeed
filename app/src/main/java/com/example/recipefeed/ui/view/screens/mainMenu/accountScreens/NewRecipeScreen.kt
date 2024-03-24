@@ -40,9 +40,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
+import com.example.recipefeed.ui.view.screens.logInAndSignUp.spacer
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import java.util.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -80,6 +82,7 @@ fun newRecipeScreen(
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
 
         ) {
+        Spacer(modifier = Modifier)
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = title,
             onValueChange = { title = it },
@@ -96,20 +99,15 @@ fun newRecipeScreen(
         ) {
             Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
         }
-        if (selectImages != null) {
 
-            Image(
-                painter = rememberAsyncImagePainter(model = selectImages),
-                contentDescription = null,
-                modifier = Modifier
+        AsyncImage(
+            model = selectImages, contentDescription = null, modifier = Modifier
 
-                    .fillMaxSize()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
-                contentScale = ContentScale.Crop
-            )
+                .fillMaxWidth()
+                .wrapContentSize()
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner)))
+        )
 
-        }
 
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = description,
@@ -160,5 +158,6 @@ fun newRecipeScreen(
             }) {
             Text(text = stringResource(id = R.string.complete))
         }
+        Spacer(modifier = Modifier)
     }
 }
