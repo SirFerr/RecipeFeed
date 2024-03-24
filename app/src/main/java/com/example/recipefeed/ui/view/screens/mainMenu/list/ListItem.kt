@@ -62,10 +62,10 @@ fun listItem(
     Card(Modifier.clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Row(
             Modifier
-                .padding(dimensionResource(id = R.dimen.subPadding))
+                .padding(dimensionResource(id = R.dimen.sub_padding))
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.subPadding))
+            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
         ) {
             AsyncImage(
                 model = image,
@@ -74,7 +74,7 @@ fun listItem(
                     .fillMaxWidth()
                     .weight(1f)
                     .aspectRatio(1f)
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))),
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
                 contentScale = ContentScale.Crop
             )
             Column(

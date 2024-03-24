@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="mainPadding">16.dp</dimen>
-    <dimen name="subPadding">8.dp</dimen>
-    <dimen name="smallPadding">4.dp</dimen>
-    <dimen name="roundedCorner">10.dp</dimen>
+    <dimen name="main_padding">16.dp</dimen>
+    <dimen name="sub_padding">8.dp</dimen>
+    <dimen name="small_padding">4.dp</dimen>
+    <dimen name="rounded_corner">10.dp</dimen>
 </resources>

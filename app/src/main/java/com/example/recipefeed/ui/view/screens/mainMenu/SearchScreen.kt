@@ -41,13 +41,13 @@ fun searchScreen(
     }
     Column(
         Modifier
-            .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
             .fillMaxSize()
 
     ) {
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
         ) {
             item { }
             item {

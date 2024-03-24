@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -62,12 +61,12 @@ fun recipeScreen(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(dimensionResource(id = R.dimen.mainPadding)),
+                .padding(dimensionResource(id = R.dimen.main_padding)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             Text(text = recipe!!.recipeName, style = MaterialTheme.typography.headlineLarge)
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
 
             AsyncImage(
                 model = if (recipe != null) {
@@ -82,18 +81,18 @@ fun recipeScreen(
                     .wrapContentSize(), contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
                 Text(text = recipe!!.description, style = MaterialTheme.typography.bodyLarge)
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
                 Divider()
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
 
                 Text(
-                    text = stringResource(id = R.string.timeToCook) + ": " + recipe!!.timeToCook,
+                    text = stringResource(id = R.string.time_to_cook) + ": " + recipe!!.timeToCook,
                     style = MaterialTheme.typography.bodyLarge
                 )
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
                 Text(
                     text = stringResource(id = R.string.ingridients) + ": " + recipe!!.ingredients,
                     style = MaterialTheme.typography.bodyLarge

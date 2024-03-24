@@ -7,15 +7,19 @@
 
     <string name="email_field">Email</string>
     <string name="password_field">Password</string>
+    <string name="password_again_field">Password again</string>
     <string name="login">LogIn</string>
     <string name="signup">SignUp</string>
+
+    <string name="field_not_fill">Field not fill!</string>
+    <string name="password_not_compared">Password not compared!</string>
 
     <string name="complete">Complete</string>
 
 
-    <string name="titleRecipe">Title</string>
-    <string name="descriptionRecipe">Description</string>
+    <string name="title_recipe">Title</string>
+    <string name="description_recipe">Description</string>
     <string name="ingridients">Ingridients</string>
-    <string name="timeToCook">Time to cook</string>
+    <string name="time_to_cook">Time to cook</string>
 
 </resources>

@@ -3,13 +3,10 @@
 package com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens
 
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,20 +21,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun mainScreenCard(
     navController: NavHostController? = null,
@@ -57,7 +50,7 @@ fun mainScreenCard(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.mainPadding))
+                    .padding(dimensionResource(id = R.dimen.main_padding))
                     .wrapContentSize(),
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -72,13 +65,13 @@ fun mainScreenCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(
-                                RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner))
+                                RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
                             )
                             .wrapContentSize(),
 
                         )
 
-                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
                     Text(
                         text = recipe.recipeName,
                         modifier = Modifier,
@@ -94,7 +87,7 @@ fun mainScreenCard(
 
                 Column {
 
-                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
 
                         Text(
@@ -102,7 +95,7 @@ fun mainScreenCard(
                             modifier = Modifier,
                             style = MaterialTheme.typography.bodyLarge
                         )
-                        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.mainPadding)))
+                        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
 
                         Text(
                             text = recipe.recipeRating.toString(),

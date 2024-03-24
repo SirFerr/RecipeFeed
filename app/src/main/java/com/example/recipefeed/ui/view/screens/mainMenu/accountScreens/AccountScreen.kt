@@ -30,10 +30,10 @@ fun accountScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.mainPadding))
+            .padding(dimensionResource(id = R.dimen.main_padding))
     ) {
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
 
             ) {
             items(list) {

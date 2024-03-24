@@ -1,6 +1,7 @@
 package com.example.recipefeed.ui.view.screens.logInAndSignUp
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,57 +35,47 @@ fun logInScreen(navController: NavHostController? = null) {
 
 
 
-    spacer {
 
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         )
         {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                OutlinedTextField(
-                    value = textEmail,
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.email_field),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    },
-                    onValueChange = { textEmail = it })
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.mainPadding)))
-                OutlinedTextField(
-                    value = textPassword,
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.password_field),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    },
-                    onValueChange = { textPassword = it })
-            }
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Button(onClick = {
-                    navController?.navigate("main") {
-                        popUpTo("loginScreen") {
-                            inclusive = true
-                        }
+            OutlinedTextField(
+                value = textEmail,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.email_field),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                onValueChange = { textEmail = it })
+            OutlinedTextField(
+                value = textPassword,
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.password_field),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                onValueChange = { textPassword = it })
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
+
+            Button(onClick = {
+                navController?.navigate("main") {
+                    popUpTo("loginScreen") {
+                        inclusive = true
                     }
-                }) {
-                    Text(text = stringResource(id = R.string.login))
                 }
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.mainPadding)))
-
-                Button(onClick = { navController?.navigate("signupScreen") }) {
-                    Text(text = stringResource(id = R.string.signup))
-                }
+            }) {
+                Text(text = stringResource(id = R.string.login))
+            }
+            Button(onClick = { navController?.navigate("signupScreen") }) {
+                Text(text = stringResource(id = R.string.signup))
             }
 
 

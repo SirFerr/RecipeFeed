@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -95,10 +93,10 @@ fun editRecipeScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
+                .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding))
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             Spacer(modifier = Modifier)
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -106,7 +104,7 @@ fun editRecipeScreen(
                 onValueChange = { title = it },
                 label = {
                     Text(
-                        text = stringResource(id = R.string.titleRecipe),
+                        text = stringResource(id = R.string.title_recipe),
                         style = MaterialTheme.typography.titleMedium
                     )
                 })
@@ -120,7 +118,7 @@ fun editRecipeScreen(
                 model = selectImages, contentDescription = null, modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentSize()
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner)))
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
             )
 
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -128,7 +126,7 @@ fun editRecipeScreen(
                 onValueChange = { description = it },
                 label = {
                     Text(
-                        text = stringResource(id = R.string.descriptionRecipe),
+                        text = stringResource(id = R.string.description_recipe),
                         style = MaterialTheme.typography.titleMedium
                     )
                 })
@@ -149,7 +147,7 @@ fun editRecipeScreen(
                 onValueChange = { timeToCook = it },
                 label = {
                     Text(
-                        text = stringResource(id = R.string.timeToCook),
+                        text = stringResource(id = R.string.time_to_cook),
                         style = MaterialTheme.typography.titleMedium
                     )
                 })

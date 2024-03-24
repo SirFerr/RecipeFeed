@@ -1,6 +1,6 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalEncodingApi::class
+    ExperimentalEncodingApi::class, ExperimentalMaterial3Api::class
 )
 
 package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens
@@ -9,11 +9,9 @@ import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,17 +32,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
-import com.example.recipefeed.ui.view.screens.logInAndSignUp.spacer
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import java.util.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -76,10 +71,10 @@ fun newRecipeScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
 
         ) {
         Spacer(modifier = Modifier)
@@ -88,7 +83,7 @@ fun newRecipeScreen(
             onValueChange = { title = it },
             label = {
                 Text(
-                    text = stringResource(id = R.string.titleRecipe),
+                    text = stringResource(id = R.string.title_recipe),
                     style = MaterialTheme.typography.titleMedium
                 )
             })
@@ -105,7 +100,7 @@ fun newRecipeScreen(
 
                 .fillMaxWidth()
                 .wrapContentSize()
-                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.roundedCorner)))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
         )
 
 
@@ -114,7 +109,7 @@ fun newRecipeScreen(
             onValueChange = { description = it },
             label = {
                 Text(
-                    text = stringResource(id = R.string.descriptionRecipe),
+                    text = stringResource(id = R.string.description_recipe),
                     style = MaterialTheme.typography.titleMedium
                 )
             })
@@ -135,7 +130,7 @@ fun newRecipeScreen(
             onValueChange = { timeToCook = it },
             label = {
                 Text(
-                    text = stringResource(id = R.string.timeToCook),
+                    text = stringResource(id = R.string.time_to_cook),
                     style = MaterialTheme.typography.titleMedium
                 )
             })

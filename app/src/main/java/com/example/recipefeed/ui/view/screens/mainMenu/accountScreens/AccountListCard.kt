@@ -17,17 +17,19 @@ import com.example.recipefeed.R
 @Composable
 fun accountListCard(accountScreenCards: AccountScreenCards) {
     Card(modifier = Modifier
-
         .fillMaxWidth()
         .clickable {
-            accountScreenCards.navController?.navigate(accountScreenCards.route)
+            if (accountScreenCards.route == "loginScreen") {
+                accountScreenCards.navController?.navigate(accountScreenCards.route){
+                    popUpTo("main") { inclusive = true }
+                }
+            } else
+                accountScreenCards.navController?.navigate(accountScreenCards.route)
+
         }) {
-        Column(Modifier.padding(dimensionResource(id = R.dimen.mainPadding))) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = accountScreenCards.title, style = MaterialTheme.typography.titleMedium)
-            }
+        Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
+            Text(text = accountScreenCards.title, style = MaterialTheme.typography.titleMedium)
+
         }
-
-
     }
 }

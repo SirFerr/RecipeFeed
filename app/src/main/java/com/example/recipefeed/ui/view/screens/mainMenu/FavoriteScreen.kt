@@ -29,12 +29,12 @@ fun favoriteScreen(
     Column(
         Modifier
             .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.mainPadding))
+            .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
     ) {
 
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.mainPadding)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
 
             ) {
             item { }
