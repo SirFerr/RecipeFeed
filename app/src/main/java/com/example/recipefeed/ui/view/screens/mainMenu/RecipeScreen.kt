@@ -1,10 +1,8 @@
 package com.example.recipefeed.ui.view.screens.mainMenu
 
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,10 +22,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -62,50 +59,50 @@ fun recipeScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(dimensionResource(id = R.dimen.main_padding)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
-            Text(text = recipe!!.recipeName, style = MaterialTheme.typography.headlineLarge)
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = recipe!!.recipeName,
+                style = MaterialTheme.typography.headlineLarge,
+                textAlign = TextAlign.Center
+            )
 
             AsyncImage(
                 model = if (recipe != null) {
                     val imageBytes = Base64.decode(recipe!!.imageData)
                     BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                } else null, contentDescription = null, modifier = Modifier
+                } else null,
+                contentDescription = null,
+                modifier = Modifier
                     .fillMaxWidth()
                     .clip(
                         RoundedCornerShape(10.dp)
                     )
-                    .background(Color.White)
-                    .wrapContentSize(), contentScale = ContentScale.Crop
+                    .wrapContentSize(),
+
+                )
+
+            Text(text = recipe!!.description, style = MaterialTheme.typography.bodyLarge)
+            Divider()
+
+            Text(
+                text = stringResource(id = R.string.time_to_cook) + ": " + recipe!!.timeToCook,
+                style = MaterialTheme.typography.bodyLarge
             )
-
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
-            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-                Text(text = recipe!!.description, style = MaterialTheme.typography.bodyLarge)
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
-                Divider()
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
-
-                Text(
-                    text = stringResource(id = R.string.time_to_cook) + ": " + recipe!!.timeToCook,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)))
-                Text(
-                    text = stringResource(id = R.string.ingridients) + ": " + recipe!!.ingredients,
-                    style = MaterialTheme.typography.bodyLarge
-                )
-//                Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.subPadding)))
+            Text(
+                text = stringResource(id = R.string.ingridients) + ": " + recipe!!.ingredients,
+                style = MaterialTheme.typography.bodyLarge
+            )
 //                Text(
 //                    text = "Recipe: " + recipe!!.ingredients,
 //                    style = MaterialTheme.typography.bodyLarge
 //                )
 
-            }
-
         }
+
+
     }
 
 }

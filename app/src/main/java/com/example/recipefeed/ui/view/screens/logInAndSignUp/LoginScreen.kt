@@ -30,7 +30,7 @@ import com.example.recipefeed.R
 @Composable
 fun logInScreen(navController: NavHostController? = null) {
 
-    var textEmail by remember { mutableStateOf("") }
+    var textUsername by remember { mutableStateOf("") }
     var textPassword by remember { mutableStateOf("") }
 
 
@@ -46,14 +46,14 @@ fun logInScreen(navController: NavHostController? = null) {
         {
 
             OutlinedTextField(
-                value = textEmail,
+                value = textUsername,
                 label = {
                     Text(
-                        text = stringResource(id = R.string.email_field),
+                        text = stringResource(id = R.string.username_field),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textEmail = it })
+                onValueChange = { textUsername = it })
             OutlinedTextField(
                 value = textPassword,
                 label = {

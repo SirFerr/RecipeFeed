@@ -6,13 +6,12 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -52,60 +52,35 @@ fun mainScreenCard(
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.main_padding))
                     .wrapContentSize(),
-                verticalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
-                    Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    AsyncImage(
-                        model = image,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(
-                                RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
-                            )
-                            .wrapContentSize(),
-
+                AsyncImage(
+                    model = image,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(
+                            RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
                         )
-
-                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-                    Text(
-                        text = recipe.recipeName,
-                        modifier = Modifier,
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-
-                }
-
-
-
-
-
-                Column {
-
-                    Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-
-                        Text(
-                            text = recipe.description,
-                            modifier = Modifier,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-
-                        Text(
-                            text = recipe.recipeLikes.toString(),
-                            modifier = Modifier,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-
-
-                    }
-                }
+                        .wrapContentSize(),
+                )
+                Text(
+                    text = recipe.recipeName,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center
+                )
+                Divider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = recipe.description,
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = recipe.recipeLikes.toString(),
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.bodyLarge
+                )
 
             }
         }

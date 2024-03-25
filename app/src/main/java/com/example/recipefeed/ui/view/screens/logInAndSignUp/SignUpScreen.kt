@@ -23,7 +23,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 
@@ -34,7 +33,7 @@ import com.example.recipefeed.R
 fun signUpScreen(navController: NavHostController? = null) {
 
 
-    var textEmail by remember { mutableStateOf("") }
+    var textUsername by remember { mutableStateOf("") }
     var textPassword by remember { mutableStateOf("") }
     var textPasswordAgain by remember { mutableStateOf("") }
 
@@ -53,14 +52,14 @@ fun signUpScreen(navController: NavHostController? = null) {
         {
             val context = LocalContext.current
             OutlinedTextField(
-                value = textEmail,
+                value = textUsername,
                 label = {
                     Text(
-                        text = stringResource(id = R.string.email_field),
+                        text = stringResource(id = R.string.username_field),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textEmail = it })
+                onValueChange = { textUsername = it })
             OutlinedTextField(
                 value = textPassword,
                 label = {
@@ -83,9 +82,13 @@ fun signUpScreen(navController: NavHostController? = null) {
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
             Button(onClick = {
-                if (textPasswordAgain != "" && textPassword != "" && textEmail != "") {
+                if (textPasswordAgain != "" && textPassword != "" && textUsername != "") {
                     if (textPasswordAgain == textPassword) {
-                        navController?.navigate("logInScreen")
+                        navController?.navigate("logInScreen"){
+                            popUpTo("loginScreen") {
+                                inclusive = true
+                            }
+                        }
 
                     } else {
                         Toast.makeText(

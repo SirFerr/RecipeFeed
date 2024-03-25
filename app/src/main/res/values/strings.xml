@@ -5,7 +5,7 @@
     <string name="favorite_title">Favorite</string>
     <string name="account_title">Account</string>
 
-    <string name="email_field">Email</string>
+    <string name="username_field">Username</string>
     <string name="password_field">Password</string>
     <string name="password_again_field">Password again</string>
     <string name="login">LogIn</string>
