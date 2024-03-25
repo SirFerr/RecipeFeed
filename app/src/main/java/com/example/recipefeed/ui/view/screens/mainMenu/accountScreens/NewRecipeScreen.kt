@@ -1,12 +1,13 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
-    ExperimentalEncodingApi::class, ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalEncodingApi::class,
+    ExperimentalMaterial3Api::class
 )
 
 package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -32,16 +33,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.core.net.toFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
-import java.util.Base64
+import com.example.recipefeed.utils.convertToMultipart
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
@@ -63,10 +64,10 @@ fun newRecipeScreen(
     }
 
     var selectImages by remember { mutableStateOf<Uri?>(null) }
-    val galleryLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-            selectImages = it
-        }
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        selectImages = it
+    }
+    val context = LocalContext.current
 
     Column(
         Modifier
@@ -89,8 +90,7 @@ fun newRecipeScreen(
             })
 
         Button(
-            onClick = { galleryLauncher.launch("image/*") },
-            modifier = Modifier
+            onClick = { galleryLauncher.launch("image/*") }, modifier = Modifier
         ) {
             Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
         }
@@ -136,21 +136,13 @@ fun newRecipeScreen(
             })
 
         Spacer(Modifier.weight(1f))
-        Button(
-            modifier = Modifier.wrapContentSize(),
-            onClick = {
-                Log.d(
-                    "encode", Recipe(
-                        id = 1001,
-                        recipeName = title,
-                        ingredients = ingredients,
-                        timeToCook = timeToCook,
-                        description = description,
-                        imageData = Base64.getEncoder()
-                            .encodeToString(selectImages?.toFile()?.readBytes())
-                    ).toString()
-                )
-            }) {
+        Button(modifier = Modifier.wrapContentSize(), onClick = {
+
+
+            recipeViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+
+
+        }) {
             Text(text = stringResource(id = R.string.complete))
         }
         Spacer(modifier = Modifier)

@@ -85,7 +85,7 @@ fun listItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = recipe.recipeName, style =  MaterialTheme.typography.titleMedium)
-                Text(text = recipe.recipeRating.toString(), style =  MaterialTheme.typography.bodyMedium)
+                Text(text = recipe.recipeLikes.toString(), style =  MaterialTheme.typography.bodyMedium)
             }
             IconButton(modifier = Modifier
                 .weight(1f)

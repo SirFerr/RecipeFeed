@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,7 @@ import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.utils.convertToMultipart
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -46,8 +48,10 @@ fun editRecipeScreen(
     navController: NavHostController,
     id: Int = -1,
     recipeViewModel: RecipeViewModel = hiltViewModel()
+
 ) {
 
+    val context = LocalContext.current
 
     var recipe by remember { mutableStateOf<Recipe?>(null) }
 
@@ -153,7 +157,11 @@ fun editRecipeScreen(
                 })
 
             Spacer(Modifier.weight(1f))
-            Button(modifier = Modifier.wrapContentSize(), onClick = { /*TODO*/ }) {
+            Button(modifier = Modifier.wrapContentSize(), onClick = {
+
+
+                recipeViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+            }) {
                 Text(
                     text = stringResource(id = R.string.complete)
 

@@ -8,7 +8,7 @@ data class Recipe(
     val ingredients: String = "testIngredients",
     val description: String = "testDescription",
     val timeToCook: String = "TestTimeToCook",
-    val recipeRating: Float = 0f,
+    val recipeLikes: Int = 1,
     val imageData: String = "",
     val idRandom: String = UUID.randomUUID().toString()
 )

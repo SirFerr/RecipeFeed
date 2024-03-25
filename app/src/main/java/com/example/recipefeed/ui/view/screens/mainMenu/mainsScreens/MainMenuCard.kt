@@ -98,7 +98,7 @@ fun mainScreenCard(
                         Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
 
                         Text(
-                            text = recipe.recipeRating.toString(),
+                            text = recipe.recipeLikes.toString(),
                             modifier = Modifier,
                             style = MaterialTheme.typography.bodyLarge
                         )

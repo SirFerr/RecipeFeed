@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.RetrofitObject
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,11 +25,10 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun getAllRecipes() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
 
             try {
                 recipes.value = RetrofitObject.api.getAll()
-                Log.d("debug", recipes.value.toString())
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }
@@ -51,24 +52,26 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
 
     fun getRandomRecipe() {
 
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                randomRecipe.value = RetrofitObject.api.getById(kotlin.random.Random.nextInt(1,100))
+                randomRecipe.value =
+                    RetrofitObject.api.getById(kotlin.random.Random.nextInt(1, 100))
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }
         }
     }
 
-    fun addRecipes(recipe: Recipe) {
-        viewModelScope.launch {
+    fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?) {
+        CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                RetrofitObject.api.addRecipe(recipe)
+                imagePart?.let { RetrofitObject.api.addRecipe(recipe, it) }
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }
         }
     }
 }
+
