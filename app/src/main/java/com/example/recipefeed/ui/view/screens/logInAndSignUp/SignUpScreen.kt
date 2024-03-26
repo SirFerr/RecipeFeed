@@ -13,29 +13,34 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.TextFieldViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun signUpScreen(navController: NavHostController? = null) {
+fun signUpScreen(
+    navController: NavHostController? = null,
+    recipeViewModel: RecipeViewModel = hiltViewModel(),
+    textFieldViewModel: TextFieldViewModel = hiltViewModel()
+) {
 
 
-    var textUsername by remember { mutableStateOf("") }
-    var textPassword by remember { mutableStateOf("") }
-    var textPasswordAgain by remember { mutableStateOf("") }
+    val textUsername by textFieldViewModel.textUsername.collectAsState()
+    val textPassword by textFieldViewModel.textPassword.collectAsState()
+    val textPasswordAgain by textFieldViewModel.textPasswordAgain.collectAsState()
 
 
 
@@ -59,7 +64,7 @@ fun signUpScreen(navController: NavHostController? = null) {
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textUsername = it })
+                onValueChange = { textFieldViewModel.textUsername.value = it })
             OutlinedTextField(
                 value = textPassword,
                 label = {
@@ -68,7 +73,7 @@ fun signUpScreen(navController: NavHostController? = null) {
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textPassword = it })
+                onValueChange = { textFieldViewModel.textPassword.value = it })
             OutlinedTextField(
                 value = textPasswordAgain,
                 label = {
@@ -77,18 +82,20 @@ fun signUpScreen(navController: NavHostController? = null) {
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textPasswordAgain = it })
+                onValueChange = { textFieldViewModel.textPasswordAgain.value = it })
 
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
             Button(onClick = {
                 if (textPasswordAgain != "" && textPassword != "" && textUsername != "") {
                     if (textPasswordAgain == textPassword) {
-                        navController?.navigate("logInScreen"){
+                        navController?.navigate("logInScreen") {
                             popUpTo("loginScreen") {
                                 inclusive = true
                             }
                         }
+
+
 
                     } else {
                         Toast.makeText(

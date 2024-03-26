@@ -14,9 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -26,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.TextFieldViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,12 +31,11 @@ import com.example.recipefeed.ui.viewModel.RecipeViewModel
 @Composable
 fun searchScreen(
     navController: NavHostController? = null,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    recipeViewModel: RecipeViewModel = hiltViewModel(),
+    textFieldViewModel: TextFieldViewModel = hiltViewModel()
 ) {
     val recipes by recipeViewModel.recipes.collectAsState()
-    var text by remember {
-        mutableStateOf("")
-    }
+    val textSearch by textFieldViewModel.textSearch.collectAsState()
     Column(
         Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
@@ -54,8 +51,8 @@ fun searchScreen(
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = text,
-                    onValueChange = { text = it },
+                    value = textSearch,
+                    onValueChange = { textFieldViewModel.textSearch.value=it },
                     label = {
                         Text(
                             stringResource(id = R.string.search_title),
