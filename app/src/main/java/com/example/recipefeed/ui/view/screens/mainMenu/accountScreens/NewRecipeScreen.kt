@@ -92,7 +92,7 @@ fun newRecipeScreen(
         Button(
             onClick = { galleryLauncher.launch("image/*") }, modifier = Modifier
         ) {
-            Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
+            Text(text = stringResource(id = R.string.pick_image), style = MaterialTheme.typography.titleMedium)
         }
 
         AsyncImage(

@@ -1,6 +1,7 @@
 package com.example.recipefeed.ui.view.screens.mainMenu
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,10 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,7 +30,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -44,65 +42,58 @@ fun recipeScreen(
     id: Int = -1,
     recipeViewModel: RecipeViewModel = hiltViewModel()
 ) {
-    var recipe by remember { mutableStateOf<Recipe?>(null) }
-
-    LaunchedEffect(true) {
-        recipe = recipeViewModel.getById(id)
-
+    LaunchedEffect(key1 = id) {
+        recipeViewModel.getById(id)
     }
 
+    val recipe by recipeViewModel.idRecipe.collectAsState()
 
-
-    if (recipe != null) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(dimensionResource(id = R.dimen.main_padding)),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = recipe!!.recipeName,
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center
-            )
-
-            AsyncImage(
-                model = if (recipe != null) {
-                    val imageBytes = Base64.decode(recipe!!.imageData)
-                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-                } else null,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(10.dp)
-                    )
-                    .wrapContentSize(),
-
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(dimensionResource(id = R.dimen.main_padding)),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = recipe.recipeName,
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center
+        )
+        val imageBytes = Base64.decode(recipe.imageData)
+        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        AsyncImage(
+            model = image,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(
+                    RoundedCornerShape(10.dp)
                 )
+                .wrapContentSize(),
 
-            Text(text = recipe!!.description, style = MaterialTheme.typography.bodyLarge)
-            Divider()
+            )
 
-            Text(
-                text = stringResource(id = R.string.time_to_cook) + ": " + recipe!!.timeToCook,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = stringResource(id = R.string.ingridients) + ": " + recipe!!.ingredients,
-                style = MaterialTheme.typography.bodyLarge
-            )
+        Text(text = recipe.description, style = MaterialTheme.typography.bodyLarge)
+        Divider()
+
+        Text(
+            text = stringResource(id = R.string.time_to_cook) + ": " + recipe.timeToCook,
+            style = MaterialTheme.typography.bodyLarge
+        )
+        Text(
+            text = stringResource(id = R.string.ingridients) + ": " + recipe.ingredients,
+            style = MaterialTheme.typography.bodyLarge
+        )
 //                Text(
 //                    text = "Recipe: " + recipe!!.ingredients,
 //                    style = MaterialTheme.typography.bodyLarge
 //                )
 
-        }
-
-
     }
 
+
 }
+

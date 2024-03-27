@@ -2,33 +2,49 @@ package com.example.recipefeed.ui.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.RetrofitObject
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
+
 @HiltViewModel
 class RecipeViewModel @Inject constructor() : ViewModel() {
-    var recipes = MutableStateFlow<List<Recipe>>(listOf())
-    var randomRecipe = MutableStateFlow(Recipe())
+
+
+    private val _recipes = MutableStateFlow<List<Recipe>>(listOf())
+
+    val recipes: StateFlow<List<Recipe>> = _recipes
+
+    private val _randomRecipe = MutableStateFlow(Recipe())
+
+    val randomRecipe: StateFlow<Recipe> = _randomRecipe
+
+
+    private val _idRecipe = MutableStateFlow(Recipe())
+
+    val idRecipe: StateFlow<Recipe> = _idRecipe
 
     init {
+
         getAllRecipes()
         getRandomRecipe()
+
     }
 
     private fun getAllRecipes() {
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                recipes.value = RetrofitObject.api.getAll()
+                val response = RetrofitObject.api.getAll()
+                if (response.isSuccessful)
+                    _recipes.value = RetrofitObject.api.getAll().body()!!
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }
@@ -40,12 +56,15 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
     }
 
 
-    suspend fun getById(id: Int): Recipe? {
-        return withContext(Dispatchers.IO) {
+    fun getById(id: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+
             try {
-                return@withContext RetrofitObject.api.getById(id)
+                val response = RetrofitObject.api.getById(id)
+                if (response.isSuccessful)
+                    _idRecipe.value = response.body()!!
             } catch (e: Exception) {
-                null
+                Log.e("err", e.toString())
             }
         }
     }
@@ -55,8 +74,9 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
 
             try {
-                randomRecipe.value =
-                    RetrofitObject.api.getById(kotlin.random.Random.nextInt(1, 100))
+                val response = RetrofitObject.api.getById(kotlin.random.Random.nextInt(1, 100))
+                if (response.isSuccessful)
+                    _randomRecipe.value = response.body()!!
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }
@@ -65,9 +85,11 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
 
     fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?) {
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
-                imagePart?.let { RetrofitObject.api.addRecipe(recipe, it) }
+                val response = imagePart?.let { RetrofitObject.api.addRecipe(recipe, it) }
+                if (response?.isSuccessful == true) {
+
+                }
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }

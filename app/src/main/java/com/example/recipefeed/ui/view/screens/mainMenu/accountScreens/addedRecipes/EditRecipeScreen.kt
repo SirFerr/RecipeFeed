@@ -21,7 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,37 +46,34 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun editRecipeScreen(
     navController: NavHostController,
-    id: Int = -1,
+    id: Int = 10,
     recipeViewModel: RecipeViewModel = hiltViewModel()
 
 ) {
 
     val context = LocalContext.current
 
-    var recipe by remember { mutableStateOf<Recipe?>(null) }
+    recipeViewModel.getById(id = id)
 
-    LaunchedEffect(id) {
-        recipe = recipeViewModel.getById(id)
-    }
+    val recipe by recipeViewModel.idRecipe.collectAsState()
 
 
 
-    if (recipe != null) {
 
         var title by remember {
-            mutableStateOf(recipe!!.recipeName)
+            mutableStateOf(recipe.recipeName)
         }
         var description by remember {
-            mutableStateOf(recipe!!.description)
+            mutableStateOf(recipe.description)
         }
         var ingredients by remember {
-            mutableStateOf(recipe!!.ingredients)
+            mutableStateOf(recipe.ingredients)
         }
         var timeToCook by remember {
-            mutableStateOf(recipe!!.timeToCook)
+            mutableStateOf(recipe.timeToCook)
         }
 
-        val imageBytes = Base64.decode(recipe!!.imageData)
+        val imageBytes = Base64.decode(recipe.imageData)
         var selectImages by remember {
             mutableStateOf<Any?>(
                 BitmapFactory.decodeByteArray(
@@ -116,7 +113,7 @@ fun editRecipeScreen(
                 onClick = { galleryLauncher.launch("image/*") },
                 modifier = Modifier
             ) {
-                Text(text = "Pick Image From Gallery", style = MaterialTheme.typography.titleMedium)
+                Text(text = stringResource(id = R.string.pick_image), style = MaterialTheme.typography.titleMedium)
             }
             AsyncImage(
                 model = selectImages, contentDescription = null, modifier = Modifier
@@ -171,4 +168,3 @@ fun editRecipeScreen(
 
         }
     }
-}

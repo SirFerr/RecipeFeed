@@ -22,4 +22,5 @@
     <string name="ingridients">Ingridients</string>
     <string name="time_to_cook">Time to cook</string>
 
+    <string name="pick_image">Pick Image From Gallery</string>
 </resources>
