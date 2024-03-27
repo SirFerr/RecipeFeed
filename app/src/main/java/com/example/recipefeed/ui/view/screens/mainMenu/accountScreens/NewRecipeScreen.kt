@@ -48,7 +48,8 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Composable
 fun newRecipeScreen(
-    navController: NavHostController, recipeViewModel: RecipeViewModel = hiltViewModel()
+    navController: NavHostController,
+    recipeViewModel: RecipeViewModel = hiltViewModel(navController.getBackStackEntry("mainScreen"))
 ) {
     var title by remember {
         mutableStateOf("")
@@ -92,7 +93,10 @@ fun newRecipeScreen(
         Button(
             onClick = { galleryLauncher.launch("image/*") }, modifier = Modifier
         ) {
-            Text(text = stringResource(id = R.string.pick_image), style = MaterialTheme.typography.titleMedium)
+            Text(
+                text = stringResource(id = R.string.pick_image),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
 
         AsyncImage(

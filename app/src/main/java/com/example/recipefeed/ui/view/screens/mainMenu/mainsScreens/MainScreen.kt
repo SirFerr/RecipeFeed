@@ -26,11 +26,10 @@ import com.example.recipefeed.R
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun mainScreen(
-    navController: NavHostController? = null,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    navController: NavHostController,
+    recipeViewModel: RecipeViewModel = hiltViewModel(navController.getBackStackEntry("mainScreen"))
 ) {
     val recipe by recipeViewModel.randomRecipe.collectAsState()
     Column(

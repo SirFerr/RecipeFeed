@@ -17,7 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
@@ -26,11 +25,12 @@ import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun searchScreen(
-    navController: NavHostController? = null,
-    recipeViewModel: RecipeViewModel = hiltViewModel(),
+    navController: NavHostController,
+    recipeViewModel: RecipeViewModel = hiltViewModel(
+        navController.getBackStackEntry("mainScreen")
+    ),
 ) {
     val recipes by recipeViewModel.recipes.collectAsState()
     val textSearch by recipeViewModel.textSearch.collectAsState()

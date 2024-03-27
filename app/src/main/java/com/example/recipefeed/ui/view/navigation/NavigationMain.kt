@@ -33,17 +33,17 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
         ) {
             composable("mainScreen") {
                 mainScreen(
-                    navController = navController, recipeViewModel = recipeViewModel
+                    navController = navController
                 )
             }
             composable("favoriteScreen") {
                 favoriteScreen(
-                    navController = navController, recipeViewModel = recipeViewModel
+                    navController = navController
                 )
             }
             composable("searchScreen") {
                 searchScreen(
-                    navController = navController, recipeViewModel = recipeViewModel
+                    navController = navController
                 )
             }
 
@@ -58,20 +58,20 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
             })) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id")
                 Log.d("recipe", id.toString())
-                recipeScreen(navController, id!!, recipeViewModel = recipeViewModel)
+                recipeScreen(navController, id!!)
             }
             composable("newRecipeScreen") {
-                newRecipeScreen(navController, recipeViewModel = recipeViewModel)
+                newRecipeScreen(navController)
             }
             composable("addedRecipesScreen") {
-                addedRecipesScreen(navController, recipeViewModel = recipeViewModel)
+                addedRecipesScreen(navController)
             }
             composable("editRecipeScreen/{id}", listOf(navArgument("id") {
                 type = NavType.IntType
             })) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id")
                 Log.d("recipe", id.toString())
-                editRecipeScreen(navController, id!!, recipeViewModel = recipeViewModel)
+                editRecipeScreen(navController, id!!)
             }
 
         }

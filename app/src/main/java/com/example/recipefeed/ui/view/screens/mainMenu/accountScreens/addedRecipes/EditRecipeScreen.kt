@@ -47,7 +47,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun editRecipeScreen(
     navController: NavHostController,
     id: Int = 10,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    recipeViewModel: RecipeViewModel = hiltViewModel(navController.getBackStackEntry("mainScreen"))
 
 ) {
 
@@ -58,113 +58,114 @@ fun editRecipeScreen(
     val recipe by recipeViewModel.idRecipe.collectAsState()
 
 
-
-
-        var title by remember {
-            mutableStateOf(recipe.recipeName)
-        }
-        var description by remember {
-            mutableStateOf(recipe.description)
-        }
-        var ingredients by remember {
-            mutableStateOf(recipe.ingredients)
-        }
-        var timeToCook by remember {
-            mutableStateOf(recipe.timeToCook)
-        }
-
-        val imageBytes = Base64.decode(recipe.imageData)
-        var selectImages by remember {
-            mutableStateOf<Any?>(
-                BitmapFactory.decodeByteArray(
-                    imageBytes,
-                    0,
-                    imageBytes.size
-                )
-            )
-        }
-
-
-        val galleryLauncher =
-            rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-                selectImages = it
-            }
-
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            Spacer(modifier = Modifier)
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = title,
-                onValueChange = { title = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.title_recipe),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-            Button(
-                onClick = { galleryLauncher.launch("image/*") },
-                modifier = Modifier
-            ) {
-                Text(text = stringResource(id = R.string.pick_image), style = MaterialTheme.typography.titleMedium)
-            }
-            AsyncImage(
-                model = selectImages, contentDescription = null, modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentSize()
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-            )
-
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = description,
-                onValueChange = { description = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.description_recipe),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = ingredients,
-                onValueChange = { ingredients = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.ingridients),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-
-
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = timeToCook,
-                onValueChange = { timeToCook = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.time_to_cook),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-
-            Spacer(Modifier.weight(1f))
-            Button(modifier = Modifier.wrapContentSize(), onClick = {
-
-
-                recipeViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
-            }) {
-                Text(
-                    text = stringResource(id = R.string.complete)
-
-                )
-            }
-            Spacer(modifier = Modifier)
-
-        }
+    var title by remember {
+        mutableStateOf(recipe.recipeName)
     }
+    var description by remember {
+        mutableStateOf(recipe.description)
+    }
+    var ingredients by remember {
+        mutableStateOf(recipe.ingredients)
+    }
+    var timeToCook by remember {
+        mutableStateOf(recipe.timeToCook)
+    }
+
+    val imageBytes = Base64.decode(recipe.imageData)
+    var selectImages by remember {
+        mutableStateOf<Any?>(
+            BitmapFactory.decodeByteArray(
+                imageBytes,
+                0,
+                imageBytes.size
+            )
+        )
+    }
+
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+            selectImages = it
+        }
+
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+    ) {
+        Spacer(modifier = Modifier)
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = title,
+            onValueChange = { title = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.title_recipe),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+        Button(
+            onClick = { galleryLauncher.launch("image/*") },
+            modifier = Modifier
+        ) {
+            Text(
+                text = stringResource(id = R.string.pick_image),
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+        AsyncImage(
+            model = selectImages, contentDescription = null, modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize()
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+        )
+
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = description,
+            onValueChange = { description = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.description_recipe),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = ingredients,
+            onValueChange = { ingredients = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.ingridients),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+
+
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = timeToCook,
+            onValueChange = { timeToCook = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.time_to_cook),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+
+        Spacer(Modifier.weight(1f))
+        Button(modifier = Modifier.wrapContentSize(), onClick = {
+
+
+            recipeViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+        }) {
+            Text(
+                text = stringResource(id = R.string.complete)
+
+            )
+        }
+        Spacer(modifier = Modifier)
+
+    }
+}

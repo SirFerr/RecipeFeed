@@ -35,12 +35,13 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun recipeScreen(
-    navController: NavHostController? = null,
+    navController: NavHostController,
     id: Int = -1,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    recipeViewModel: RecipeViewModel = hiltViewModel(
+        navController.getBackStackEntry("mainScreen")
+    )
 ) {
     LaunchedEffect(key1 = id) {
         recipeViewModel.getById(id)

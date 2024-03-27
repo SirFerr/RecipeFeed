@@ -20,11 +20,12 @@ import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun favoriteScreen(
-    navController: NavHostController? = null,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    navController: NavHostController,
+    recipeViewModel: RecipeViewModel = hiltViewModel(
+        navController.getBackStackEntry("mainScreen")
+    )
 ) {
     Column(
         Modifier
