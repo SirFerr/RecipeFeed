@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeViewModel @Inject constructor() : ViewModel() {
-
+    var textSearch = MutableStateFlow("")
 
     private val _recipes = MutableStateFlow<List<Recipe>>(listOf())
 
@@ -32,7 +32,7 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
     val idRecipe: StateFlow<Recipe> = _idRecipe
 
     init {
-
+        Log.d("recipeViewModel", this.toString())
         getAllRecipes()
         getRandomRecipe()
 
@@ -49,10 +49,6 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
                 Log.e("err", e.toString())
             }
         }
-    }
-
-    fun fetch() {
-        getAllRecipes()
     }
 
 

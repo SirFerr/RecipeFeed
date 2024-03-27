@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
+import com.example.recipefeed.data.recipe.model.recipe.Recipe
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -34,11 +35,10 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun mainScreenCard(
     navController: NavHostController? = null,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    recipe : Recipe
 ) {
     var imageURL =
         "https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png"
-    val recipe by recipeViewModel.randomRecipe.collectAsState()
     val imageBytes = Base64.decode(recipe.imageData)
     val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
@@ -77,7 +77,7 @@ fun mainScreenCard(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    text = recipe.recipeLikes.toString(),
+                    text = "Likes: "+recipe.recipeLikes.toString(),
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyLarge
                 )

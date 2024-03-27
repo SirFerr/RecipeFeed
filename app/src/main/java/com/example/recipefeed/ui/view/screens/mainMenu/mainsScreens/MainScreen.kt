@@ -1,6 +1,7 @@
 package com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,8 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -29,7 +32,7 @@ fun mainScreen(
     navController: NavHostController? = null,
     recipeViewModel: RecipeViewModel = hiltViewModel()
 ) {
-
+    val recipe by recipeViewModel.randomRecipe.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,14 +41,15 @@ fun mainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))
-        Column(Modifier.weight(10f), verticalArrangement = Arrangement.Center) {
-            mainScreenCard(navController)
+        Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
+            mainScreenCard(navController, recipe)
         }
 
         Spacer(modifier = Modifier.weight(1f))
 
         Row(
-            Modifier.weight(1f)
+            Modifier
+                .weight(1f)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
