@@ -7,7 +7,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TextFieldViewModel @Inject constructor() : ViewModel() {
-    var textSearch = MutableStateFlow("")
     var textUsername = MutableStateFlow("")
     var textPassword = MutableStateFlow("")
     var textPasswordAgain = MutableStateFlow("")

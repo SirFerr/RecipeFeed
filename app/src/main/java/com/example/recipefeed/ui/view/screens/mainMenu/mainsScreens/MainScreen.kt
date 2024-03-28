@@ -1,5 +1,6 @@
 package com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,32 +15,21 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
-import com.example.recipefeed.utils.clearState
+import com.example.recipefeed.ui.viewModel.RandomRecipeViewModel
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun mainScreen(
     navController: NavHostController,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    randomRecipeViewModel: RandomRecipeViewModel
 ) {
-    val recipe by recipeViewModel.randomRecipe.collectAsState()
-
-    LaunchedEffect(navController) {
-
-        recipeViewModel.getRandomRecipe()
-    }
-
-    clearState(navController,recipeViewModel)
 
     Column(
         modifier = Modifier
@@ -50,11 +40,7 @@ fun mainScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
-            LaunchedEffect(recipe) {
-
-
-            }
-            mainScreenCard(navController, recipe)
+            mainScreenCard(navController, randomRecipeViewModel.randomRecipe.collectAsState().value)
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -66,7 +52,7 @@ fun mainScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(modifier = Modifier, onClick = {
-                recipeViewModel.getRandomRecipe()
+                randomRecipeViewModel.getRandomRecipe()
             }) {
                 Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
             }

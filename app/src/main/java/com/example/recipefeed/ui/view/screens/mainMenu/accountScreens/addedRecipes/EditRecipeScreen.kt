@@ -3,6 +3,7 @@
 package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens.addedRecipes
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -38,7 +39,8 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.IdRecipeViewModel
+import com.example.recipefeed.ui.viewModel.OtherNetworkViewModel
 import com.example.recipefeed.utils.convertToMultipart
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -47,43 +49,53 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun editRecipeScreen(
     navController: NavHostController,
-    id: Int = 10,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    id: Int,
+    idRecipeViewModel: IdRecipeViewModel = hiltViewModel(),
+    otherNetworkViewModel: OtherNetworkViewModel = hiltViewModel()
 
 ) {
-
+    Log.d("idEditScreen", id.toString())
     val context = LocalContext.current
 
+    idRecipeViewModel.getById(id)
 
-    val recipe by recipeViewModel.idRecipe.collectAsState()
 
-    LaunchedEffect(id) {
-        recipeViewModel.getById(id = id)
-    }
+    val recipe by idRecipeViewModel.idRecipe.collectAsState()
+
 
     var title by remember {
-        mutableStateOf(recipe.recipeName)
+        mutableStateOf("")
     }
     var description by remember {
-        mutableStateOf(recipe.description)
+        mutableStateOf("")
     }
     var ingredients by remember {
-        mutableStateOf(recipe.ingredients)
+        mutableStateOf("")
     }
     var timeToCook by remember {
-        mutableStateOf(recipe.timeToCook)
+        mutableStateOf("")
     }
+
 
     val imageBytes = Base64.decode(recipe.imageData)
     var selectImages by remember {
         mutableStateOf<Any?>(
-            BitmapFactory.decodeByteArray(
-                imageBytes,
-                0,
-                imageBytes.size
-            )
+            ""
         )
     }
+
+    LaunchedEffect(recipe) {
+        title = recipe.recipeName
+        description = recipe.description
+        ingredients = recipe.ingredients
+        timeToCook = recipe.timeToCook
+        selectImages = BitmapFactory.decodeByteArray(
+            imageBytes,
+            0,
+            imageBytes.size
+        )
+    }
+
 
 
     val galleryLauncher =
@@ -161,7 +173,7 @@ fun editRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            recipeViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
         }) {
             Text(
                 text = stringResource(id = R.string.complete)

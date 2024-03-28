@@ -20,11 +20,20 @@ import com.example.recipefeed.ui.view.screens.mainMenu.favoriteScreen
 import com.example.recipefeed.ui.view.screens.mainMenu.mainsScreens.mainScreen
 import com.example.recipefeed.ui.view.screens.mainMenu.recipeScreen
 import com.example.recipefeed.ui.view.screens.mainMenu.searchScreen
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.FavoriteRecipesViewModel
+import com.example.recipefeed.ui.viewModel.RandomRecipeViewModel
+import com.example.recipefeed.ui.viewModel.SearchRecipesViewModel
 
 @Composable
 fun navigationMain(firstNavController: NavHostController): NavHostController {
+
     val navController = rememberNavController()
+
+    val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
+    val randomRecipeViewModel: RandomRecipeViewModel = hiltViewModel()
+    val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
+    randomRecipeViewModel.getRandomRecipe()
+
     scaffold(navController = navController, screen = {
         NavHost(
             navController = navController, startDestination = "mainScreen",
@@ -32,17 +41,18 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
         ) {
             composable("mainScreen") {
                 mainScreen(
-                    navController = navController
+                    navController = navController, randomRecipeViewModel = randomRecipeViewModel
                 )
+
             }
             composable("favoriteScreen") {
                 favoriteScreen(
-                    navController = navController
+                    navController = navController, favoriteRecipesViewModel
                 )
             }
             composable("searchScreen") {
                 searchScreen(
-                    navController = navController
+                    navController = navController, searchRecipesViewModel
                 )
             }
 

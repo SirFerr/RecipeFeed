@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
 import com.example.recipefeed.ui.viewModel.TextFieldViewModel
 
 
@@ -33,11 +32,8 @@ import com.example.recipefeed.ui.viewModel.TextFieldViewModel
 @Preview(showSystemUi = true, showBackground = true)
 fun signUpScreen(
     navController: NavHostController? = null,
-    recipeViewModel: RecipeViewModel = hiltViewModel(),
     textFieldViewModel: TextFieldViewModel = hiltViewModel()
 ) {
-
-
     val textUsername by textFieldViewModel.textUsername.collectAsState()
     val textPassword by textFieldViewModel.textPassword.collectAsState()
     val textPasswordAgain by textFieldViewModel.textPasswordAgain.collectAsState()
@@ -94,7 +90,6 @@ fun signUpScreen(
                                 inclusive = true
                             }
                         }
-
 
 
                     } else {

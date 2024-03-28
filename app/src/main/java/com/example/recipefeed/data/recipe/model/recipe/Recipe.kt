@@ -10,5 +10,4 @@ data class Recipe(
     val timeToCook: String = "TestTimeToCook",
     val recipeLikes: Int = 1,
     val imageData: String = "",
-    val idRandom: String = UUID.randomUUID().toString()
-)
+    )

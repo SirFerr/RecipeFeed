@@ -27,27 +27,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
-import com.example.recipefeed.utils.clearState
+import com.example.recipefeed.ui.viewModel.SearchRecipesViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun searchScreen(
     navController: NavHostController,
-    recipeViewModel: RecipeViewModel = hiltViewModel(
-
-    ),
+    searchRecipesViewModel: SearchRecipesViewModel,
 ) {
-    val recipes by recipeViewModel.recipes.collectAsState()
-    val textSearch by recipeViewModel.textSearch.collectAsState()
+    val recipes by searchRecipesViewModel.searchRecipes.collectAsState()
+    val textSearch by searchRecipesViewModel.textSearch.collectAsState()
     val isVisible by remember {
         derivedStateOf {
             textSearch.isNotBlank()
         }
     }
-
-    clearState(navController = navController, recipeViewModel = recipeViewModel)
     Column(
         Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
@@ -65,7 +60,7 @@ fun searchScreen(
                         .fillMaxWidth(),
                     value = textSearch,
                     singleLine = true,
-                    onValueChange = { recipeViewModel.textSearch.value = it },
+                    onValueChange = { searchRecipesViewModel.textSearch.value = it },
                     label = {
                         Text(
                             stringResource(id = R.string.search_title),
@@ -75,7 +70,7 @@ fun searchScreen(
                     trailingIcon = {
                         if (isVisible) {
                             IconButton(
-                                onClick = { recipeViewModel.textSearch.value = "" }
+                                onClick = { searchRecipesViewModel.textSearch.value = "" }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
@@ -86,7 +81,7 @@ fun searchScreen(
                     }
                 )
             }
-            items(recipes, key = { it.idRandom }) {
+            items(recipes, key = { it.id }) {
                 listItem(it, navController)
             }
             item { }

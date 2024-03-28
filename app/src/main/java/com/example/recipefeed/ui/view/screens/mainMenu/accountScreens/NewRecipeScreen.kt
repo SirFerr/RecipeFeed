@@ -41,7 +41,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.recipe.model.recipe.Recipe
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.OtherNetworkViewModel
 import com.example.recipefeed.utils.convertToMultipart
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -49,7 +49,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun newRecipeScreen(
     navController: NavHostController,
-    recipeViewModel: RecipeViewModel = hiltViewModel()
+    otherNetworkViewModel: OtherNetworkViewModel = hiltViewModel()
 ) {
     var title by remember {
         mutableStateOf("")
@@ -143,7 +143,7 @@ fun newRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            recipeViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
 
 
         }) {

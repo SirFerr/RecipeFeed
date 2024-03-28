@@ -1,7 +1,6 @@
 package com.example.recipefeed.ui.view.screens.mainMenu
 
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,13 +23,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.IdRecipeViewModel
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -39,15 +37,13 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun recipeScreen(
     navController: NavHostController,
     id: Int = -1,
-    recipeViewModel: RecipeViewModel = hiltViewModel(
-
-    )
+    idRecipeViewModel: IdRecipeViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = id) {
-        recipeViewModel.getById(id)
+        idRecipeViewModel.getById(id)
     }
 
-    val recipe by recipeViewModel.idRecipe.collectAsState()
+    val recipe by idRecipeViewModel.idRecipe.collectAsState()
 
     Column(
         Modifier

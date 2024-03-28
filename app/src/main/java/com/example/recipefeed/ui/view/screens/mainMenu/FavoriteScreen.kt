@@ -19,20 +19,18 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
-import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.ui.viewModel.FavoriteRecipesViewModel
 
 
 @Composable
 fun favoriteScreen(
     navController: NavHostController,
-    recipeViewModel: RecipeViewModel = hiltViewModel(
-
-    )
+    favoriteRecipesViewModel: FavoriteRecipesViewModel
 ) {
 
-    val recipes by recipeViewModel.recipes.collectAsState()
+    val recipes by favoriteRecipesViewModel.favoriteRecipes.collectAsState()
     LaunchedEffect(navController) {
-        recipeViewModel.getAllRecipes()
+        favoriteRecipesViewModel.getAllRecipes()
     }
 
     Column(
@@ -47,7 +45,7 @@ fun favoriteScreen(
             ) {
             item { }
 
-            items(recipes, key = { it.idRandom }) {
+            items(recipes, key = { it.id}) {
                 listItem(it, navController)
             }
             item { }
