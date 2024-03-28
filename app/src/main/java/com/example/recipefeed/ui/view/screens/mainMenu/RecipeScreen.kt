@@ -3,6 +3,7 @@ package com.example.recipefeed.ui.view.screens.mainMenu
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -88,6 +89,10 @@ fun recipeScreen(
 //                    text = "Recipe: " + recipe!!.ingredients,
 //                    style = MaterialTheme.typography.bodyLarge
 //                )
+
+            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)*4))
+
+
 
     }
 

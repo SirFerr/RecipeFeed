@@ -173,7 +173,7 @@ fun editRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context),context)
         }) {
             Text(
                 text = stringResource(id = R.string.complete)

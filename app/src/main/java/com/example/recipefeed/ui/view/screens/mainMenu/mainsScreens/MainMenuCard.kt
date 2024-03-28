@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -31,54 +32,53 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun mainScreenCard(
     navController: NavHostController? = null,
-    recipe : Recipe
+    recipe: Recipe
 ) {
     var imageURL =
         "https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png"
     val imageBytes = Base64.decode(recipe.imageData)
-    val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
-    if (image != null)
-        Card(
+
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { navController?.navigate("recipeScreen/${recipe.id}") }
+    ) {
+        Column(
             modifier = Modifier
-                .wrapContentSize()
-                .clickable { navController?.navigate("recipeScreen/${recipe.id}") }
+                .padding(dimensionResource(id = R.dimen.main_padding))
+                .wrapContentSize(),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
+            AsyncImage(
+                model = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size),
+                contentDescription = null,
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.main_padding))
+                    .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                    )
                     .wrapContentSize(),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AsyncImage(
-                    model = image,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(
-                            RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
-                        )
-                        .wrapContentSize(),
-                )
-                Text(
-                    text = recipe.recipeName,
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center
-                )
-                Divider(color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(
-                    text = recipe.description,
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = "Likes: "+recipe.recipeLikes.toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+            )
+            Text(
+                text = recipe.recipeName,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center
+            )
+            Divider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                text = recipe.description,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = "Likes: " + recipe.recipeLikes.toString(),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyLarge
+            )
 
-            }
         }
+    }
 
 }

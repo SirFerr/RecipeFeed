@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
@@ -38,19 +37,16 @@ fun favoriteScreen(
             .fillMaxSize()
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
     ) {
-
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-
-            ) {
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+        ) {
             item { }
-
-            items(recipes, key = { it.id}) {
+            items(recipes, key = { it.id }) {
                 listItem(it, navController)
             }
             item { }
-
         }
 
     }
 }
+

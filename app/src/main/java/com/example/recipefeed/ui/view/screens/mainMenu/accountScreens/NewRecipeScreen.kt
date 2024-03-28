@@ -8,6 +8,7 @@
 package com.example.recipefeed.ui.view.screens.mainMenu.accountScreens
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -143,7 +144,7 @@ fun newRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context))
+            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context),context)
 
 
         }) {
