@@ -40,7 +40,7 @@ fun recipeScreen(
     navController: NavHostController,
     id: Int = -1,
     recipeViewModel: RecipeViewModel = hiltViewModel(
-        navController.getBackStackEntry("mainScreen")
+
     )
 ) {
     LaunchedEffect(key1 = id) {

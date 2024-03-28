@@ -19,7 +19,7 @@ import com.example.recipefeed.ui.viewModel.RecipeViewModel
 
 @Composable
 fun addedRecipesScreen(
-    navController: NavHostController, recipeViewModel: RecipeViewModel = hiltViewModel(navController.getBackStackEntry("mainScreen"))
+    navController: NavHostController, recipeViewModel: RecipeViewModel = hiltViewModel()
 ) {
     Column(
         Modifier

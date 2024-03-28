@@ -49,7 +49,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun newRecipeScreen(
     navController: NavHostController,
-    recipeViewModel: RecipeViewModel = hiltViewModel(navController.getBackStackEntry("mainScreen"))
+    recipeViewModel: RecipeViewModel = hiltViewModel()
 ) {
     var title by remember {
         mutableStateOf("")

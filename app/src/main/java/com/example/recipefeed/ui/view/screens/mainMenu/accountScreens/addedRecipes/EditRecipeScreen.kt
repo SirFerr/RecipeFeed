@@ -47,7 +47,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun editRecipeScreen(
     navController: NavHostController,
     id: Int = 10,
-    recipeViewModel: RecipeViewModel = hiltViewModel(navController.getBackStackEntry("mainScreen"))
+    recipeViewModel: RecipeViewModel = hiltViewModel()
 
 ) {
 

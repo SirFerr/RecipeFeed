@@ -26,21 +26,16 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
 
     val randomRecipe: StateFlow<Recipe> = _randomRecipe
 
-
     private val _idRecipe = MutableStateFlow(Recipe())
 
     val idRecipe: StateFlow<Recipe> = _idRecipe
 
     init {
         Log.d("recipeViewModel", this.toString())
-        getAllRecipes()
-        getRandomRecipe()
-
     }
 
-    private fun getAllRecipes() {
+    fun getAllRecipes() {
         CoroutineScope(Dispatchers.IO).launch {
-
             try {
                 val response = RetrofitObject.api.getAll()
                 if (response.isSuccessful)

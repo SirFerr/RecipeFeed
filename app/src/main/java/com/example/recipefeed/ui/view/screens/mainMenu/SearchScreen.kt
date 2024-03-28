@@ -29,7 +29,7 @@ import com.example.recipefeed.ui.viewModel.RecipeViewModel
 fun searchScreen(
     navController: NavHostController,
     recipeViewModel: RecipeViewModel = hiltViewModel(
-        navController.getBackStackEntry("mainScreen")
+
     ),
 ) {
     val recipes by recipeViewModel.recipes.collectAsState()

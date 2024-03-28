@@ -25,7 +25,6 @@ import com.example.recipefeed.ui.viewModel.RecipeViewModel
 @Composable
 fun navigationMain(firstNavController: NavHostController): NavHostController {
     val navController = rememberNavController()
-    val recipeViewModel: RecipeViewModel = hiltViewModel()
     scaffold(navController = navController, screen = {
         NavHost(
             navController = navController, startDestination = "mainScreen",
