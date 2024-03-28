@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.utils.clearState
 
 
 @Composable
@@ -33,10 +34,13 @@ fun mainScreen(
 ) {
     val recipe by recipeViewModel.randomRecipe.collectAsState()
 
-    LaunchedEffect (navController){
+    LaunchedEffect(navController) {
 
         recipeViewModel.getRandomRecipe()
     }
+
+    clearState(navController,recipeViewModel)
+
     Column(
         modifier = Modifier
             .fillMaxSize()

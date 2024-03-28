@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.ui.view.screens.mainMenu.list.listItem
 import com.example.recipefeed.ui.viewModel.RecipeViewModel
+import com.example.recipefeed.utils.clearState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +46,8 @@ fun searchScreen(
             textSearch.isNotBlank()
         }
     }
+
+    clearState(navController = navController, recipeViewModel = recipeViewModel)
     Column(
         Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding))

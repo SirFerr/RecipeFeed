@@ -86,5 +86,12 @@ class RecipeViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
+
+    fun clearState() {
+        textSearch.value = ""
+        _recipes.value = listOf()
+        _idRecipe.value = Recipe()
+        _randomRecipe.value = Recipe()
+    }
 }
 
