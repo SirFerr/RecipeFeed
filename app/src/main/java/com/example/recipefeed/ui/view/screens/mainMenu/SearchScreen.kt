@@ -7,13 +7,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +40,11 @@ fun searchScreen(
 ) {
     val recipes by recipeViewModel.recipes.collectAsState()
     val textSearch by recipeViewModel.textSearch.collectAsState()
+    val isVisible by remember {
+        derivedStateOf {
+            textSearch.isNotBlank()
+        }
+    }
     Column(
         Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
@@ -50,12 +61,25 @@ fun searchScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     value = textSearch,
+                    singleLine = true,
                     onValueChange = { recipeViewModel.textSearch.value = it },
                     label = {
                         Text(
                             stringResource(id = R.string.search_title),
                             style = MaterialTheme.typography.titleMedium
                         )
+                    },
+                    trailingIcon = {
+                        if (isVisible) {
+                            IconButton(
+                                onClick = { recipeViewModel.textSearch.value = "" }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Clear,
+                                    contentDescription = "Clear"
+                                )
+                            }
+                        }
                     }
                 )
             }

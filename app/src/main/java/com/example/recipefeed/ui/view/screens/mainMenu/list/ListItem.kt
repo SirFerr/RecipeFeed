@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
@@ -90,7 +91,7 @@ fun listItem(
             IconButton(modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f), onClick = {
-                if (_icon != Icons.Filled.Favorite && _icon != Icons.Filled.FavoriteBorder) {
+                if (_icon == Icons.Filled.Edit) {
                     navController?.navigate("editRecipeScreen/${recipe.id}")
                 }
             }) {

@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,10 +54,12 @@ fun editRecipeScreen(
 
     val context = LocalContext.current
 
-    recipeViewModel.getById(id = id)
 
     val recipe by recipeViewModel.idRecipe.collectAsState()
 
+    LaunchedEffect(id) {
+        recipeViewModel.getById(id = id)
+    }
 
     var title by remember {
         mutableStateOf(recipe.recipeName)
