@@ -1,4 +1,4 @@
-package com.example.recipefeed.viewModel
+package com.example.recipefeed.screens.mainMenu.newRecipeScreen
 
 import android.content.Context
 import android.util.Log
@@ -14,22 +14,23 @@ import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import javax.inject.Inject
 
-@HiltViewModel
-class OtherNetworkViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
 
-    fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?, context:Context) {
+@HiltViewModel
+class NewRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
+
+    fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = imagePart?.let { recipeFeedApi.addRecipe(recipe, it) }
                 if (response?.isSuccessful == true) {
                     Log.d("Successful", response.code().toString())
                     withContext(Dispatchers.Main){
-                        Toast.makeText(context,"Successful",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Successful", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Log.e("err", response?.code().toString())
                     withContext(Dispatchers.Main){
-                        Toast.makeText(context,"Error",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Error", Toast.LENGTH_SHORT).show()
                     }
                 }
 

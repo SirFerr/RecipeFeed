@@ -42,7 +42,7 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
         ) {
             composable("mainScreen") {
                 mainScreen(
-                    navController = navController, randomRecipeViewModel = randomRecipeViewModel
+                    navController = navController, viewModel = randomRecipeViewModel
                 )
 
             }

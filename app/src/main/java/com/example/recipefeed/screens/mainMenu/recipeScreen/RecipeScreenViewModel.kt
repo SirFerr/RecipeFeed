@@ -1,4 +1,4 @@
-package com.example.recipefeed.viewModel
+package com.example.recipefeed.screens.mainMenu.recipeScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class IdRecipeViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
+class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
     private val _idRecipe = MutableStateFlow(Recipe())
 
     val idRecipe: StateFlow<Recipe> = _idRecipe

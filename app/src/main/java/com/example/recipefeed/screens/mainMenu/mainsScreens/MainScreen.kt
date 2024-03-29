@@ -28,7 +28,7 @@ import com.example.recipefeed.R
 @Composable
 fun mainScreen(
     navController: NavHostController,
-    randomRecipeViewModel: RandomRecipeViewModel
+    viewModel: RandomRecipeViewModel
 ) {
 
     Column(
@@ -40,7 +40,7 @@ fun mainScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
-            mainScreenCard(navController, randomRecipeViewModel.randomRecipe.collectAsState().value)
+            mainScreenCard(navController, viewModel.randomRecipe.collectAsState().value)
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -52,7 +52,7 @@ fun mainScreen(
             horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
         ) {
             Button(modifier = Modifier, onClick = {
-                randomRecipeViewModel.getRandomRecipe()
+                viewModel.getRandomRecipe()
             }) {
                 Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
             }

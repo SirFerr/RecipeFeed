@@ -22,11 +22,11 @@ import com.example.recipefeed.screens.mainMenu.list.listItem
 
 @Composable
 fun addedRecipesScreen(
-    navController: NavHostController, addedRecipesViewModel: AddedRecipesViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: AddedRecipesViewModel = hiltViewModel()
 ) {
-    val recipes by addedRecipesViewModel.addedRecipes.collectAsState()
+    val recipes by viewModel.addedRecipes.collectAsState()
     LaunchedEffect(navController) {
-        addedRecipesViewModel.getAllRecipes()
+        viewModel.getAllRecipes()
     }
     Column(
         Modifier

@@ -8,7 +8,6 @@
 package com.example.recipefeed.screens.mainMenu.newRecipeScreen
 
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +42,6 @@ import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.utils.convertToMultipart
-import com.example.recipefeed.viewModel.OtherNetworkViewModel
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
@@ -51,7 +49,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun newRecipeScreen(
     navController: NavHostController,
-    otherNetworkViewModel: OtherNetworkViewModel = hiltViewModel()
+    viewModel: NewRecipeScreenViewModel = hiltViewModel()
 ) {
     var title by remember {
         mutableStateOf("")
@@ -145,7 +143,7 @@ fun newRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            otherNetworkViewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context),context)
+            viewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context),context)
 
 
         }) {

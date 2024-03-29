@@ -23,12 +23,12 @@ import com.example.recipefeed.screens.mainMenu.list.listItem
 @Composable
 fun favoriteScreen(
     navController: NavHostController,
-    favoriteRecipesViewModel: FavoriteRecipesViewModel
+    viewModel: FavoriteRecipesViewModel
 ) {
 
-    val recipes by favoriteRecipesViewModel.favoriteRecipes.collectAsState()
+    val recipes by viewModel.favoriteRecipes.collectAsState()
     LaunchedEffect(navController) {
-        favoriteRecipesViewModel.getAllRecipes()
+        viewModel.getAllRecipes()
     }
 
     Column(

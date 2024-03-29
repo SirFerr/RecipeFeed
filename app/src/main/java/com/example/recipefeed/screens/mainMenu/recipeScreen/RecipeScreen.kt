@@ -29,7 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.viewModel.IdRecipeViewModel
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -38,13 +37,13 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun recipeScreen(
     navController: NavHostController,
     id: Int = -1,
-    idRecipeViewModel: IdRecipeViewModel = hiltViewModel()
+    viewModel: RecipeScreenViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key1 = id) {
-        idRecipeViewModel.getById(id)
+        viewModel.getById(id)
     }
 
-    val recipe by idRecipeViewModel.idRecipe.collectAsState()
+    val recipe by viewModel.idRecipe.collectAsState()
 
     Column(
         Modifier

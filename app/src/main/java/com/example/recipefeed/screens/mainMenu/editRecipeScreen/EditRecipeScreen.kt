@@ -35,13 +35,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.utils.convertToMultipart
-import com.example.recipefeed.viewModel.IdRecipeViewModel
-import com.example.recipefeed.viewModel.OtherNetworkViewModel
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -50,17 +49,16 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun editRecipeScreen(
     navController: NavHostController,
     id: Int,
-    idRecipeViewModel: IdRecipeViewModel = hiltViewModel(),
-    otherNetworkViewModel: OtherNetworkViewModel = hiltViewModel()
+    viewModel: EditRecipeScreenViewModel = hiltViewModel(),
 
 ) {
     Log.d("idEditScreen", id.toString())
     val context = LocalContext.current
 
-    idRecipeViewModel.getById(id)
+    viewModel.getById(id)
 
 
-    val recipe by idRecipeViewModel.idRecipe.collectAsState()
+    val recipe by viewModel.idRecipe.collectAsState()
 
 
     var title by remember {
@@ -172,7 +170,7 @@ fun editRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            otherNetworkViewModel.addRecipes(
+            viewModel.addRecipes(
                 Recipe(),
                 convertToMultipart(selectImages, context),
                 context
