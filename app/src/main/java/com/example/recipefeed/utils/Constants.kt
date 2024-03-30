@@ -4,4 +4,5 @@ object Constants {
 
     const val BASE_URL = "http://192.168.1.82:8080/api/"
 
+    const val PAGE_SIZE = 20
 }

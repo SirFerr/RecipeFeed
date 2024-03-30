@@ -1,8 +1,9 @@
-package com.example.recipefeed.navigation
+package com.example.recipefeed.screens.mainMenu
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -33,7 +34,7 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
     val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
     val randomRecipeViewModel: RandomRecipeViewModel = hiltViewModel()
     val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
-    randomRecipeViewModel.getRandomRecipe()
+
 
     scaffold(navController = navController, screen = {
         NavHost(
@@ -50,6 +51,7 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
                 favoriteScreen(
                     navController = navController, favoriteRecipesViewModel
                 )
+
             }
             composable("searchScreen") {
                 searchScreen(

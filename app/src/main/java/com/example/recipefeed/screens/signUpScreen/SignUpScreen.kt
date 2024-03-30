@@ -24,7 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.viewModel.TextFieldViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,11 +31,11 @@ import com.example.recipefeed.viewModel.TextFieldViewModel
 @Preview(showSystemUi = true, showBackground = true)
 fun signUpScreen(
     navController: NavHostController? = null,
-    textFieldViewModel: TextFieldViewModel = hiltViewModel()
+    viewModel: SignUpScreenViewModel = hiltViewModel()
 ) {
-    val textUsername by textFieldViewModel.textUsername.collectAsState()
-    val textPassword by textFieldViewModel.textPassword.collectAsState()
-    val textPasswordAgain by textFieldViewModel.textPasswordAgain.collectAsState()
+    val textUsername by viewModel.textUsername.collectAsState()
+    val textPassword by viewModel.textPassword.collectAsState()
+    val textPasswordAgain by viewModel.textPasswordAgain.collectAsState()
 
 
 
@@ -60,7 +59,7 @@ fun signUpScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textFieldViewModel.textUsername.value = it })
+                onValueChange = { viewModel.textUsername.value = it })
             OutlinedTextField(
                 value = textPassword,
                 label = {
@@ -69,7 +68,7 @@ fun signUpScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textFieldViewModel.textPassword.value = it })
+                onValueChange = { viewModel.textPassword.value = it })
             OutlinedTextField(
                 value = textPasswordAgain,
                 label = {
@@ -78,7 +77,7 @@ fun signUpScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
-                onValueChange = { textFieldViewModel.textPasswordAgain.value = it })
+                onValueChange = { viewModel.textPasswordAgain.value = it })
 
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))

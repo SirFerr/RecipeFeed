@@ -2,6 +2,7 @@ package com.example.recipefeed.screens.mainMenu.recipeScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: Recip
 
     fun getById(id: Int) {
         Log.d("getByID",id.toString())
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
 
             try {
                 val response = recipeFeedApi.getById(id)

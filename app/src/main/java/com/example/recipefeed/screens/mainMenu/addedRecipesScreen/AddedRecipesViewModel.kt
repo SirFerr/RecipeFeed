@@ -2,6 +2,7 @@ package com.example.recipefeed.screens.mainMenu.addedRecipesScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ class AddedRecipesViewModel @Inject constructor(private val recipeFeedApi: Recip
     val addedRecipes: StateFlow<List<Recipe>> = _addedRecipes
 
     fun getAllRecipes() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             try {
                 val response = recipeFeedApi.getAll()
                 if (response.isSuccessful)

@@ -17,7 +17,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.list.listItem
+import com.example.recipefeed.screens.mainMenu.listItem
 
 
 @Composable

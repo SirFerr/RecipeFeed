@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.list.listItem
+import com.example.recipefeed.screens.mainMenu.listItem
 
 
 @Composable
@@ -27,9 +27,6 @@ fun favoriteScreen(
 ) {
 
     val recipes by viewModel.favoriteRecipes.collectAsState()
-    LaunchedEffect(navController) {
-        viewModel.getAllRecipes()
-    }
 
     Column(
         Modifier

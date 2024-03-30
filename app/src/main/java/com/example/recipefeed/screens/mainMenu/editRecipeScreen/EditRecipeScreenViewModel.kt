@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +25,7 @@ class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: R
 
     fun getById(id: Int) {
         Log.d("getByID",id.toString())
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
 
             try {
                 val response = recipeFeedApi.getById(id)

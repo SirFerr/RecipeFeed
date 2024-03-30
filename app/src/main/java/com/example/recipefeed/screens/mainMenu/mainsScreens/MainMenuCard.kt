@@ -6,25 +6,30 @@ import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.models.recipe.Recipe
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -32,13 +37,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun mainScreenCard(
     navController: NavHostController? = null,
-    recipe: Recipe
+    viewModel: RandomRecipeViewModel
 ) {
-    var imageURL =
-        "https://developer.android.com/static/codelabs/jetpack-compose-animation/img/jetpack_compose_logo_with_rocket.png"
-    val imageBytes = Base64.decode(recipe.imageData)
+    val recipe by viewModel.randomRecipe.collectAsState()
+    val context = LocalContext.current
 
+    LaunchedEffect(recipe) {
 
+    }
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -49,33 +55,41 @@ fun mainScreenCard(
                 .padding(dimensionResource(id = R.dimen.main_padding))
                 .wrapContentSize(),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size),
+
+            val imageBytes = Base64.decode(recipe.imageData)
+            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            SubcomposeAsyncImage(
+                model = image,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
                     .clip(
                         RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
                     )
-                    .wrapContentSize(),
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+                loading = { }
             )
             Text(
                 text = recipe.recipeName,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center
             )
-            Divider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+            HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
             Text(
                 text = recipe.description,
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1
             )
             Text(
                 text = "Likes: " + recipe.recipeLikes.toString(),
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1
             )
 
         }

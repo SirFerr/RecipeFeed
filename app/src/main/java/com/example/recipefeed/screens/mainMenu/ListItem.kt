@@ -1,4 +1,4 @@
-package com.example.recipefeed.screens.mainMenu.list
+package com.example.recipefeed.screens.mainMenu
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,9 +31,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ErrorResult
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.example.recipefeed.R
 import com.example.recipefeed.data.models.recipe.Recipe
 import kotlinx.coroutines.Dispatchers
@@ -50,15 +53,11 @@ fun listItem(
     navController: NavController? = null,
     icon: ImageVector = Icons.Filled.Favorite
 ) {
-    val imageBytes = Base64.decode(recipe.imageData)
-    var image by rememberSaveable { mutableStateOf<Bitmap?>(null) }
+    val context = LocalContext.current
+
     val _icon by remember { mutableStateOf(icon) }
 
-    LaunchedEffect(imageBytes) {
-        image = withContext(Dispatchers.IO) {
-            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        }
-    }
+
 
     Card(Modifier.clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Row(
@@ -68,7 +67,10 @@ fun listItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
         ) {
-            AsyncImage(
+
+            val imageBytes = Base64.decode(recipe.imageData)
+            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            SubcomposeAsyncImage(
                 model = image,
                 contentDescription = null,
                 modifier = Modifier
@@ -76,7 +78,8 @@ fun listItem(
                     .weight(1f)
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                loading = { }
             )
             Column(
                 Modifier
@@ -85,8 +88,11 @@ fun listItem(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = recipe.recipeName, style =  MaterialTheme.typography.titleMedium)
-                Text(text = recipe.recipeLikes.toString(), style =  MaterialTheme.typography.bodyMedium)
+                Text(text = recipe.recipeName, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = recipe.recipeLikes.toString(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
             IconButton(modifier = Modifier
                 .weight(1f)

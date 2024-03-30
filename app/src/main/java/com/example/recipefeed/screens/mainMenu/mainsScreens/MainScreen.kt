@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,16 +41,17 @@ fun mainScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
-            mainScreenCard(navController, viewModel.randomRecipe.collectAsState().value)
+            mainScreenCard(navController, viewModel)
         }
-
         Spacer(modifier = Modifier.weight(1f))
 
         Row(
             Modifier
-                .weight(1f).
-                wrapContentSize().fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
+                .weight(1f)
+                .wrapContentSize()
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Button(modifier = Modifier, onClick = {
                 viewModel.getRandomRecipe()

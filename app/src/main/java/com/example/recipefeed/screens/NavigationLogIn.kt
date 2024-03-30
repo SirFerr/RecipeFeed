@@ -1,4 +1,4 @@
-package com.example.recipefeed.navigation
+package com.example.recipefeed.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.recipefeed.screens.loginScreen.logInScreen
+import com.example.recipefeed.screens.mainMenu.navigationMain
 import com.example.recipefeed.screens.signUpScreen.signUpScreen
 
 @Composable

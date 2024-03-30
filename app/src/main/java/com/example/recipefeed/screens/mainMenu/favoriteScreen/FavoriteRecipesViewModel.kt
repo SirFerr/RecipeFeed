@@ -2,6 +2,7 @@ package com.example.recipefeed.screens.mainMenu.favoriteScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class FavoriteRecipesViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
 
@@ -19,8 +21,13 @@ class FavoriteRecipesViewModel @Inject constructor(private val recipeFeedApi: Re
 
     val favoriteRecipes: StateFlow<List<Recipe>> = _favoriteRecipes
 
+    init {
+        getAllRecipes()
+    }
+
     fun getAllRecipes() {
-        CoroutineScope(Dispatchers.IO).launch {
+        Log.d("FavoriteRecipesViewModel","getAll")
+        viewModelScope.launch {
             try {
                 val response = recipeFeedApi.getAll()
                 if (response.isSuccessful)
