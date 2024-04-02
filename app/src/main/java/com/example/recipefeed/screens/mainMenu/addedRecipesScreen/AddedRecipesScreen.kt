@@ -37,8 +37,6 @@ fun addedRecipesScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
 
-
-
     val refreshState =
         rememberPullRefreshState(refreshing = isLoading, onRefresh = { viewModel.getAllRecipes() })
 
@@ -54,16 +52,15 @@ fun addedRecipesScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             item { }
-            if (!isLoading) {
-                if (isSuccessful) {
-                    items(recipes, key = { it.id }) {
-                        listItem(it, navController)
-                    }
-                } else {
-                    item {
-                        CardItem {
-                            viewModel.getAllRecipes()
-                        }
+
+            if (isSuccessful) {
+                items(recipes, key = { it.id }) {
+                    listItem(it, navController)
+                }
+            } else {
+                item {
+                    CardItem {
+                        viewModel.getAllRecipes()
                     }
                 }
             }
