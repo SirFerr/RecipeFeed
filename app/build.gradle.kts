@@ -52,6 +52,9 @@ android {
 }
 
 dependencies {
+    //SwipeRefresh
+    implementation ("androidx.compose.material:material")
+
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.49")
     kapt("com.google.dagger:hilt-android-compiler:2.44")

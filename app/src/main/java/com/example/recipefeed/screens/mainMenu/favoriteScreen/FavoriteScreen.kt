@@ -4,19 +4,15 @@ package com.example.recipefeed.screens.mainMenu.favoriteScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -25,9 +21,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.screens.mainMenu.CardItem
 import com.example.recipefeed.screens.mainMenu.listItem
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun favoriteScreen(
     navController: NavHostController,
@@ -38,12 +36,18 @@ fun favoriteScreen(
     val isSuccessful by viewModel.isSuccessful.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
+    val refreshState =
+        rememberPullRefreshState(refreshing = isLoading, onRefresh = { viewModel.getAllRecipes() })
+
+    Box(
+        modifier = Modifier.pullRefresh(state = refreshState),
+        contentAlignment = Alignment.TopCenter
     ) {
+
         LazyColumn(
+            modifier = Modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             item { }
@@ -54,49 +58,18 @@ fun favoriteScreen(
                     }
                 } else {
                     item {
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        ) {
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(dimensionResource(id = R.dimen.main_padding)),
-                                verticalArrangement = Arrangement.spacedBy(
-                                    dimensionResource(id = R.dimen.main_padding)
-                                )
-                            ) {
-                                Text(text = "Network error")
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Button(
-                                        onClick = { viewModel.getAllRecipes() },
-                                        modifier = Modifier.wrapContentSize()
-                                    ) {
-                                        Text(text = "Refresh")
-                                    }
-                                }
-                            }
+                        CardItem {
+                            viewModel.getAllRecipes()
                         }
-                    }
-                }
-            } else  {
-                item {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(id = R.dimen.main_padding)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(modifier = Modifier)
                     }
                 }
             }
             item { }
         }
-
+        PullRefreshIndicator(refreshing = isLoading, state = refreshState)
     }
 }
+
+
+
 

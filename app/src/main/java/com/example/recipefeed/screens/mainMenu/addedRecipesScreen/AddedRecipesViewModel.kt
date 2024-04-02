@@ -15,18 +15,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddedRecipesViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
-    private val _addedRecipes = MutableStateFlow<List<Recipe>>(listOf())
+    var isLoading = MutableStateFlow(true)
 
-    val addedRecipes: StateFlow<List<Recipe>> = _addedRecipes
+    val isSuccessful = MutableStateFlow(true)
+
+
+    val recipes =
+        MutableStateFlow<List<Recipe>>(listOf())
+
+    init {
+        getAllRecipes()
+    }
 
     fun getAllRecipes() {
-        viewModelScope.launch {
+        isLoading.value = true
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = recipeFeedApi.getAll()
+                isSuccessful.value = response.isSuccessful
+                Log.d("response", response.isSuccessful.toString())
                 if (response.isSuccessful)
-                    _addedRecipes.value = response.body()!!
+                    recipes.value = response.body()!!
             } catch (e: Exception) {
                 Log.e("err", e.toString())
+                isSuccessful.value = false
+            }
+            finally {
+                isLoading.value = false
             }
         }
     }
