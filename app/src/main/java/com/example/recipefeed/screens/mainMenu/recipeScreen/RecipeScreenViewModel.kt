@@ -15,18 +15,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
-    private val _idRecipe = MutableStateFlow(Recipe())
 
-    val idRecipe: StateFlow<Recipe> = _idRecipe
+    val idRecipe =  MutableStateFlow(Recipe())
 
     fun getById(id: Int) {
-        Log.d("getByID",id.toString())
+        Log.d("getByID","$id $this")
         viewModelScope.launch {
-
             try {
                 val response = recipeFeedApi.getById(id)
                 if (response.isSuccessful)
-                    _idRecipe.value = response.body()!!
+                    idRecipe.value = response.body()!!
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }

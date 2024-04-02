@@ -3,7 +3,6 @@ package com.example.recipefeed.screens.mainMenu
 import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -18,7 +17,7 @@ import com.example.recipefeed.screens.mainMenu.addedRecipesScreen.addedRecipesSc
 import com.example.recipefeed.screens.mainMenu.editRecipeScreen.editRecipeScreen
 import com.example.recipefeed.screens.mainMenu.favoriteScreen.FavoriteRecipesViewModel
 import com.example.recipefeed.screens.mainMenu.favoriteScreen.favoriteScreen
-import com.example.recipefeed.screens.mainMenu.mainsScreens.RandomRecipeViewModel
+import com.example.recipefeed.screens.mainMenu.mainsScreens.MainScreenViewModel
 import com.example.recipefeed.screens.mainMenu.mainsScreens.mainScreen
 import com.example.recipefeed.screens.mainMenu.newRecipeScreen.newRecipeScreen
 import com.example.recipefeed.screens.mainMenu.recipeScreen.recipeScreen
@@ -32,8 +31,9 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
     val navController = rememberNavController()
 
     val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
-    val randomRecipeViewModel: RandomRecipeViewModel = hiltViewModel()
+    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
     val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
+
 
 
     scaffold(navController = navController, screen = {
@@ -43,7 +43,7 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
         ) {
             composable("mainScreen") {
                 mainScreen(
-                    navController = navController, viewModel = randomRecipeViewModel
+                    navController = navController, viewModel = mainScreenViewModel
                 )
 
             }
@@ -69,7 +69,7 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
                 type = NavType.IntType
             })) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id")
-                Log.d("recipe", id.toString())
+                Log.d("recipeScreen", id.toString())
                 recipeScreen(navController, id!!)
             }
             composable("newRecipeScreen") {
@@ -82,7 +82,7 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
                 type = NavType.IntType
             })) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id")
-                Log.d("recipe", id.toString())
+                Log.d("editRecipeScreen", id.toString())
                 editRecipeScreen(navController, id!!)
             }
 

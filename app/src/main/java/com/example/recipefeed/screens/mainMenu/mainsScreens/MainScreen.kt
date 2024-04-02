@@ -16,8 +16,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -29,8 +28,11 @@ import com.example.recipefeed.R
 @Composable
 fun mainScreen(
     navController: NavHostController,
-    viewModel: RandomRecipeViewModel
+    viewModel: MainScreenViewModel
 ) {
+
+    val coroutineScope = rememberCoroutineScope()
+
 
     Column(
         modifier = Modifier

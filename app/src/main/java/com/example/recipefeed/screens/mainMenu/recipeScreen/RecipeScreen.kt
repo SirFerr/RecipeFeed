@@ -1,6 +1,7 @@
 package com.example.recipefeed.screens.mainMenu.recipeScreen
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -63,6 +65,7 @@ fun recipeScreen(
 
 
         val imageBytes = Base64.decode(recipe.imageData)
+        Log.d("image Bytes",imageBytes.toString())
         val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         SubcomposeAsyncImage(
             model = image,
@@ -71,7 +74,7 @@ fun recipeScreen(
                 .fillMaxSize()
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
             contentScale = ContentScale.Fit,
-            loading = { }
+            loading = { CircularProgressIndicator()  }
         )
 
         Text(text = recipe.description, style = MaterialTheme.typography.bodyLarge)

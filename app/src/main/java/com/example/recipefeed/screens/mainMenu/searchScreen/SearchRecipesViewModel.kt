@@ -8,27 +8,41 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchRecipesViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
+class SearchRecipesViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+    ViewModel() {
+
+    var isLoading = MutableStateFlow(true)
     var textSearch = MutableStateFlow("")
 
+    val isSuccessful = MutableStateFlow(true)
 
-    private val _searchRecipes = MutableStateFlow<List<Recipe>>(listOf())
 
-    val searchRecipes: StateFlow<List<Recipe>> = _searchRecipes
+    val recipes =
+        MutableStateFlow<List<Recipe>>(listOf())
+
+    init {
+        getAllRecipes()
+    }
 
     fun getAllRecipes() {
+        isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = recipeFeedApi.getAll()
+                isSuccessful.value = response.isSuccessful
+                Log.d("response", response.isSuccessful.toString())
                 if (response.isSuccessful)
-                    _searchRecipes.value = response.body()!!
+                    recipes.value = response.body()!!
             } catch (e: Exception) {
                 Log.e("err", e.toString())
+                isSuccessful.value = false
+            }
+            finally {
+                isLoading.value = false
             }
         }
     }

@@ -6,16 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RandomRecipeViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
     ViewModel() {
 
     private val _randomRecipe = MutableStateFlow(Recipe())

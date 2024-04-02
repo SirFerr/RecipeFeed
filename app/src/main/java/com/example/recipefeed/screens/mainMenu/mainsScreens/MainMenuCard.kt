@@ -3,6 +3,7 @@
 package com.example.recipefeed.screens.mainMenu.mainsScreens
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,19 +39,23 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun mainScreenCard(
-    navController: NavHostController? = null,
-    viewModel: RandomRecipeViewModel
+    navController: NavHostController,
+    viewModel: MainScreenViewModel
 ) {
     val recipe by viewModel.randomRecipe.collectAsState()
     val context = LocalContext.current
-
-    LaunchedEffect(recipe) {
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(1) {
+        Log.d("launchedEffect", "execute")
 
     }
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .clickable { navController?.navigate("recipeScreen/${recipe.id}") }
+            .clickable {
+                Log.d("Click main screen", "click")
+                navController.navigate("recipeScreen/${recipe.id}")
+            }
     ) {
         Column(
             modifier = Modifier
@@ -69,8 +76,9 @@ fun mainScreenCard(
                     )
                     .aspectRatio(1f),
                 contentScale = ContentScale.Crop,
-                loading = { }
+                loading = { CircularProgressIndicator() }
             )
+
             Text(
                 text = recipe.recipeName,
                 modifier = Modifier
