@@ -22,7 +22,7 @@ interface RecipeFeedApi {
         @Part("data") recipe: Recipe, @Part imagePart: MultipartBody.Part
     ): Response<Recipe>
 
-    @GET("recipe/getByName/{name}")
+    @GET("recipe/getByNameLike/{name}")
     suspend fun getByName(@Path("name") name: String): Response<List<Recipe>>
 
     @Multipart

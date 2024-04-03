@@ -143,7 +143,15 @@ fun newRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            viewModel.addRecipes(Recipe(), convertToMultipart(selectImages, context),context)
+            viewModel.addRecipes(
+                Recipe(
+                    recipeName = title,
+                    description = description,
+                    timeToCook = timeToCook,
+                    ingredients = ingredients
+                ),
+                convertToMultipart(selectImages, context), context
+            )
 
 
         }) {
