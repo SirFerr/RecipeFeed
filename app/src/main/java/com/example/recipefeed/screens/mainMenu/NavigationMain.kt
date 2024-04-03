@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipefeed.scaffold.scaffold
+import com.example.recipefeed.screens.NetworkAccessViewModel
 import com.example.recipefeed.screens.mainMenu.accountScreen.accountScreen
 import com.example.recipefeed.screens.mainMenu.addedRecipesScreen.addedRecipesScreen
 import com.example.recipefeed.screens.mainMenu.editRecipeScreen.editRecipeScreen
@@ -33,61 +34,58 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
     val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
     val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
     val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
+        scaffold(navController = navController, screen = {
+            NavHost(
+                navController = navController, startDestination = "mainScreen",
+                modifier = Modifier.padding(it)
+            ) {
+                composable("mainScreen") {
+                    mainScreen(
+                        navController = navController, viewModel = mainScreenViewModel
+                    )
 
+                }
+                composable("favoriteScreen") {
+                    favoriteScreen(
+                        navController = navController, favoriteRecipesViewModel
+                    )
 
+                }
+                composable("searchScreen") {
+                    searchScreen(
+                        navController = navController, searchRecipesViewModel
+                    )
+                }
 
-    scaffold(navController = navController, screen = {
-        NavHost(
-            navController = navController, startDestination = "mainScreen",
-            modifier = Modifier.padding(it)
-        ) {
-            composable("mainScreen") {
-                mainScreen(
-                    navController = navController, viewModel = mainScreenViewModel
-                )
+                composable("accountScreen") {
+                    accountScreen(
+                        navController,
+                        firstNavController
+                    )
+                }
+                composable("recipeScreen/{id}", listOf(navArgument("id") {
+                    type = NavType.IntType
+                })) { backStackEntry ->
+                    val id = backStackEntry.arguments?.getInt("id")
+                    Log.d("recipeScreen", id.toString())
+                    recipeScreen(navController, id!!)
+                }
+                composable("newRecipeScreen") {
+                    newRecipeScreen(navController)
+                }
+                composable("addedRecipesScreen") {
+                    addedRecipesScreen(navController)
+                }
+                composable("editRecipeScreen/{id}", listOf(navArgument("id") {
+                    type = NavType.IntType
+                })) { backStackEntry ->
+                    val id = backStackEntry.arguments?.getInt("id")
+                    Log.d("editRecipeScreen", id.toString())
+                    editRecipeScreen(navController, id!!)
+                }
 
             }
-            composable("favoriteScreen") {
-                favoriteScreen(
-                    navController = navController, favoriteRecipesViewModel
-                )
-
-            }
-            composable("searchScreen") {
-                searchScreen(
-                    navController = navController, searchRecipesViewModel
-                )
-            }
-
-            composable("accountScreen") {
-                accountScreen(
-                    navController,
-                    firstNavController
-                )
-            }
-            composable("recipeScreen/{id}", listOf(navArgument("id") {
-                type = NavType.IntType
-            })) { backStackEntry ->
-                val id = backStackEntry.arguments?.getInt("id")
-                Log.d("recipeScreen", id.toString())
-                recipeScreen(navController, id!!)
-            }
-            composable("newRecipeScreen") {
-                newRecipeScreen(navController)
-            }
-            composable("addedRecipesScreen") {
-                addedRecipesScreen(navController)
-            }
-            composable("editRecipeScreen/{id}", listOf(navArgument("id") {
-                type = NavType.IntType
-            })) { backStackEntry ->
-                val id = backStackEntry.arguments?.getInt("id")
-                Log.d("editRecipeScreen", id.toString())
-                editRecipeScreen(navController, id!!)
-            }
-
-        }
-    })
+        })
 
 
     return navController

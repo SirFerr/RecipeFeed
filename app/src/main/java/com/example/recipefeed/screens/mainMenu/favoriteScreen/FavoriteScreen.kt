@@ -62,7 +62,6 @@ fun favoriteScreen(
                     }
                 }
             }
-
             item { }
         }
         PullRefreshIndicator(refreshing = isLoading, state = refreshState)

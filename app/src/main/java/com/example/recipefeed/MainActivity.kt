@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.recipefeed.screens.NetworkAccessViewModel
 import com.example.recipefeed.screens.navigationLogIn
 import com.example.recipefeed.ui.theme.RecipeFeedTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +25,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    navigationLogIn()
+                    hiltViewModel<NetworkAccessViewModel>().NetworkErrorCard {
+                        navigationLogIn()
+                    }
                 }
             }
         }

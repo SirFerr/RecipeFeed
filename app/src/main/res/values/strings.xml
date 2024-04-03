@@ -16,6 +16,9 @@
 
     <string name="complete">Complete</string>
 
+    <string name="refresh">Refresh</string>
+    <string name="network_error">Network error</string>
+    <string name="server_error">Server error</string>
 
     <string name="title_recipe">Title</string>
     <string name="description_recipe">Description</string>
