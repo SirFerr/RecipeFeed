@@ -37,10 +37,10 @@ class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: R
         }
     }
 
-    fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?, context: Context) {
+    fun editRecipe(recipe: Recipe, imagePart: MultipartBody.Part?, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = imagePart?.let { recipeFeedApi.addRecipe(recipe, it) }
+                val response = imagePart?.let { recipeFeedApi.updateRecipe(recipe.id,recipe, it) }
                 if (response?.isSuccessful == true) {
                     Log.d("Successful", response.code().toString())
                     withContext(Dispatchers.Main){

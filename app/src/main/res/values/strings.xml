@@ -20,6 +20,8 @@
     <string name="network_error">Network error</string>
     <string name="server_error">Server error</string>
 
+    <string name="nothing_found">Nothing found</string>
+
     <string name="title_recipe">Title</string>
     <string name="description_recipe">Description</string>
     <string name="ingridients">Ingridients</string>

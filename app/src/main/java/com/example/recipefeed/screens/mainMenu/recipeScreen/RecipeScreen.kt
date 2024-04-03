@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -65,16 +65,15 @@ fun recipeScreen(
 
 
         val imageBytes = Base64.decode(recipe.imageData)
-        Log.d("image Bytes",imageBytes.toString())
+        Log.d("image Bytes", imageBytes.toString())
         val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
         SubcomposeAsyncImage(
             model = image,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-            contentScale = ContentScale.Fit,
-            loading = { CircularProgressIndicator()  }
+            loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
         )
 
         Text(text = recipe.description, style = MaterialTheme.typography.bodyLarge)

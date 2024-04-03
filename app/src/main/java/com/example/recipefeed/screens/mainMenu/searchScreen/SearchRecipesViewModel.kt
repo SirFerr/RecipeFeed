@@ -15,28 +15,25 @@ import javax.inject.Inject
 class SearchRecipesViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
     ViewModel() {
 
-    var isLoading = MutableStateFlow(true)
+    var isLoading = MutableStateFlow(false)
     var textSearch = MutableStateFlow("")
 
     val isSuccessful = MutableStateFlow(true)
-
-
+    val isFound = MutableStateFlow(true)
     val recipes =
         MutableStateFlow<List<Recipe>>(listOf())
 
-    init {
-        getAllRecipes()
-    }
-
-    fun getAllRecipes() {
-        isLoading.value = true
+    fun getByName() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.getAll()
+                isLoading.value = true
+                val response = recipeFeedApi.getByName(textSearch.value)
                 isSuccessful.value = response.isSuccessful
                 Log.d("response", response.isSuccessful.toString())
-                if (response.isSuccessful)
+                if (response.isSuccessful) {
                     recipes.value = response.body()!!
+                    isFound.value = response.body()!!!=listOf<Recipe>()
+                }
             } catch (e: Exception) {
                 Log.e("err", e.toString())
                 isSuccessful.value = false

@@ -1,6 +1,7 @@
 package com.example.recipefeed.screens.mainMenu.searchScreen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,11 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.screens.mainMenu.CardItem
 import com.example.recipefeed.screens.mainMenu.CircularItem
 import com.example.recipefeed.screens.mainMenu.listItem
@@ -41,6 +45,7 @@ fun searchScreen(
     val textSearch by viewModel.textSearch.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val isFound by viewModel.isFound.collectAsState()
     val isVisible by remember {
         derivedStateOf {
             textSearch.isNotBlank()
@@ -80,7 +85,7 @@ fun searchScreen(
                                 )
                             }
                             IconButton(
-                                onClick = { viewModel.getAllRecipes() }
+                                onClick = { viewModel.getByName() }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Done,
@@ -95,13 +100,27 @@ fun searchScreen(
         }
         if (!isLoading) {
             if (isSuccessful) {
-                items(recipes, key = { it.id }) {
-                    listItem(it, navController)
-                }
+                if (!isFound) {
+                    item {
+                            Text(
+                                text = stringResource(id = R.string.nothing_found), modifier = Modifier
+                                    .padding(
+                                        dimensionResource(id = R.dimen.main_padding)
+                                    )
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+
+                    }
+                } else
+                    items(recipes, key = { it.id }) {
+                        listItem(it, navController)
+                    }
             } else {
                 item {
                     CardItem {
-                        viewModel.getAllRecipes()
+                        viewModel.getByName()
                     }
                 }
             }

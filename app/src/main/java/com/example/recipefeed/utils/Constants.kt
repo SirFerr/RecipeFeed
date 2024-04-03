@@ -2,7 +2,7 @@ package com.example.recipefeed.utils
 
 object Constants {
 
-    const val BASE_URL = "http://192.168.1.82:8080/api/"
+    const val BASE_URL = "https://recipefeedrestapi-tesinitsyn.amvera.io/api/"
 
     const val PAGE_SIZE = 20
 }

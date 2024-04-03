@@ -2,7 +2,6 @@ package com.example.recipefeed.data.remote
 
 import com.example.recipefeed.data.models.recipe.Recipe
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -21,6 +20,15 @@ interface RecipeFeedApi {
     @POST("recipe/addRecipe")
     suspend fun addRecipe(
         @Part("data") recipe: Recipe, @Part imagePart: MultipartBody.Part
-    ) : Response<ResponseBody>
+    ): Response<Recipe>
 
+    @GET("recipe/getByName/{name}")
+    suspend fun getByName(@Path("name") name: String): Response<List<Recipe>>
+
+    @Multipart
+    @POST("recipe/updateRecipe/{id}")
+    suspend fun updateRecipe(
+        @Path("id") id: Int,
+        @Part("data") recipe: Recipe, @Part imagePart: MultipartBody.Part
+    ): Response<Recipe>
 }

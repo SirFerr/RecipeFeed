@@ -31,13 +31,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.utils.convertToMultipart
@@ -51,7 +52,7 @@ fun editRecipeScreen(
     id: Int,
     viewModel: EditRecipeScreenViewModel = hiltViewModel(),
 
-) {
+    ) {
     Log.d("idEditScreen", id.toString())
     val context = LocalContext.current
 
@@ -128,11 +129,13 @@ fun editRecipeScreen(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-        AsyncImage(
-            model = selectImages, contentDescription = null, modifier = Modifier
+        SubcomposeAsyncImage(
+            model = selectImages,
+            contentDescription = null,
+            modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentSize()
-                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
+             contentScale = ContentScale.FillWidth
         )
 
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -170,7 +173,7 @@ fun editRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
-            viewModel.addRecipes(
+            viewModel.editRecipe(
                 Recipe(),
                 convertToMultipart(selectImages, context),
                 context
