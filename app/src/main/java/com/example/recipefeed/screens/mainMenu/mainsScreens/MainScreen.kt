@@ -30,10 +30,6 @@ fun mainScreen(
     navController: NavHostController,
     viewModel: MainScreenViewModel
 ) {
-
-    val coroutineScope = rememberCoroutineScope()
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()

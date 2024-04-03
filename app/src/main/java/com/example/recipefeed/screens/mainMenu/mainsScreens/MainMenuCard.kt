@@ -33,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
+import com.example.recipefeed.data.models.recipe.Recipe
+import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -49,58 +51,66 @@ fun mainScreenCard(
         Log.d("launchedEffect", "execute")
 
     }
-    Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable {
-                Log.d("Click main screen", "click")
-                navController.navigate("recipeScreen/${recipe.id}")
-            }
-    ) {
-        Column(
+
+    if (recipe != Recipe())
+        Card(
             modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.main_padding))
-                .wrapContentSize(),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+                .fillMaxSize()
+                .clickable {
+
+                    navController.navigate("recipeScreen/${recipe.id}")
+                }
         ) {
+            if (recipe != Recipe())
+                Column(
+                    modifier = Modifier
+                        .padding(dimensionResource(id = R.dimen.main_padding))
+                        .wrapContentSize(),
+                    verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+                ) {
 
-            val imageBytes = Base64.decode(recipe.imageData)
-            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-            SubcomposeAsyncImage(
-                model = image,
-                contentDescription = null,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .clip(
-                        RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                    val imageBytes = Base64.decode(recipe.imageData)
+                    val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                    SubcomposeAsyncImage(
+                        model = image,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .clip(
+                                RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                            )
+                            .aspectRatio(1f),
+                        contentScale = ContentScale.Crop,
+                        loading = { CircularProgressIndicator() }
                     )
-                    .aspectRatio(1f),
-                contentScale = ContentScale.Crop,
-                loading = { CircularProgressIndicator() }
-            )
 
-            Text(
-                text = recipe.recipeName,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                style = MaterialTheme.typography.headlineMedium, textAlign = TextAlign.Center
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(
-                text = recipe.description,
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1
-            )
-            Text(
-                text = "Likes: " + recipe.recipeLikes.toString(),
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1
-            )
+                    Text(
+                        text = recipe.recipeName,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.CenterHorizontally),
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(
+                        text = recipe.description,
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = "Likes: " + recipe.recipeLikes.toString(),
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyLarge,
+                        maxLines = 1
+                    )
 
+                }
         }
-    }
+    else
+        ErrorNetworkCard {
+            viewModel.getRandomRecipe()
+        }
 
 }

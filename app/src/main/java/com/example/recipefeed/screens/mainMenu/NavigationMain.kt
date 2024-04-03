@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipefeed.scaffold.scaffold
-import com.example.recipefeed.screens.NetworkAccessViewModel
 import com.example.recipefeed.screens.mainMenu.accountScreen.accountScreen
 import com.example.recipefeed.screens.mainMenu.addedRecipesScreen.addedRecipesScreen
 import com.example.recipefeed.screens.mainMenu.editRecipeScreen.editRecipeScreen

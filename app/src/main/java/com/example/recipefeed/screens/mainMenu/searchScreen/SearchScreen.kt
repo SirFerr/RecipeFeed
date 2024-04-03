@@ -1,7 +1,6 @@
 package com.example.recipefeed.screens.mainMenu.searchScreen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,16 +21,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.models.recipe.Recipe
-import com.example.recipefeed.screens.mainMenu.CardItem
-import com.example.recipefeed.screens.mainMenu.CircularItem
+import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
+import com.example.recipefeed.screens.mainMenu.CircularLoad
 import com.example.recipefeed.screens.mainMenu.listItem
 
 
@@ -119,14 +116,14 @@ fun searchScreen(
                     }
             } else {
                 item {
-                    CardItem {
+                    ErrorNetworkCard {
                         viewModel.getByName()
                     }
                 }
             }
         } else {
             item {
-                CircularItem()
+                CircularLoad()
             }
         }
         item { }

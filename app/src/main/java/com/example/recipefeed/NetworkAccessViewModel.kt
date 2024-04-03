@@ -1,4 +1,4 @@
-package com.example.recipefeed.screens
+package com.example.recipefeed
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -24,9 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,6 +53,14 @@ class NetworkAccessViewModel @Inject constructor(private val recipeFeedApi: Reci
             } finally {
                 isLoading.value = false
             }
+        }
+    }
+
+    fun delayCheck(){
+        viewModelScope.launch {
+            checkNetwork()
+            delay(10000)
+            delayCheck()
         }
     }
 
@@ -96,7 +104,10 @@ class NetworkAccessViewModel @Inject constructor(private val recipeFeedApi: Reci
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onErrorContainer),
                                 modifier = Modifier.wrapContentSize()
                             ) {
-                                Text(text = stringResource(id = R.string.refresh), color = MaterialTheme.colorScheme.onError)
+                                Text(
+                                    text = stringResource(id = R.string.refresh),
+                                    color = MaterialTheme.colorScheme.onError
+                                )
                             }
                         }
                     }

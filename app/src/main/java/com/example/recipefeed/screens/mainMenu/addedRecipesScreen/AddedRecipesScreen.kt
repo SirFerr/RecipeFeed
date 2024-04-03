@@ -21,8 +21,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.CardItem
-import com.example.recipefeed.screens.mainMenu.CircularItem
+import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
 import com.example.recipefeed.screens.mainMenu.listItem
 
 
@@ -59,7 +58,7 @@ fun addedRecipesScreen(
                 }
             } else {
                 item {
-                    CardItem {
+                    ErrorNetworkCard {
                         viewModel.getAllRecipes()
                     }
                 }

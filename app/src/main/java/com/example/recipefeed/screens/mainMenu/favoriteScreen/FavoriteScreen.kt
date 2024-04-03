@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.CardItem
+import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
 import com.example.recipefeed.screens.mainMenu.listItem
 
 
@@ -57,7 +57,7 @@ fun favoriteScreen(
                 }
             } else {
                 item {
-                    CardItem {
+                    ErrorNetworkCard {
                         viewModel.getAllRecipes()
                     }
                 }
