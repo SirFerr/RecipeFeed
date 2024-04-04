@@ -7,7 +7,6 @@ import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,9 +14,9 @@ import javax.inject.Inject
 class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
     ViewModel() {
 
-    private val _randomRecipe = MutableStateFlow(Recipe())
 
-    val randomRecipe: StateFlow<Recipe> = _randomRecipe
+    val randomRecipe = MutableStateFlow(Recipe())
+    val isSuccessful = MutableStateFlow(true)
 
     init {
         getRandomRecipe()
@@ -27,12 +26,13 @@ class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeF
     fun getRandomRecipe() {
         Log.d("RandomRecipeViewModel +", this.toString())
         viewModelScope.launch {
-
             try {
-                val response = recipeFeedApi.getById(kotlin.random.Random.nextInt(1, 120))
+                var response = recipeFeedApi.getById(kotlin.random.Random.nextInt(1, 400))
                 if (response.isSuccessful)
-                    _randomRecipe.value = response.body()!!
+                    randomRecipe.value = response.body()!!
+                isSuccessful.value = response.isSuccessful
             } catch (e: Exception) {
+                isSuccessful.value = false
                 Log.e("err", e.toString())
             }
         }
