@@ -1,5 +1,7 @@
 package com.example.recipefeed.screens.mainMenu.searchScreen
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.screens.mainMenu.CircularLoad
@@ -46,6 +49,11 @@ fun searchScreen(
     val isLoading by viewModel.isLoading.collectAsState()
     val isFound by viewModel.isFound.collectAsState()
     val searchHistory by viewModel.searchHistory.collectAsState()
+
+    val padding by animateDpAsState(
+        targetValue = if (!isSearching) dimensionResource(id = R.dimen.main_padding) else 0.dp,
+        animationSpec = tween(durationMillis = 300)
+    )
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -63,7 +71,7 @@ fun searchScreen(
             placeholder = { Text(text = stringResource(id = R.string.search_title)) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.main_padding)),
+                .padding(padding),
             trailingIcon = {
                 if (searchText.isNotBlank()) {
                     Row1 {
