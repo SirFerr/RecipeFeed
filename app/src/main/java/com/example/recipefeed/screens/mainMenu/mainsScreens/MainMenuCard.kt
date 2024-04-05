@@ -53,7 +53,7 @@ fun mainScreenCard(
 
     }
 
-    if (!isSuccessful)
+    if (isSuccessful)
         Card(
             modifier = Modifier
                 .fillMaxSize()

@@ -10,7 +10,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.Timer
 import javax.inject.Inject
+import kotlin.concurrent.scheduleAtFixedRate
 
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor(
@@ -19,16 +21,24 @@ class SearchRecipesViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    var isLoading = MutableStateFlow(false)
     val searchText = MutableStateFlow("")
+
+
+    var isLoading = MutableStateFlow(false)
     val isSearching = MutableStateFlow(false)
     val isSuccessful = MutableStateFlow(true)
     val isFound = MutableStateFlow(true)
+
+
     val recipes = MutableStateFlow<List<Recipe>>(listOf())
     val searchHistory = MutableStateFlow<List<String>>(listOf())
 
     init {
         searchHistory.value = sharedPreferencesManager.getLastTenStrings()
+//        val timer = Timer("schedule", true)
+//        timer.scheduleAtFixedRate(2000, 2000) {
+//            search()
+//        }
     }
 
 

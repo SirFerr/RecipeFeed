@@ -33,7 +33,6 @@ import com.example.recipefeed.R
 import com.example.recipefeed.screens.mainMenu.CircularLoad
 import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
 import com.example.recipefeed.screens.mainMenu.listItem
-import androidx.compose.foundation.layout.Row as Row1
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,34 +71,38 @@ fun searchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(padding),
-            trailingIcon = {
-                if (searchText.isNotBlank()) {
-                    Row1 {
-                        IconButton(
-                            onClick = { viewModel.searchText.value = "" }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear"
-                            )
-                        }
-                        IconButton(
-                            onClick = { viewModel.search() }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search"
-                            )
-                        }
-                    }
-
+            leadingIcon = ({
+                IconButton(
+                    onClick = { viewModel.search() }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "Search"
+                    )
                 }
+            }),
+            trailingIcon = {
+                if (isSearching)
+                    IconButton(
+                        onClick = {
+
+                            if (searchText.isNotBlank())
+                                viewModel.searchText.value = ""
+                            else
+                                viewModel.isSearching.value = false
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Clear"
+                        )
+                    }
             }) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding)),
                 horizontalAlignment = Alignment.Start
             ) {
-                items(searchHistory) {
+                items(searchHistory.filter { it.lowercase().startsWith(searchText) }) {
                     TextButton(modifier = Modifier.fillMaxWidth(),
                         onClick = { viewModel.searchText.value = it }
                     ) {
