@@ -1,6 +1,5 @@
 package com.example.recipefeed.screens.mainMenu
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,18 +14,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,13 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
-import coil.request.ErrorResult
-import coil.request.ImageRequest
-import coil.request.SuccessResult
 import com.example.recipefeed.R
 import com.example.recipefeed.data.models.recipe.Recipe
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -70,7 +61,9 @@ fun listItem(
         ) {
 
             val imageBytes = Base64.decode(recipe.imageData)
-            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            val image by rememberSaveable {
+                mutableStateOf(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
+            }
             SubcomposeAsyncImage(
                 model = image,
                 contentDescription = null,

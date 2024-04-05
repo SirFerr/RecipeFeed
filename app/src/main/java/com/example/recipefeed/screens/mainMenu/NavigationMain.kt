@@ -29,10 +29,6 @@ import com.example.recipefeed.screens.mainMenu.searchScreen.searchScreen
 fun navigationMain(firstNavController: NavHostController): NavHostController {
 
     val navController = rememberNavController()
-
-    val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
-    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
-    val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
         scaffold(navController = navController, screen = {
             NavHost(
                 navController = navController, startDestination = "mainScreen",
@@ -40,19 +36,19 @@ fun navigationMain(firstNavController: NavHostController): NavHostController {
             ) {
                 composable("mainScreen") {
                     mainScreen(
-                        navController = navController, viewModel = mainScreenViewModel
+                        navController = navController
                     )
 
                 }
                 composable("favoriteScreen") {
                     favoriteScreen(
-                        navController = navController, favoriteRecipesViewModel
+                        navController = navController
                     )
 
                 }
                 composable("searchScreen") {
                     searchScreen(
-                        navController = navController, searchRecipesViewModel
+                        navController = navController
                     )
                 }
 

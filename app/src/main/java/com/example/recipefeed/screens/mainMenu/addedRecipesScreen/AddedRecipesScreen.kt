@@ -1,7 +1,6 @@
 package com.example.recipefeed.screens.mainMenu.addedRecipesScreen
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,26 +8,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
+import com.example.recipefeed.screens.ErrorNetworkCard
 import com.example.recipefeed.screens.mainMenu.listItem
+import com.example.recipefeed.screens.updateBox
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun addedRecipesScreen(
-    navController: NavHostController, viewModel: AddedRecipesViewModel = hiltViewModel()
+    navController: NavHostController, viewModel: AddedRecipesViewModel =  hiltViewModel(navController.currentBackStackEntry!!)
 ) {
     val recipes by viewModel.recipes.collectAsState()
 
@@ -36,14 +32,7 @@ fun addedRecipesScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
 
-    val refreshState =
-        rememberPullRefreshState(refreshing = isLoading, onRefresh = { viewModel.getAllRecipes() })
-
-    Box(
-        modifier = Modifier.pullRefresh(state = refreshState),
-        contentAlignment = Alignment.TopCenter
-    ) {
-
+    updateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
         LazyColumn(
             modifier = Modifier
                 .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
@@ -54,7 +43,7 @@ fun addedRecipesScreen(
 
             if (isSuccessful) {
                 items(recipes, key = { it.id }) {
-                    listItem(it, navController,Icons.Filled.Edit)
+                    listItem(it, navController, Icons.Filled.Edit)
                 }
             } else {
                 item {
@@ -65,9 +54,7 @@ fun addedRecipesScreen(
             }
             item { }
         }
-        PullRefreshIndicator(refreshing = isLoading, state = refreshState)
     }
-
 }
 
 

@@ -28,10 +28,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.CircularLoad
-import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
+import com.example.recipefeed.screens.CircularLoad
+import com.example.recipefeed.screens.ErrorNetworkCard
 import com.example.recipefeed.screens.mainMenu.listItem
 
 
@@ -39,7 +40,7 @@ import com.example.recipefeed.screens.mainMenu.listItem
 @Composable
 fun searchScreen(
     navController: NavHostController,
-    viewModel: SearchRecipesViewModel,
+    viewModel: SearchRecipesViewModel = hiltViewModel(navController.currentBackStackEntry!!),
 ) {
     val recipes by viewModel.recipes.collectAsState()
     val searchText by viewModel.searchText.collectAsState()

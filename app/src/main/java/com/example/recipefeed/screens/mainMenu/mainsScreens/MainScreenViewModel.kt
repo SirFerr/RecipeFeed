@@ -8,6 +8,7 @@ import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,24 +18,30 @@ class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeF
 
     val randomRecipe = MutableStateFlow(Recipe())
     val isSuccessful = MutableStateFlow(true)
+    var response = MutableStateFlow(Response.success(listOf<Recipe>()))
 
     init {
-        getRandomRecipe()
-        Log.d("RandomRecipeViewModel", this.toString())
+        getResponse()
     }
 
-    fun getRandomRecipe() {
-        Log.d("RandomRecipeViewModel +", this.toString())
+    fun getResponse() {
         viewModelScope.launch {
             try {
-                var response = recipeFeedApi.getById(kotlin.random.Random.nextInt(1, 400))
-                if (response.isSuccessful)
-                    randomRecipe.value = response.body()!!
-                isSuccessful.value = response.isSuccessful
+                response.value = recipeFeedApi.getAll()
+                isSuccessful.value = response.value.isSuccessful
+                getRandomRecipe()
             } catch (e: Exception) {
                 isSuccessful.value = false
                 Log.e("err", e.toString())
             }
+        }
+    }
+
+    fun getRandomRecipe() {
+        viewModelScope.launch {
+            if (response.value.isSuccessful)
+                randomRecipe.value = response.value.body()!!.random()
+
         }
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 
@@ -28,7 +29,7 @@ import com.example.recipefeed.R
 @Composable
 fun mainScreen(
     navController: NavHostController,
-    viewModel: MainScreenViewModel
+    viewModel: MainScreenViewModel =  hiltViewModel(navController.currentBackStackEntry!!)
 ) {
     Column(
         modifier = Modifier

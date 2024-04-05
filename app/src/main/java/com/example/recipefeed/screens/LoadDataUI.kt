@@ -1,4 +1,4 @@
-package com.example.recipefeed.screens.mainMenu
+package com.example.recipefeed.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

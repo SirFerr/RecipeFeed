@@ -3,7 +3,6 @@
 package com.example.recipefeed.screens.mainMenu.mainsScreens
 
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,21 +18,23 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.mainMenu.ErrorNetworkCard
+import com.example.recipefeed.screens.ErrorNetworkCard
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -41,17 +42,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun mainScreenCard(
     navController: NavHostController,
-    viewModel: MainScreenViewModel
+    viewModel: MainScreenViewModel =  hiltViewModel(navController.currentBackStackEntry!!)
 ) {
     val recipe by viewModel.randomRecipe.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
 
-    val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(1) {
-        Log.d("launchedEffect", "execute")
 
-    }
 
     if (isSuccessful)
         Card(
@@ -70,7 +66,9 @@ fun mainScreenCard(
             ) {
 
                 val imageBytes = Base64.decode(recipe.imageData)
-                val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                val image =
+                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
                 SubcomposeAsyncImage(
                     model = image,
                     contentDescription = null,

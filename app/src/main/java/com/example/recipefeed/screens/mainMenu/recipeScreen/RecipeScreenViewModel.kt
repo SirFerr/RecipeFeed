@@ -6,21 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) : ViewModel() {
+class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+    ViewModel() {
 
-    val idRecipe =  MutableStateFlow(Recipe())
+    val idRecipe = MutableStateFlow(Recipe())
+    val isLoading = MutableStateFlow(false)
 
     fun getById(id: Int) {
-        Log.d("getByID","$id $this")
         viewModelScope.launch {
+            isLoading.value = true
             try {
                 val response = recipeFeedApi.getById(id)
                 if (response.isSuccessful)
@@ -28,6 +27,7 @@ class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: Recip
             } catch (e: Exception) {
                 Log.e("err", e.toString())
             }
+            isLoading.value = false
         }
     }
 }
