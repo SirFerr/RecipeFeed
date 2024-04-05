@@ -16,21 +16,25 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.screens.ErrorNetworkCard
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun mainScreen(
     navController: NavHostController,
-    viewModel: MainScreenViewModel =  hiltViewModel()
+    viewModel: MainScreenViewModel = hiltViewModel()
 ) {
+    val recipe by viewModel.randomRecipe.collectAsState()
+    val isSuccessful by viewModel.isSuccessful.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,7 +44,12 @@ fun mainScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
-            mainScreenCard(navController, viewModel)
+            if (isSuccessful)
+                mainScreenCard(navController, recipe)
+            else
+                ErrorNetworkCard {
+                    viewModel.getRandomRecipe()
+                }
         }
         Spacer(modifier = Modifier.weight(1f))
 

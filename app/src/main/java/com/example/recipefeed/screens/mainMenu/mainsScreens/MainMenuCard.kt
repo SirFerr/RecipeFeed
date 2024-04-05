@@ -18,19 +18,16 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.ErrorNetworkCard
+import com.example.recipefeed.data.models.recipe.Recipe
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -38,74 +35,63 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun mainScreenCard(
     navController: NavHostController,
-    viewModel: MainScreenViewModel = hiltViewModel()
+    recipe: Recipe
 ) {
-    val recipe by viewModel.randomRecipe.collectAsState()
-    val isSuccessful by viewModel.isSuccessful.collectAsState()
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable {
 
-
-
-    if (isSuccessful)
-        Card(
-            modifier = Modifier
-                .fillMaxSize()
-                .clickable {
-
-                    navController.navigate("recipeScreen/${recipe.id}")
-                }
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.main_padding))
-                    .wrapContentSize(),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-            ) {
-
-                val imageBytes = Base64.decode(recipe.imageData)
-                val image =
-                    BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-
-                SubcomposeAsyncImage(
-                    model = image,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .clip(
-                            RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
-                        )
-                        .aspectRatio(1f),
-                    contentScale = ContentScale.Crop,
-                    loading = { CircularProgressIndicator() }
-                )
-
-                Text(
-                    text = recipe.recipeName,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.CenterHorizontally),
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(
-                    text = recipe.description,
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1
-                )
-                Text(
-                    text = "Likes: " + recipe.recipeLikes.toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1
-                )
-
+                navController.navigate("recipeScreen/${recipe.id}")
             }
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(dimensionResource(id = R.dimen.main_padding))
+                .wrapContentSize(),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+        ) {
+
+
+            val imageBytes = Base64.decode(recipe.imageData)
+            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            SubcomposeAsyncImage(
+                model = image,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                    )
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Crop,
+                loading = { CircularProgressIndicator() }
+            )
+
+            Text(
+                text = recipe.recipeName,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                style = MaterialTheme.typography.headlineMedium,
+                textAlign = TextAlign.Center
+            )
+            HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                text = recipe.description,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1
+            )
+            Text(
+                text = "Likes: " + recipe.recipeLikes.toString(),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1
+            )
+
         }
-    else
-        ErrorNetworkCard {
-            viewModel.getRandomRecipe()
-        }
+    }
+
 
 }
