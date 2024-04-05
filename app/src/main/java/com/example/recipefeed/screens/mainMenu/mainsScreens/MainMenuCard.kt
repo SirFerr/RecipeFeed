@@ -20,9 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +27,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
@@ -42,7 +38,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun mainScreenCard(
     navController: NavHostController,
-    viewModel: MainScreenViewModel =  hiltViewModel(navController.currentBackStackEntry!!)
+    viewModel: MainScreenViewModel = hiltViewModel()
 ) {
     val recipe by viewModel.randomRecipe.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
@@ -73,7 +69,8 @@ fun mainScreenCard(
                     model = image,
                     contentDescription = null,
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
                         .clip(
                             RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
                         )

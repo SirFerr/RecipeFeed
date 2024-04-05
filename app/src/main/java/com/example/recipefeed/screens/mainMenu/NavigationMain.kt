@@ -28,59 +28,63 @@ import com.example.recipefeed.screens.mainMenu.searchScreen.searchScreen
 @Composable
 fun navigationMain(firstNavController: NavHostController): NavHostController {
 
+    val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
+    val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
+
     val navController = rememberNavController()
-        scaffold(navController = navController, screen = {
-            NavHost(
-                navController = navController, startDestination = "mainScreen",
-                modifier = Modifier.padding(it)
-            ) {
-                composable("mainScreen") {
-                    mainScreen(
-                        navController = navController
-                    )
-
-                }
-                composable("favoriteScreen") {
-                    favoriteScreen(
-                        navController = navController
-                    )
-
-                }
-                composable("searchScreen") {
-                    searchScreen(
-                        navController = navController
-                    )
-                }
-
-                composable("accountScreen") {
-                    accountScreen(
-                        navController,
-                        firstNavController
-                    )
-                }
-                composable("recipeScreen/{id}", listOf(navArgument("id") {
-                    type = NavType.IntType
-                })) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getInt("id")
-                    Log.d("recipeScreen", id.toString())
-                    recipeScreen(navController, id!!)
-                }
-                composable("newRecipeScreen") {
-                    newRecipeScreen(navController)
-                }
-                composable("addedRecipesScreen") {
-                    addedRecipesScreen(navController)
-                }
-                composable("editRecipeScreen/{id}", listOf(navArgument("id") {
-                    type = NavType.IntType
-                })) { backStackEntry ->
-                    val id = backStackEntry.arguments?.getInt("id")
-                    Log.d("editRecipeScreen", id.toString())
-                    editRecipeScreen(navController, id!!)
-                }
+    scaffold(navController = navController, screen = {
+        NavHost(
+            navController = navController, startDestination = "mainScreen",
+            modifier = Modifier.padding(it)
+        ) {
+            composable("mainScreen") {
+                mainScreen(
+                    navController = navController,mainScreenViewModel
+                )
 
             }
-        })
+            composable("favoriteScreen") {
+                favoriteScreen(
+                    navController = navController,favoriteRecipesViewModel
+                )
+
+            }
+            composable("searchScreen") {
+                searchScreen(
+                    navController = navController,searchRecipesViewModel
+                )
+            }
+
+            composable("accountScreen") {
+                accountScreen(
+                    navController,
+                    firstNavController
+                )
+            }
+            composable("recipeScreen/{id}", listOf(navArgument("id") {
+                type = NavType.IntType
+            })) { backStackEntry ->
+                val id = backStackEntry.arguments?.getInt("id")
+                Log.d("recipeScreen", id.toString())
+                recipeScreen(navController, id!!)
+            }
+            composable("newRecipeScreen") {
+                newRecipeScreen(navController)
+            }
+            composable("addedRecipesScreen") {
+                addedRecipesScreen(navController)
+            }
+            composable("editRecipeScreen/{id}", listOf(navArgument("id") {
+                type = NavType.IntType
+            })) { backStackEntry ->
+                val id = backStackEntry.arguments?.getInt("id")
+                Log.d("editRecipeScreen", id.toString())
+                editRecipeScreen(navController, id!!)
+            }
+
+        }
+    })
 
 
     return navController

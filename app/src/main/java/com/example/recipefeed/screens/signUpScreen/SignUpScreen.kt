@@ -84,11 +84,7 @@ fun signUpScreen(
             Button(onClick = {
                 if (textPasswordAgain != "" && textPassword != "" && textUsername != "") {
                     if (textPasswordAgain == textPassword) {
-                        navController?.navigate("logInScreen") {
-                            popUpTo("loginScreen") {
-                                inclusive = true
-                            }
-                        }
+                        navController?.popBackStack()
 
 
                     } else {

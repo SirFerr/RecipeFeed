@@ -29,7 +29,7 @@ import com.example.recipefeed.R
 @Composable
 fun mainScreen(
     navController: NavHostController,
-    viewModel: MainScreenViewModel =  hiltViewModel(navController.currentBackStackEntry!!)
+    viewModel: MainScreenViewModel =  hiltViewModel()
 ) {
     Column(
         modifier = Modifier

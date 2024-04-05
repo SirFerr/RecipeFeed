@@ -40,7 +40,7 @@ import com.example.recipefeed.screens.mainMenu.listItem
 @Composable
 fun searchScreen(
     navController: NavHostController,
-    viewModel: SearchRecipesViewModel = hiltViewModel(navController.currentBackStackEntry!!),
+    viewModel: SearchRecipesViewModel = hiltViewModel(),
 ) {
     val recipes by viewModel.recipes.collectAsState()
     val searchText by viewModel.searchText.collectAsState()

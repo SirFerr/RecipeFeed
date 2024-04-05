@@ -27,6 +27,8 @@ class FavoriteRecipesViewModel @Inject constructor(private val recipeFeedApi: Re
 
     init {
         getAllRecipes()
+        Log.d("FavVM",this.toString())
+
     }
 
     fun getAllRecipes() {

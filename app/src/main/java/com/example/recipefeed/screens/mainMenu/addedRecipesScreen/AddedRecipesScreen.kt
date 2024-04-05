@@ -24,10 +24,10 @@ import com.example.recipefeed.screens.updateBox
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun addedRecipesScreen(
-    navController: NavHostController, viewModel: AddedRecipesViewModel =  hiltViewModel(navController.currentBackStackEntry!!)
+    navController: NavHostController,
+    viewModel: AddedRecipesViewModel =  hiltViewModel()
 ) {
     val recipes by viewModel.recipes.collectAsState()
-
     val isSuccessful by viewModel.isSuccessful.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
