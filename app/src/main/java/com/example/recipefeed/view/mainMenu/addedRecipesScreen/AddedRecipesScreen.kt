@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -16,8 +17,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.view.subComponent.ErrorNetworkCard
 import com.example.recipefeed.view.mainMenu.listItem
+import com.example.recipefeed.view.subComponent.ErrorNetworkCard
 import com.example.recipefeed.view.subComponent.updateBox
 
 
@@ -25,7 +26,7 @@ import com.example.recipefeed.view.subComponent.updateBox
 @Composable
 fun addedRecipesScreen(
     navController: NavHostController,
-    viewModel: AddedRecipesViewModel =  hiltViewModel()
+    viewModel: AddedRecipesViewModel = hiltViewModel()
 ) {
     val recipes by viewModel.recipes.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
@@ -34,6 +35,8 @@ fun addedRecipesScreen(
 
     updateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
         LazyColumn(
+            state = rememberLazyListState(),
+
             modifier = Modifier
                 .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
                 .fillMaxSize(),

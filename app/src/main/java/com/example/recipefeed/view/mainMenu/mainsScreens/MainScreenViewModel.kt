@@ -2,8 +2,8 @@ package com.example.recipefeed.view.mainMenu.mainsScreens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefeed.data.remote.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
+import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -18,6 +18,7 @@ class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeF
     val recipe = MutableStateFlow(Recipe())
     val isSuccessful = MutableStateFlow(true)
     var response = MutableStateFlow(Response.success(listOf<Recipe>()))
+    var isLoading = MutableStateFlow(false)
 
     init {
         getResponse()
@@ -25,6 +26,7 @@ class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeF
 
     fun getResponse() {
         viewModelScope.launch {
+            isLoading.value = true
             try {
                 response.value = recipeFeedApi.getAll()
                 isSuccessful.value = response.value.isSuccessful
@@ -32,6 +34,7 @@ class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeF
             } catch (e: Exception) {
                 isSuccessful.value = false
             }
+            isLoading.value = false
         }
     }
 
