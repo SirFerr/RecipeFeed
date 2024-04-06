@@ -1,6 +1,6 @@
 package com.example.recipefeed.data.remote
 
-import com.example.recipefeed.data.models.recipe.Recipe
+import com.example.recipefeed.data.remote.recipe.Recipe
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.GET
