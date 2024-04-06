@@ -18,9 +18,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,9 +54,8 @@ fun mainScreenCard(
 
 
             val imageBytes = Base64.decode(recipe.imageData)
-            val image by rememberSaveable {
-                mutableStateOf(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
-            }
+            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
             SubcomposeAsyncImage(
                 model = image,
                 contentDescription = null,
