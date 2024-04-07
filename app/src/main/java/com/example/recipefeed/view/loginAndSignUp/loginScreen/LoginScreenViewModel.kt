@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.loginScreen
+package com.example.recipefeed.view.loginAndSignUp.loginScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.remote.RecipeFeedApi

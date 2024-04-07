@@ -14,8 +14,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.example.recipefeed.scaffold.scaffold
-import com.example.recipefeed.view.loginScreen.logInScreen
+import com.example.recipefeed.view.loginAndSignUp.loginScreen.logInScreen
 import com.example.recipefeed.view.mainMenu.accountScreen.accountScreen
 import com.example.recipefeed.view.mainMenu.addedRecipesScreen.addedRecipesScreen
 import com.example.recipefeed.view.mainMenu.editRecipeScreen.editRecipeScreen
@@ -27,7 +28,7 @@ import com.example.recipefeed.view.mainMenu.newRecipeScreen.newRecipeScreen
 import com.example.recipefeed.view.mainMenu.recipeScreen.recipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchRecipesViewModel
 import com.example.recipefeed.view.mainMenu.searchScreen.searchScreen
-import com.example.recipefeed.view.signUpScreen.signUpScreen
+import com.example.recipefeed.view.loginAndSignUp.signUpScreen.signUpScreen
 
 @Composable
 fun navigation(): NavHostController {
@@ -36,18 +37,19 @@ fun navigation(): NavHostController {
     val firstNavController = rememberNavController()
 
     NavHost(navController = firstNavController,
-        startDestination = "loginScreen",
+        startDestination = "loginAndSignUp",
         modifier = Modifier.clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { focusManager.clearFocus() })
     {
-        composable("loginScreen") { logInScreen(firstNavController) }
-        composable("signupScreen") { signUpScreen(firstNavController) }
+        navigation("loginScreen", "loginAndSignUp") {
+            composable("loginScreen") { logInScreen(firstNavController) }
+            composable("signupScreen") { signUpScreen(firstNavController) }
+        }
         composable("main") {
             val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
             val favoriteRecipesViewModel: FavoriteRecipesViewModel = hiltViewModel()
             val searchRecipesViewModel: SearchRecipesViewModel = hiltViewModel()
-
             val navController = rememberNavController()
             scaffold(navController = navController, screen = {
                 NavHost(

@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.signUpScreen
+package com.example.recipefeed.view.loginAndSignUp.signUpScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

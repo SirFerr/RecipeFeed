@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.view.subComponent.ErrorNetworkCard
-import com.example.recipefeed.view.subComponent.updateBox
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -36,8 +35,6 @@ fun mainScreen(
 ) {
     val recipe by viewModel.recipe.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
 
     Column(
         modifier = Modifier
@@ -53,7 +50,6 @@ fun mainScreen(
             else
                 ErrorNetworkCard {
                     viewModel.getResponse()
-                    viewModel.getRandomRecipe()
                 }
         }
         Spacer(modifier = Modifier.weight(1f))

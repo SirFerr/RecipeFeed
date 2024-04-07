@@ -146,6 +146,7 @@ fun newRecipeScreen(
         Button(modifier = Modifier.wrapContentSize(), onClick = {
 
 
+
             viewModel.addRecipes(
                 Recipe(
                     recipeName = recipeName,

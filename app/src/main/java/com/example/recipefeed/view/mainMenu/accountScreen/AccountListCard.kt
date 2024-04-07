@@ -17,7 +17,7 @@ fun accountListCard(accountScreenCards: AccountScreenCards) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .clickable {
-            if (accountScreenCards.route == "loginScreen") {
+            if (accountScreenCards.route == "loginAndSignUp") {
                 accountScreenCards.navController?.navigate(accountScreenCards.route){
                     popUpTo("main") { inclusive = true }
                 }

@@ -22,11 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.recipefeed.R
 
 @Composable
-fun image() {
-
-}
-
-@Composable
 fun CircularLoad() {
     Box(
         Modifier

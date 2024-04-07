@@ -24,7 +24,7 @@ fun accountScreen(
     val list = listOf(
         AccountScreenCards("Create recipe", "newRecipeScreen", navController),
         AccountScreenCards("Show created recipes", "addedRecipesScreen", navController),
-        AccountScreenCards("LogOut", "loginScreen", firstNavController)
+        AccountScreenCards("LogOut", "loginAndSignUp", firstNavController)
     )
 
     Column(
