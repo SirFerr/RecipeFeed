@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.view.subComponent.customTextField
+import com.example.recipefeed.view.loginAndSignUp.customTextField
 
 
 @OptIn(ExperimentalMaterial3Api::class)

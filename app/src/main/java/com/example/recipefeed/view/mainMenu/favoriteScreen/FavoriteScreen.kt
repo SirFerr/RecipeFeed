@@ -18,9 +18,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.view.subComponent.ErrorNetworkCard
+import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
 import com.example.recipefeed.view.mainMenu.listItem
-import com.example.recipefeed.view.subComponent.updateBox
+import com.example.recipefeed.view.mainMenu.updateBox
 
 
 @OptIn(ExperimentalMaterialApi::class)

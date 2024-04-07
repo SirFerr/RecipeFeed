@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.subComponent
+package com.example.recipefeed.view.mainMenu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

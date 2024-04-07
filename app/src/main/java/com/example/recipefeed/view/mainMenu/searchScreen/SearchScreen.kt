@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.view.subComponent.CircularLoad
-import com.example.recipefeed.view.subComponent.ErrorNetworkCard
+import com.example.recipefeed.view.mainMenu.CircularLoad
+import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
 import com.example.recipefeed.view.mainMenu.listItem
 
 
