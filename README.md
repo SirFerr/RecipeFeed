@@ -37,34 +37,46 @@ Expectations:
 1) Run Gradle build
 2) Launch app
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/b6e89352-f0c6-45fd-9427-12ab0fd3a861)
+## Description
+
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/b6e89352-f0c6-45fd-9427-12ab0fd3a861" wight="300">
+
 > Image 1 - LogIn screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/24de08ce-6df0-436a-8d03-b99d9a19a371)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/24de08ce-6df0-436a-8d03-b99d9a19a371" wight="300">
+
 > Image 2 - SignUp screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/b6c1e217-460a-4d6b-a5a2-8fabd112fa54)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/b6c1e217-460a-4d6b-a5a2-8fabd112fa54" wight="300">
+
 > Image 3 - Home screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/4a02f14a-e02c-449c-8e9f-1f26a58b49ec)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/4a02f14a-e02c-449c-8e9f-1f26a58b49ec" wight="300">
+
 > Image 4 - Recipe screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/ea41cd23-1e91-4966-9018-1a32a6916cf6)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/ea41cd23-1e91-4966-9018-1a32a6916cf6" wight="300">
+
 > Image 5 - Search screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/3dec4f34-ddfc-454b-bf25-88d1fc5e35eb)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/3dec4f34-ddfc-454b-bf25-88d1fc5e35eb" wight="300">
+
 > Image 6 - Favorite screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/98aef7c4-f1d8-47a5-8c54-7f6e4f9ae423)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/98aef7c4-f1d8-47a5-8c54-7f6e4f9ae423" wight="300">
+
 > Image 7 - Account screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/b68b1364-8a0f-4610-b220-0304d693a019)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/b68b1364-8a0f-4610-b220-0304d693a019" wight="300">
+
 > Image 8 - Add recipe screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/81e5dadb-01f8-4a9a-af37-3fb9514dafb8)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/81e5dadb-01f8-4a9a-af37-3fb9514dafb8" wight="300">
+
 > Image 9 - Added recipes screen
 
-![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/99574075-f1cb-481e-9a02-bc00563de46a)
+<img src="https://github.com/SirFerr/RecipeFeed/assets/7862646/99574075-f1cb-481e-9a02-bc00563de46a" wight="300">
+
 > Image 10 - Edit recipe screen
 
 ## REST API for application
