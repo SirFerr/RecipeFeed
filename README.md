@@ -32,6 +32,10 @@ Expectations:
 - Pay attention to performance optimization, especially in loading and displaying recipes.
 - Test thoroughly to ensure the app functions correctly on different devices and screen sizes.
 
+## Project Launch Guide
+1) Run Gradle build
+2) Launch app
+
 ![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/b6e89352-f0c6-45fd-9427-12ab0fd3a861)
 > Image 1 - LogIn screen
 
