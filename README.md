@@ -33,6 +33,7 @@ Expectations:
 - Test thoroughly to ensure the app functions correctly on different devices and screen sizes.
 
 ## Project Launch Guide
+1) Change api address to your, in Constants
 1) Run Gradle build
 2) Launch app
 
@@ -66,4 +67,6 @@ Expectations:
 ![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/99574075-f1cb-481e-9a02-bc00563de46a)
 > Image 10 - Edit recipe screen
 
+## REST API for application
 
+https://github.com/tesinitsyn/RecipeFeedRestApi
