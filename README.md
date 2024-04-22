@@ -1,8 +1,37 @@
 # RecipeFeed application
 
-Tools: Kotlin, Android SDK, 
+## Task for project
+Tools: Kotlin, Android Studio, Retrofit, Room Database
 
-## Description
+Description:
+You are tasked with developing RecipeFeed, a mobile application focused on showcasing random recipes in a Tinder-like interface. The app includes features such as user authentication, recipe browsing, favoriting recipes, viewing recipe details, adding new recipes, viewing user-created recipes, and editing them.
+
+Basic Features:
+
+User Authentication: Users can sign up and log in to access personalized features.
+Recipe Card Interface: The main screen resembles a card-based interface similar to Tinder, allowing users to swipe through random recipes.
+Recipe Search: Users can search for specific recipes based on various criteria.
+Favorite Recipes: Users can save recipes to their favorites for quick access.
+View Recipe Details: Users can view detailed information about each recipe.
+Add New Recipes: Users can contribute by adding new recipes to the app.
+View User-created Recipes: Users can see a list of recipes they've added.
+Edit User-created Recipes: Users can edit recipes they've added.
+Advanced Features:
+
+API Integration: Utilize Retrofit to fetch recipe data from a server.
+Local Database: Implement Room Database to store user data and favorited recipes locally.
+Smooth UI/UX: Ensure a smooth and intuitive user experience throughout the app.
+Offline Support: Implement caching mechanisms to support offline usage and improve app performance.
+Image Loading Optimization: Optimize image loading to ensure fast and efficient browsing of recipes.
+Expectations:
+
+Use Kotlin and Android Studio for development.
+Utilize Retrofit for API communication to fetch recipe data.
+Implement Room Database for storing user data and favorited recipes locally.
+Design a user-friendly interface with intuitive navigation.
+Ensure clean and modular code following best practices.
+Pay attention to performance optimization, especially in loading and displaying recipes.
+Test thoroughly to ensure the app functions correctly on different devices and screen sizes.
 
 ![image](https://github.com/SirFerr/RecipeFeed/assets/7862646/b6e89352-f0c6-45fd-9427-12ab0fd3a861)
 > Image 1 - LogIn screen
