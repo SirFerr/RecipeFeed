@@ -1,6 +1,7 @@
 package com.example.recipefeed.view.mainMenu.editRecipeScreen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,6 +56,7 @@ class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: R
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = recipeFeedApi.deleteById(id)
+                Log.d("delete", response.isSuccessful.toString())
             } catch (e: Exception) {
 
             }

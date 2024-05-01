@@ -69,7 +69,7 @@ fun ListItem(
         ) {
 
             val imageBytes = Base64.decode(recipe.imageData)
-            val image by rememberSaveable {
+            val image by remember {
                 mutableStateOf(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
             }
             SubcomposeAsyncImage(

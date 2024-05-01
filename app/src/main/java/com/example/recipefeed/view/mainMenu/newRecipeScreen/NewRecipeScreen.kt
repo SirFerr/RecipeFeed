@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,20 +53,20 @@ fun NewRecipeScreen(
     navController: NavHostController,
     viewModel: NewRecipeScreenViewModel = hiltViewModel()
 ) {
-    var recipeName by rememberSaveable {
+    var recipeName by remember {
         mutableStateOf("")
     }
-    var description by rememberSaveable {
+    var description by remember {
         mutableStateOf("")
     }
-    var ingredients by rememberSaveable {
+    var ingredients by remember {
         mutableStateOf("")
     }
-    var timeToCook by rememberSaveable {
+    var timeToCook by remember {
         mutableStateOf("")
     }
 
-    var selectImages by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var selectImages by remember { mutableStateOf<Uri?>(null) }
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         selectImages = it
     }

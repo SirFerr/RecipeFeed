@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -68,26 +70,26 @@ fun EditRecipeScreen(
     val recipe by viewModel.recipe.collectAsState()
     viewModel.getById(id)
 
-    var recipeName by rememberSaveable {
+    var recipeName by remember {
         mutableStateOf("")
     }
-    var description by rememberSaveable {
+    var description by remember {
         mutableStateOf("")
     }
-    var ingredients by rememberSaveable {
+    var ingredients by remember {
         mutableStateOf("")
     }
-    var timeToCook by rememberSaveable {
+    var timeToCook by remember {
         mutableStateOf("")
     }
 
 
     val imageBytes = Base64.decode(recipe.imageData)
-    var selectImages by rememberSaveable {
+    var selectImages by remember{
         mutableStateOf<Any?>(
             ""
-        )
-    }
+        )}
+
     LaunchedEffect(recipe) {
         selectImages = BitmapFactory.decodeByteArray(
             imageBytes,
@@ -104,22 +106,6 @@ fun EditRecipeScreen(
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
             selectImages = it
         }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End, modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            IconButton(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .wrapContentSize()
-            ) {
-                Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
-            }
-        }
         Column(
             Modifier
                 .fillMaxSize()
@@ -128,6 +114,23 @@ fun EditRecipeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.main_padding))
+            ) {
+                IconButton(
+                    onClick = {
+                        viewModel.deleteRecipeById(id)
+                              navController.popBackStack()
+                              },
+                    modifier = Modifier.size(30.dp)
+                        .wrapContentSize()
+                ) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
+                }
+            }
 
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = recipeName,
@@ -205,4 +208,4 @@ fun EditRecipeScreen(
 
         }
     }
-}
+
