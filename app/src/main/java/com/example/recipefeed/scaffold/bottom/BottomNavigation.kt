@@ -56,9 +56,10 @@ fun bottomNavigation(navController: NavController) {
             .wrapContentSize()) {
         list.forEach {
             NavigationBarItem(
+                modifier = Modifier.wrapContentSize(),
                 selected = currentRoute == it.route,
                 onClick = { navController.navigate(it.route) },
-                label = { Text(it.screenName, style = MaterialTheme.typography.titleSmall) },
+                label = { Text(it.screenName) },
                 icon = {
                     Icon(
                         it.icon, contentDescription = it.screenName

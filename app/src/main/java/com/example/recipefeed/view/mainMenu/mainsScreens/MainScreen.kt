@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -37,38 +35,43 @@ fun MainScreen(
     val recipe by viewModel.recipe.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize()){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.main_padding)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
-            if (isSuccessful)
-                MainScreenCard(navController, recipe)
-            else
-                ErrorNetworkCard {
-                    viewModel.getResponse()
-                }
-        }
-        Row(
-            Modifier
-                .wrapContentSize()
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(id = R.dimen.main_padding)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Button(modifier = Modifier.wrapContentSize(), onClick = {
-                viewModel.getRandomRecipe()
-            }) {
-                Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
+            Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
+                if (isSuccessful)
+                    MainScreenCard(navController, recipe)
+                else
+                    ErrorNetworkCard {
+                        viewModel.getResponse()
+                    }
             }
-            Button(modifier = Modifier.wrapContentSize(),onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+            Row(
+                Modifier
+                    .wrapContentSize()
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(modifier = Modifier.wrapContentSize(),
+                    onClick = {
+                        viewModel.getRandomRecipe()
+                    }) {
+                    Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
+                }
+                IconButton(modifier = Modifier.wrapContentSize(),
+                    onClick = {
+                        viewModel.getRandomRecipe()
+                    }) {
+                    Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
+                }
             }
-        }}
+        }
     }
 
 

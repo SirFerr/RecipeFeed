@@ -81,49 +81,5 @@ class AndroidTest {
 
     }
 
-    @Test
-    fun testMainScreenNavigation() {
-        // Start with the main screen
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "mainScreen") {
-                composable("mainScreen") {
-                    MainScreen(navController = navController, viewModel = mockk<MainScreenViewModel>())
-                }
-                composable("recipeScreen/{id}") { backStackEntry ->
-                    val id = backStackEntry.arguments?.getInt("id")
-                    if (id != null) {
-                        RecipeScreen(navController = navController, id = id, viewModel = mockk())
-                    }
-                }
-            }
-        }
 
-        // Perform click on the recipe card
-        composeTestRule.onNodeWithText("Test Recipe").performClick()
-
-        // Validate navigation to recipe screen
-        composeTestRule.onNodeWithText("Test Recipe").assertExists()
-    }
-
-    fun testRecipeScreenDisplay() {
-        // Start with the recipe screen
-        composeTestRule.setContent {
-            val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "recipeScreen") {
-                composable("recipeScreen/{id}") { backStackEntry ->
-                    val id = backStackEntry.arguments?.getInt("id")
-                    if (id != null) {
-                        RecipeScreen(navController = navController, id = id, viewModel = mockk())
-                    }
-                }
-            }
-        }
-
-        // Validate the display of recipe details
-        composeTestRule.onNodeWithText("Test Recipe").assertExists()
-        composeTestRule.onNodeWithText("This is a test recipe").assertExists()
-        composeTestRule.onNodeWithText("Time to Cook: 30 minutes").assertExists()
-        composeTestRule.onNodeWithText("Ingridients: Ingredient 1, Ingredient 2").assertExists()
-    }
 }

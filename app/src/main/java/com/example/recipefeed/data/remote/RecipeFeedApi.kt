@@ -3,6 +3,7 @@ package com.example.recipefeed.data.remote
 import com.example.recipefeed.data.remote.recipe.Recipe
 import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -24,6 +25,9 @@ interface RecipeFeedApi {
 
     @GET("recipe/getByNameLike/{name}")
     suspend fun getByName(@Path("name") name: String): Response<List<Recipe>>
+
+    @DELETE("recipe/updateRecipe/{id}")
+    suspend fun deleteById(@Path("id") id: Int): Response<Recipe>
 
     @Multipart
     @POST("recipe/updateRecipe/{id}")

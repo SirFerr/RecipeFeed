@@ -44,10 +44,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.recipe.Recipe
 import com.example.recipefeed.utils.convertToMultipart
+import com.example.recipefeed.view.mainMenu.CustomAsyncImage
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -63,8 +65,8 @@ fun EditRecipeScreen(
     ) {
     val context = LocalContext.current
 
-    viewModel.getById(id)
     val recipe by viewModel.recipe.collectAsState()
+    viewModel.getById(id)
 
     var recipeName by rememberSaveable {
         mutableStateOf("")
@@ -145,15 +147,16 @@ fun EditRecipeScreen(
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-            SubcomposeAsyncImage(
-                model = selectImages,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-                loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
-            )
-
+            if (selectImages!=null)
+                AsyncImage(
+                    model = selectImages,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize()
+                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
+                    contentScale = ContentScale.FillWidth
+                )
             OutlinedTextField(modifier = Modifier.fillMaxWidth(),
                 value = description,
                 onValueChange = { description = it },
@@ -187,8 +190,6 @@ fun EditRecipeScreen(
 
             Spacer(Modifier.weight(1f))
             Button(modifier = Modifier.wrapContentSize(), onClick = {
-
-
                 viewModel.editRecipe(
                     Recipe(),
                     convertToMultipart(selectImages, context),

@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="AndroidTest">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>
@@ -9,6 +12,9 @@
         <State />
       </entry>
       <entry key="testMainScreenNavigation()">
+        <State />
+      </entry>
+      <entry key="testRecipeScreenDisplay()">
         <State />
       </entry>
       <entry key="testSignUpSuccess()">

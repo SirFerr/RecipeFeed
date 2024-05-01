@@ -53,7 +53,13 @@ fun ListItem(
 
 
 
-    Card(Modifier.fillMaxWidth().size(1f.dp,70.dp).clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
+    Card(
+        Modifier
+            .fillMaxWidth()
+            .size(1f.dp, 70.dp)
+            .clickable { navController?.navigate("recipeScreen/${recipe.id}") },
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
+    ) {
         Row(
             Modifier
                 .padding(dimensionResource(id = R.dimen.sub_padding))
@@ -72,7 +78,7 @@ fun ListItem(
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Crop,
                 loading = { }
             )
             Column(

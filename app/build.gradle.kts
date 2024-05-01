@@ -9,9 +9,11 @@ android {
     namespace = "com.example.recipefeed"
     compileSdk = 34
 
-    packaging {
+    packagingOptions {
         resources {
-            excludes += "META-INF/LICENSE.md"
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
     defaultConfig {

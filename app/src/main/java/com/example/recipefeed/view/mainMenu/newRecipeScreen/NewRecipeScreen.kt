@@ -99,7 +99,7 @@ fun NewRecipeScreen(
                 style = MaterialTheme.typography.titleMedium
             )
         }
-
+        if (selectImages!=null)
         AsyncImage(
             model = selectImages,
             contentDescription = null,

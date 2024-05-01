@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
+import com.example.recipefeed.view.mainMenu.CustomAsyncImage
 import com.example.recipefeed.view.mainMenu.UpdateBox
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -40,42 +41,38 @@ fun RecipeScreen(
     viewModel: RecipeScreenViewModel = hiltViewModel()
 ) {
     val recipe by viewModel.idRecipe.collectAsState()
+
     viewModel.getById(id)
         Column(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(dimensionResource(id = R.dimen.main_padding)),
-            horizontalAlignment = Alignment.Start,
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = recipe.recipeName,
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center
-            )
+            val alignmentStartModifier = Modifier.align(Alignment.Start)
+
             val imageBytes = Base64.decode(recipe.imageData)
             val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-            SubcomposeAsyncImage(
-                model = image,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize(0.5f)
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-                    .align(Alignment.CenterHorizontally),
-                loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
+            CustomAsyncImage(image)
+            Text(
+                modifier = alignmentStartModifier,
+                text = recipe.recipeName,
             )
-            Text(text = recipe.description, style = MaterialTheme.typography.bodyLarge)
             HorizontalDivider()
+            Text(
+                modifier = alignmentStartModifier,
+                text = recipe.description,
+            )
 
             Text(
+                modifier = alignmentStartModifier,
                 text = stringResource(id = R.string.time_to_cook) + ": " + recipe.timeToCook,
-                style = MaterialTheme.typography.bodyLarge
             )
             Text(
+                modifier =alignmentStartModifier ,
                 text = stringResource(id = R.string.ingridients) + ": " + recipe.ingredients,
-                style = MaterialTheme.typography.bodyLarge
             )
 //                Text(
 //                    text = "Recipe: " + recipe!!.ingredients,

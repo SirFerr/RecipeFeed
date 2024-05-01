@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -70,6 +71,7 @@ fun SearchScreen(
             active = isSearching,
             onActiveChange = { viewModel.isSearching.value = !viewModel.isSearching.value },
             placeholder = { Text(text = stringResource(id = R.string.search_title)) },
+            shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(padding),
@@ -132,7 +134,7 @@ fun SearchScreen(
                                     )
                                     .fillMaxWidth(),
                                 textAlign = TextAlign.Center,
-                                style = MaterialTheme.typography.titleLarge
+                                style = MaterialTheme.typography.titleMedium
                             )
 
                         }
