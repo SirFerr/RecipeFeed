@@ -48,7 +48,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun newRecipeScreen(
+fun NewRecipeScreen(
     navController: NavHostController,
     viewModel: NewRecipeScreenViewModel = hiltViewModel()
 ) {

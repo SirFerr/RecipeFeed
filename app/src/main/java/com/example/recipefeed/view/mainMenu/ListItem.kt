@@ -40,7 +40,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
-fun listItem(
+fun ListItem(
     recipe: Recipe,
     navController: NavController? = null,
     icon: ImageVector = Icons.Filled.Favorite

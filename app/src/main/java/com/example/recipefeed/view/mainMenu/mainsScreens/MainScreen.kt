@@ -29,7 +29,7 @@ import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun mainScreen(
+fun MainScreen(
     navController: NavHostController,
     viewModel: MainScreenViewModel = hiltViewModel()
 ) {
@@ -46,7 +46,7 @@ fun mainScreen(
         Spacer(modifier = Modifier.weight(1f))
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
             if (isSuccessful)
-                mainScreenCard(navController, recipe)
+                MainScreenCard(navController, recipe)
             else
                 ErrorNetworkCard {
                     viewModel.getResponse()

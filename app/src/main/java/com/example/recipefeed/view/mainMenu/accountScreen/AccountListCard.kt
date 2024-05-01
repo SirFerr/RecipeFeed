@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import com.example.recipefeed.R
 
 @Composable
-fun accountListCard(accountScreenCards: AccountScreenCards) {
+fun AccountListCard(accountScreenCards: AccountScreenCards) {
     Card(modifier = Modifier
         .fillMaxWidth()
         .clickable {

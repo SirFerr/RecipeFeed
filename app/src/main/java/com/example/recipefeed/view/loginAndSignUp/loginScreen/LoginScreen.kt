@@ -10,8 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -26,18 +24,17 @@ import com.example.recipefeed.view.loginAndSignUp.customTextField
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun logInScreen(
+fun LogInScreen(
     navController: NavHostController? = null,
     viewModel: LoginScreenViewModel = hiltViewModel()
 ) {
 
-    val textUsername by viewModel.textUsername.collectAsState()
-    val textPassword by viewModel.textPassword.collectAsState()
-
     Box(
         Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.large_padding)), contentAlignment = Alignment.Center) {
+            .padding(dimensionResource(id = R.dimen.large_padding)),
+        contentAlignment = Alignment.Center
+    ) {
 
         Column(
             modifier = Modifier,

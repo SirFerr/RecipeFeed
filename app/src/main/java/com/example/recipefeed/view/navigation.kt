@@ -16,19 +16,19 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.recipefeed.scaffold.scaffold
-import com.example.recipefeed.view.loginAndSignUp.loginScreen.logInScreen
-import com.example.recipefeed.view.mainMenu.accountScreen.accountScreen
-import com.example.recipefeed.view.mainMenu.addedRecipesScreen.addedRecipesScreen
-import com.example.recipefeed.view.mainMenu.editRecipeScreen.editRecipeScreen
+import com.example.recipefeed.view.loginAndSignUp.loginScreen.LogInScreen
+import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
+import com.example.recipefeed.view.mainMenu.addedRecipesScreen.AddedRecipesScreen
+import com.example.recipefeed.view.mainMenu.editRecipeScreen.EditRecipeScreen
 import com.example.recipefeed.view.mainMenu.favoriteScreen.FavoriteRecipesViewModel
-import com.example.recipefeed.view.mainMenu.favoriteScreen.favoriteScreen
+import com.example.recipefeed.view.mainMenu.favoriteScreen.FavoriteScreen
 import com.example.recipefeed.view.mainMenu.mainsScreens.MainScreenViewModel
-import com.example.recipefeed.view.mainMenu.mainsScreens.mainScreen
-import com.example.recipefeed.view.mainMenu.newRecipeScreen.newRecipeScreen
-import com.example.recipefeed.view.mainMenu.recipeScreen.recipeScreen
+import com.example.recipefeed.view.mainMenu.mainsScreens.MainScreen
+import com.example.recipefeed.view.mainMenu.newRecipeScreen.NewRecipeScreen
+import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchRecipesViewModel
-import com.example.recipefeed.view.mainMenu.searchScreen.searchScreen
-import com.example.recipefeed.view.loginAndSignUp.signUpScreen.signUpScreen
+import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
+import com.example.recipefeed.view.loginAndSignUp.signUpScreen.SignUpScreen
 
 @Composable
 fun navigation(): NavHostController {
@@ -43,8 +43,8 @@ fun navigation(): NavHostController {
             interactionSource = remember { MutableInteractionSource() }) { focusManager.clearFocus() })
     {
         navigation("loginScreen", "loginAndSignUp") {
-            composable("loginScreen") { logInScreen(firstNavController) }
-            composable("signupScreen") { signUpScreen(firstNavController) }
+            composable("loginScreen") { LogInScreen(firstNavController) }
+            composable("signupScreen") { SignUpScreen(firstNavController) }
         }
         composable("main") {
             val mainScreenViewModel: MainScreenViewModel = hiltViewModel()
@@ -57,25 +57,25 @@ fun navigation(): NavHostController {
                     modifier = Modifier.padding(it)
                 ) {
                     composable("mainScreen") {
-                        mainScreen(
+                        MainScreen(
                             navController = navController, mainScreenViewModel
                         )
 
                     }
                     composable("favoriteScreen") {
-                        favoriteScreen(
+                        FavoriteScreen(
                             navController = navController, favoriteRecipesViewModel
                         )
 
                     }
                     composable("searchScreen") {
-                        searchScreen(
+                        SearchScreen(
                             navController = navController, searchRecipesViewModel
                         )
                     }
 
                     composable("accountScreen") {
-                        accountScreen(
+                        AccountScreen(
                             navController,
                             firstNavController
                         )
@@ -85,21 +85,21 @@ fun navigation(): NavHostController {
                     })) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("id")
                         if (id != null) {
-                            recipeScreen(navController, id)
+                            RecipeScreen(navController, id)
                         }
                     }
                     composable("newRecipeScreen") {
-                        newRecipeScreen(navController)
+                        NewRecipeScreen(navController)
                     }
                     composable("addedRecipesScreen") {
-                        addedRecipesScreen(navController)
+                        AddedRecipesScreen(navController)
                     }
                     composable("editRecipeScreen/{id}", listOf(navArgument("id") {
                         type = NavType.IntType
                     })) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("id")
                         if (id != null) {
-                            editRecipeScreen(navController, id)
+                            EditRecipeScreen(navController, id)
                         }
                     }
 

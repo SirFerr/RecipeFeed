@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+class LoginScreenViewModel @Inject constructor() :
     ViewModel() {
     var textUsername = MutableStateFlow("")
     var textPassword = MutableStateFlow("")

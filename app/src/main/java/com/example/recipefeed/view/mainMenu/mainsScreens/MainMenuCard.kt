@@ -33,7 +33,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
-fun mainScreenCard(
+fun MainScreenCard(
     navController: NavHostController,
     recipe: Recipe
 ) {

@@ -16,7 +16,7 @@ import com.example.recipefeed.R
 
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun accountScreen(
+fun AccountScreen(
     navController: NavHostController? = null,
     firstNavController: NavHostController? = null
 ) {
@@ -37,7 +37,7 @@ fun accountScreen(
 
             ) {
             items(list) {
-                accountListCard(accountScreenCards = it)
+                AccountListCard(accountScreenCards = it)
             }
         }
     }

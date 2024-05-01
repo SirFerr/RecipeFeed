@@ -17,14 +17,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.view.mainMenu.listItem
+import com.example.recipefeed.view.mainMenu.ListItem
 import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
-import com.example.recipefeed.view.mainMenu.updateBox
+import com.example.recipefeed.view.mainMenu.UpdateBox
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun addedRecipesScreen(
+fun AddedRecipesScreen(
     navController: NavHostController,
     viewModel: AddedRecipesViewModel = hiltViewModel()
 ) {
@@ -33,7 +33,7 @@ fun addedRecipesScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
 
-    updateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
+    UpdateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
         LazyColumn(
             state = rememberLazyListState(),
 
@@ -46,7 +46,7 @@ fun addedRecipesScreen(
 
             if (isSuccessful) {
                 items(recipes, key = { it.id }) {
-                    listItem(it, navController, Icons.Filled.Edit)
+                    ListItem(it, navController, Icons.Filled.Edit)
                 }
             } else {
                 item {

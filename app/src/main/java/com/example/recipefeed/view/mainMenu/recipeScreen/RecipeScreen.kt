@@ -29,13 +29,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.view.mainMenu.updateBox
+import com.example.recipefeed.view.mainMenu.UpdateBox
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
-fun recipeScreen(
+fun RecipeScreen(
     navController: NavHostController,
     id: Int = -1,
     viewModel: RecipeScreenViewModel = hiltViewModel()
@@ -48,7 +48,7 @@ fun recipeScreen(
     val recipe by viewModel.idRecipe.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    updateBox(isLoading = isLoading, exec = { viewModel.getById(id) }) {
+    UpdateBox(isLoading = isLoading, exec = { viewModel.getById(id) }) {
         Column(
             Modifier
                 .fillMaxSize()

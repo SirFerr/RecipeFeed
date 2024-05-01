@@ -19,13 +19,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
-import com.example.recipefeed.view.mainMenu.listItem
-import com.example.recipefeed.view.mainMenu.updateBox
+import com.example.recipefeed.view.mainMenu.ListItem
+import com.example.recipefeed.view.mainMenu.UpdateBox
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun favoriteScreen(
+fun FavoriteScreen(
     navController: NavHostController,
     viewModel: FavoriteRecipesViewModel = hiltViewModel()
 ) {
@@ -36,7 +36,7 @@ fun favoriteScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
 
-    updateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
+    UpdateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
         LazyColumn(
             state = rememberLazyListState(),
 
@@ -48,7 +48,7 @@ fun favoriteScreen(
             item { }
             if (isSuccessful) {
                 items(recipes, key = { it.id }) {
-                    listItem(it, navController)
+                    ListItem(it, navController)
                 }
             } else {
                 item {

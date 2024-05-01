@@ -34,12 +34,12 @@ import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.view.mainMenu.CircularLoad
 import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
-import com.example.recipefeed.view.mainMenu.listItem
+import com.example.recipefeed.view.mainMenu.ListItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun searchScreen(
+fun SearchScreen(
     navController: NavHostController,
     viewModel: SearchRecipesViewModel = hiltViewModel(),
 ) {
@@ -138,7 +138,7 @@ fun searchScreen(
                         }
                     } else
                         items(recipes, key = { it.id }) {
-                            listItem(it, navController)
+                            ListItem(it, navController)
                         }
                 } else {
                     item {

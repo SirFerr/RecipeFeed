@@ -28,7 +28,7 @@ import com.example.recipefeed.view.loginAndSignUp.customTextField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showSystemUi = true, showBackground = true)
-fun signUpScreen(
+fun SignUpScreen(
     navController: NavHostController? = null,
     viewModel: SignUpScreenViewModel = hiltViewModel()
 ) {

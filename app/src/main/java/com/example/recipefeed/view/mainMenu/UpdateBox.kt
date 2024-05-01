@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun updateBox(isLoading: Boolean, exec: () -> Unit, screen: @Composable () -> Unit) {
+fun UpdateBox(isLoading: Boolean, exec: () -> Unit, screen: @Composable () -> Unit) {
     val refreshState =
         rememberPullRefreshState(refreshing = isLoading, onRefresh = { exec() })
     Box(
