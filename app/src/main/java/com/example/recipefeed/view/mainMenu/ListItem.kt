@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -30,6 +31,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
@@ -51,7 +53,7 @@ fun ListItem(
 
 
 
-    Card(Modifier.clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
+    Card(Modifier.fillMaxWidth().size(1f.dp,70.dp).clickable { navController?.navigate("recipeScreen/${recipe.id}") }) {
         Row(
             Modifier
                 .padding(dimensionResource(id = R.dimen.sub_padding))
@@ -68,11 +70,9 @@ fun ListItem(
                 model = image,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .weight(1f)
-                    .aspectRatio(1f)
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillWidth,
                 loading = { }
             )
             Column(

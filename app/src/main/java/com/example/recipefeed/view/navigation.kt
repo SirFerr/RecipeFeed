@@ -85,7 +85,7 @@ fun navigation(): NavHostController {
                     })) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("id")
                         if (id != null) {
-                            RecipeScreen(navController, id)
+                            RecipeScreen( id)
                         }
                     }
                     composable("newRecipeScreen") {

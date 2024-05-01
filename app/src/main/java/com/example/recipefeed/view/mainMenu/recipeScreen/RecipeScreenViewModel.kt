@@ -17,6 +17,7 @@ class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: Recip
     val idRecipe = MutableStateFlow(Recipe())
     val isLoading = MutableStateFlow(false)
 
+
     fun getById(id: Int) {
         viewModelScope.launch {
             isLoading.value = true

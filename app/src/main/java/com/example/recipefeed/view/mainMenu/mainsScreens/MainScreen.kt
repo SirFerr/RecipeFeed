@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,14 +37,14 @@ fun MainScreen(
     val recipe by viewModel.recipe.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
 
+    Box(modifier = Modifier.fillMaxSize()){
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.main_padding)),
-        verticalArrangement = Arrangement.SpaceBetween,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.weight(1f))
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
             if (isSuccessful)
                 MainScreenCard(navController, recipe)
@@ -52,25 +53,23 @@ fun MainScreen(
                     viewModel.getResponse()
                 }
         }
-        Spacer(modifier = Modifier.weight(1f))
-
         Row(
             Modifier
-                .weight(1f)
                 .wrapContentSize()
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Button(modifier = Modifier, onClick = {
+            Button(modifier = Modifier.wrapContentSize(), onClick = {
                 viewModel.getRandomRecipe()
             }) {
                 Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(modifier = Modifier.wrapContentSize(),onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
             }
-        }
+        }}
     }
+
 
 }

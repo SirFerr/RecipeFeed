@@ -3,15 +3,20 @@
 package com.example.recipefeed.view.mainMenu.mainsScreens
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -48,7 +53,7 @@ fun MainScreenCard(
         Column(
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.main_padding))
-                .wrapContentSize(),
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
         ) {
 
@@ -60,13 +65,10 @@ fun MainScreenCard(
                 model = image,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(
-                        RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
-                    )
-                    .aspectRatio(1f),
-                contentScale = ContentScale.Crop,
-                loading = { CircularProgressIndicator() }
+                    .fillMaxSize(0.5f)
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+                    .align(Alignment.CenterHorizontally),
+                loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
             )
 
             Text(

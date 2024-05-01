@@ -36,19 +36,11 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun RecipeScreen(
-    navController: NavHostController,
     id: Int = -1,
     viewModel: RecipeScreenViewModel = hiltViewModel()
 ) {
-
-    viewModel.getById(id)
-
-    val context = LocalContext.current
-
     val recipe by viewModel.idRecipe.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-    UpdateBox(isLoading = isLoading, exec = { viewModel.getById(id) }) {
+    viewModel.getById(id)
         Column(
             Modifier
                 .fillMaxSize()
@@ -69,11 +61,11 @@ fun RecipeScreen(
                 model = image,
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
+                    .fillMaxSize(0.5f)
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+                    .align(Alignment.CenterHorizontally),
                 loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
             )
-
             Text(text = recipe.description, style = MaterialTheme.typography.bodyLarge)
             HorizontalDivider()
 
@@ -91,11 +83,6 @@ fun RecipeScreen(
 //                )
 
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding) * 4))
-
-
         }
-    }
-
-
 }
 
