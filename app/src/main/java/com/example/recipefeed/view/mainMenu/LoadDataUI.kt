@@ -45,6 +45,7 @@ fun ErrorNetworkCard(exec: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize(),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.errorContainer,
             contentColor = MaterialTheme.colorScheme.error
