@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -91,7 +92,7 @@ fun CustomAsyncImage(image: Any?) {
         contentDescription = null,
         modifier = Modifier
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-            .size(250.dp),
-        loading = { CircularProgressIndicator() }, contentScale = ContentScale.Crop
+            .height(250.dp),
+        loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
     )
 }

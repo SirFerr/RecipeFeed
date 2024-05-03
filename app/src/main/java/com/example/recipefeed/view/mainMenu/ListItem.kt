@@ -90,7 +90,7 @@ fun ListItem(
             ) {
                 Text(text = recipe.recipeName, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = recipe.recipeLikes.toString(),
+                    text = "Likes: "+recipe.recipeLikes.toString(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
