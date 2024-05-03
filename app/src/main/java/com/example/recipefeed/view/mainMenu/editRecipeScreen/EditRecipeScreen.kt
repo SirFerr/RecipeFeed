@@ -19,14 +19,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -47,11 +48,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.recipe.Recipe
 import com.example.recipefeed.utils.convertToMultipart
-import com.example.recipefeed.view.mainMenu.CustomAsyncImage
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -82,13 +81,17 @@ fun EditRecipeScreen(
     var timeToCook by remember {
         mutableStateOf("")
     }
+    var isDelete by remember {
+        mutableStateOf(false)
+    }
 
 
     val imageBytes = Base64.decode(recipe.imageData)
-    var selectImages by remember{
+    var selectImages by remember {
         mutableStateOf<Any?>(
             ""
-        )}
+        )
+    }
 
     LaunchedEffect(recipe) {
         selectImages = BitmapFactory.decodeByteArray(
@@ -104,108 +107,139 @@ fun EditRecipeScreen(
 
     val galleryLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-            selectImages = it
+            if (it != null)
+                selectImages = it
         }
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End, modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(id = R.dimen.main_padding))
-            ) {
-                IconButton(
-                    onClick = {
-                        viewModel.deleteRecipeById(id)
-                              navController.popBackStack()
-                              },
-                    modifier = Modifier.size(30.dp)
-                        .wrapContentSize()
-                ) {
-                    Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
-                }
-            }
 
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = recipeName,
-                onValueChange = { recipeName = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.title_recipe),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-            Button(
-                onClick = { galleryLauncher.launch("image/*") },
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End, modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.main_padding))
+        ) {
+            IconButton(
+                onClick = {
+                    isDelete = true
+
+                },
                 modifier = Modifier
+                    .size(30.dp)
+                    .wrapContentSize()
             ) {
+                Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
+            }
+        }
+
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = recipeName,
+            onValueChange = { recipeName = it },
+            label = {
                 Text(
-                    text = stringResource(id = R.string.pick_image),
+                    text = stringResource(id = R.string.title_recipe),
                     style = MaterialTheme.typography.titleMedium
                 )
-            }
-            if (selectImages!=null)
-                AsyncImage(
-                    model = selectImages,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentSize()
-                        .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-                    contentScale = ContentScale.FillWidth
-                )
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = description,
-                onValueChange = { description = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.description_recipe),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = ingredients,
-                onValueChange = { ingredients = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.ingridients),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-
-
-            OutlinedTextField(modifier = Modifier.fillMaxWidth(),
-                value = timeToCook,
-                onValueChange = { timeToCook = it },
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.time_to_cook),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                })
-
-            Spacer(Modifier.weight(1f))
-            Button(modifier = Modifier.wrapContentSize(), onClick = {
-                viewModel.editRecipe(
-                    Recipe(),
-                    convertToMultipart(selectImages, context),
-                    context
-                )
-            }) {
-                Text(
-                    text = stringResource(id = R.string.complete)
-
-                )
-            }
-            Spacer(modifier = Modifier)
-
+            })
+        Button(
+            onClick = { galleryLauncher.launch("image/*") },
+            modifier = Modifier
+        ) {
+            Text(
+                text = stringResource(id = R.string.pick_image),
+                style = MaterialTheme.typography.titleMedium
+            )
         }
+        if (selectImages != null)
+            AsyncImage(
+                model = selectImages,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentSize()
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
+                contentScale = ContentScale.FillWidth
+            )
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = description,
+            onValueChange = { description = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.description_recipe),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = ingredients,
+            onValueChange = { ingredients = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.ingridients),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+
+
+        OutlinedTextField(modifier = Modifier.fillMaxWidth(),
+            value = timeToCook,
+            onValueChange = { timeToCook = it },
+            label = {
+                Text(
+                    text = stringResource(id = R.string.time_to_cook),
+                    style = MaterialTheme.typography.titleMedium
+                )
+            })
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(modifier = Modifier.wrapContentSize(), onClick = {
+            viewModel.editRecipe(
+                Recipe(),
+                convertToMultipart(selectImages, context),
+                context
+            )
+        }) {
+            Text(
+                text = stringResource(id = R.string.complete)
+
+            )
+        }
+        Spacer(modifier = Modifier)
+
     }
+    if (isDelete) {
+
+        AlertDialog(
+            onDismissRequest = {
+                isDelete = false
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    isDelete = false
+                }) {
+                    Text(text = "dismiss")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    isDelete = false
+                    viewModel.deleteRecipeById(id)
+                    navController.popBackStack()
+                }) {
+                    Text(text = "confirm")
+                }
+            }, text = {
+                Text(text = "Are you sure you want to delete the recipe?")
+            })
+
+    }
+
+}
+
 

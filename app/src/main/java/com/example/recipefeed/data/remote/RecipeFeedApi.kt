@@ -26,7 +26,7 @@ interface RecipeFeedApi {
     @GET("recipe/getByNameLike/{name}")
     suspend fun getByName(@Path("name") name: String): Response<List<Recipe>>
 
-    @DELETE("recipe/updateRecipe/{id}")
+    @DELETE("recipe/deleteRecipe/{id}")
     suspend fun deleteById(@Path("id") id: Int): Response<Recipe>
 
     @Multipart

@@ -1,10 +1,9 @@
 package com.example.recipefeed.view.mainMenu.searchScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.local.SharedPreferencesManager
-import com.example.recipefeed.data.remote.recipe.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
+import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +40,9 @@ class SearchRecipesViewModel @Inject constructor(
 
 
     fun search() {
-        getByName()
-        sharedPreferencesManager.saveString(value = searchText.value)
+        if (searchText.value != ""){
+            getByName()
+        sharedPreferencesManager.saveString(value = searchText.value)}
         searchHistory.value = sharedPreferencesManager.getLastTenStrings()
         isSearching.value = false
     }

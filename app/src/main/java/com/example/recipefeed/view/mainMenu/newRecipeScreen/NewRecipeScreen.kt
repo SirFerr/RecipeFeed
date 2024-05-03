@@ -68,6 +68,7 @@ fun NewRecipeScreen(
 
     var selectImages by remember { mutableStateOf<Uri?>(null) }
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        if(it!=null)
         selectImages = it
     }
     val context = LocalContext.current

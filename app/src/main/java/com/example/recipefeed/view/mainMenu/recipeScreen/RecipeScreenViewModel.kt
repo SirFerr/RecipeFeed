@@ -1,6 +1,9 @@
 package com.example.recipefeed.view.mainMenu.recipeScreen
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.remote.recipe.Recipe
@@ -16,8 +19,12 @@ class RecipeScreenViewModel @Inject constructor(private val recipeFeedApi: Recip
 
     val idRecipe = MutableStateFlow(Recipe())
     val isLoading = MutableStateFlow(false)
+    val isLiked =  MutableStateFlow(false)
 
 
+    fun changeLike(){
+        isLiked.value = !isLiked.value
+    }
     fun getById(id: Int) {
         viewModelScope.launch {
             isLoading.value = true
