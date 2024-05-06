@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.mainMenu.CustomAsyncImage
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -38,7 +39,7 @@ fun MainScreenCard(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                navController.navigate("recipeScreen/${recipe.id}")
+                navController.navigate("${Destinations.recipe}/${recipe.id}")
             },
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.loginAndSignUp.customTextField
 
 
@@ -53,8 +54,8 @@ fun LogInScreen(
             )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
             Button(onClick = {
-                navController?.navigate("main") {
-                    popUpTo("loginScreen") {
+                navController?.navigate(Destinations.mainGroup) {
+                    popUpTo(Destinations.login) {
                         inclusive = true
                     }
                 }
@@ -63,7 +64,7 @@ fun LogInScreen(
                 Text(text = stringResource(id = R.string.login))
             }
             Button(onClick = {
-                navController?.navigate("signupScreen")
+                navController?.navigate(Destinations.signUp)
 
             }) {
                 Text(text = stringResource(id = R.string.signup))

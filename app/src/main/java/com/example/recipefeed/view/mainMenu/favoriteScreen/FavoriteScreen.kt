@@ -2,6 +2,7 @@
 
 package com.example.recipefeed.view.mainMenu.favoriteScreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,6 +31,7 @@ fun FavoriteScreen(
     viewModel: FavoriteRecipesViewModel = hiltViewModel()
 ) {
 
+    Log.d("1", hiltViewModel<FavoriteRecipesViewModel>().toString())
 
     val recipes by viewModel.recipes.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()

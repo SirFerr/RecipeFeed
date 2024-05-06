@@ -12,6 +12,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.utils.Destinations
 
 
 @Preview(showSystemUi = true, showBackground = true)
@@ -22,9 +23,9 @@ fun AccountScreen(
 ) {
 
     val list = listOf(
-        AccountScreenCards("Create recipe", "newRecipeScreen", navController),
-        AccountScreenCards("Show created recipes", "addedRecipesScreen", navController),
-        AccountScreenCards("LogOut", "loginAndSignUp", firstNavController)
+        AccountScreenCards("Create recipe", Destinations.newRecipe, navController),
+        AccountScreenCards("Show created recipes", Destinations.addedRecipes, navController),
+        AccountScreenCards("LogOut", Destinations.loginGroup, firstNavController)
     )
 
     Column(

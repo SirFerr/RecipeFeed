@@ -1,8 +1,6 @@
 package com.example.recipefeed.scaffold.bottom
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -11,7 +9,6 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,28 +17,30 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipefeed.R
+import com.example.recipefeed.utils.Destinations
 
 @Composable
 fun bottomNavigation(navController: NavController) {
+
     val list = listOf(
         NavBarItem(
             stringResource(id = R.string.home_title),
-            "mainScreen",
+            Destinations.main,
             Icons.Filled.Home
         ),
         NavBarItem(
             stringResource(id = R.string.search_title),
-            "searchScreen",
+            Destinations.search,
             Icons.Filled.Search
         ),
         NavBarItem(
             stringResource(id = R.string.favorite_title),
-            "favoriteScreen",
+            Destinations.favorite,
             Icons.Filled.Star
         ),
         NavBarItem(
             stringResource(id = R.string.account_title),
-            "accountScreen",
+            Destinations.account,
             Icons.Filled.AccountCircle
         ),
     )
@@ -56,7 +55,17 @@ fun bottomNavigation(navController: NavController) {
             NavigationBarItem(
                 modifier = Modifier,
                 selected = currentRoute == it.route,
-                onClick = { navController.navigate(it.route) },
+                onClick = {
+                    navController.navigate(it.route) {
+                        navController.graph.startDestinationRoute?.let { route ->
+                            popUpTo(route) {
+                                saveState = true
+                            }
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
 //                label = { Text(it.screenName) },
 //                alwaysShowLabel = false,
                 icon = {

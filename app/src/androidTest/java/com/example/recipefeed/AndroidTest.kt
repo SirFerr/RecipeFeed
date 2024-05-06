@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.recipefeed.data.remote.RecipeFeedApi
+import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.loginAndSignUp.loginScreen.LoginScreenViewModel
 import com.example.recipefeed.view.loginAndSignUp.loginScreen.LogInScreen
 import com.example.recipefeed.view.loginAndSignUp.signUpScreen.SignUpScreen
@@ -20,7 +21,6 @@ import com.example.recipefeed.view.loginAndSignUp.signUpScreen.SignUpScreenViewM
 import com.example.recipefeed.view.mainMenu.mainsScreens.MainScreen
 import com.example.recipefeed.view.mainMenu.mainsScreens.MainScreenViewModel
 import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
-import io.mockk.mockk
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -37,8 +37,8 @@ class AndroidTest {
         // Start with the login screen
         composeTestRule.setContent {
             val navController = rememberNavController()
-            NavHost(navController = navController, startDestination = "loginScreen") {
-                composable("loginScreen") {
+            NavHost(navController = navController, startDestination = Destinations.login) {
+                composable(Destinations.login) {
                     LogInScreen(navController = navController, LoginScreenViewModel())
                 }
                 composable("main"){ Text(text = "MainScreen")}

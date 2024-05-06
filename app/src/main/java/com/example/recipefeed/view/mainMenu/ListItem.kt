@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.utils.Destinations
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -57,7 +58,7 @@ fun ListItem(
         Modifier
             .fillMaxWidth()
             .size(1f.dp, 70.dp)
-            .clickable { navController?.navigate("recipeScreen/${recipe.id}") },
+            .clickable { navController?.navigate("${Destinations.recipe}/${recipe.id}") },
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
     ) {
         Row(
@@ -98,7 +99,7 @@ fun ListItem(
                 .weight(1f)
                 .aspectRatio(1f), onClick = {
                 if (_icon == Icons.Filled.Edit) {
-                    navController?.navigate("editRecipeScreen/${recipe.id}")
+                    navController?.navigate("${Destinations.editRecipe}/${recipe.id}")
                 }
             }) {
                 Icon(imageVector = _icon, contentDescription = null)
