@@ -63,7 +63,7 @@ fun navigation(): NavHostController {
                     startDestination = Destinations.main,
                     modifier = Modifier.padding(it),
                     enterTransition = { fadeIn(animationSpec = tween(duration)) },
-                    exitTransition = { fadeOut(animationSpec = tween(700)) }
+                    exitTransition = { fadeOut(animationSpec = tween(duration)) }
                 ) {
                     composable(Destinations.main) {
                         MainScreen(
