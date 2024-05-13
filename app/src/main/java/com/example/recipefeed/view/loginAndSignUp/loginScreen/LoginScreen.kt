@@ -68,6 +68,7 @@ fun LogInScreen(
                     popUpTo(Destinations.login) {
                         inclusive = true
                     }
+                    viewModel.saveToken("1")
                 }
 
             }) {
