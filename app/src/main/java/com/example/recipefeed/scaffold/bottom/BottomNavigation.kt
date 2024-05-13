@@ -1,5 +1,6 @@
 package com.example.recipefeed.scaffold.bottom
 
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipefeed.R
 import com.example.recipefeed.utils.Destinations
@@ -49,7 +51,7 @@ fun bottomNavigation(navController: NavController) {
     val currentRoute = backStackEntry?.destination?.route
 
     NavigationBar(
-        Modifier.height(60.dp)
+        Modifier.height(55.dp)
     ) {
         list.forEach {
             NavigationBarItem(
@@ -57,12 +59,14 @@ fun bottomNavigation(navController: NavController) {
                 selected = currentRoute == it.route,
                 onClick = {
                     navController.navigate(it.route) {
+
+
+
                         navController.graph.startDestinationRoute?.let { route ->
                             popUpTo(route) {
                                 saveState = true
                             }
                         }
-                        launchSingleTop = true
                         restoreState = true
                     }
                 },

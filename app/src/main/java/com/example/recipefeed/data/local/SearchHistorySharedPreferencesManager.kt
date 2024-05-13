@@ -2,7 +2,7 @@ package com.example.recipefeed.data.local
 
 import android.content.Context
 
-class SharedPreferencesManager(context: Context) {
+class SearchHistorySharedPreferencesManager(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
 
     fun saveString(value: String) {

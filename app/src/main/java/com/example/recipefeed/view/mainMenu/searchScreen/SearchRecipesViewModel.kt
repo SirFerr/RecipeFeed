@@ -1,7 +1,7 @@
 package com.example.recipefeed.view.mainMenu.searchScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.local.SharedPreferencesManager
+import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor(
     private val recipeFeedApi: RecipeFeedApi,
-    private val sharedPreferencesManager: SharedPreferencesManager
+    private val searchHistorySharedPreferencesManager: SearchHistorySharedPreferencesManager
 ) :
     ViewModel() {
 
@@ -31,7 +31,7 @@ class SearchRecipesViewModel @Inject constructor(
     val searchHistory = MutableStateFlow<List<String>>(listOf())
 
     init {
-        searchHistory.value = sharedPreferencesManager.getLastTenStrings()
+        searchHistory.value = searchHistorySharedPreferencesManager.getLastTenStrings()
 //        val timer = Timer("schedule", true)
 //        timer.scheduleAtFixedRate(2000, 2000) {
 //            search()
@@ -42,8 +42,8 @@ class SearchRecipesViewModel @Inject constructor(
     fun search() {
         if (searchText.value != ""){
             getByName()
-        sharedPreferencesManager.saveString(value = searchText.value)}
-        searchHistory.value = sharedPreferencesManager.getLastTenStrings()
+        searchHistorySharedPreferencesManager.saveString(value = searchText.value)}
+        searchHistory.value = searchHistorySharedPreferencesManager.getLastTenStrings()
         isSearching.value = false
     }
 

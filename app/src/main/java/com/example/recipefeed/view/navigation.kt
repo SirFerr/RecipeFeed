@@ -7,10 +7,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,6 +21,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.scaffold.scaffold
 import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.loginAndSignUp.loginScreen.LogInScreen
@@ -36,7 +40,6 @@ import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
 
 @Composable
 fun navigation(): NavHostController {
-
     val focusManager = LocalFocusManager.current
     val firstNavController = rememberNavController()
     val duration = 700
