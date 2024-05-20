@@ -15,15 +15,13 @@ import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
     private val recipeFeedApi: RecipeFeedApi,
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
-) :
-    ViewModel() {
-
+) : ViewModel() {
 
     val recipe = MutableStateFlow(Recipe())
     val isSuccessful = MutableStateFlow(true)
-    var response = MutableStateFlow(Response.success(listOf<Recipe>()))
+    var response = MutableStateFlow(Response.success(emptyList<Recipe>()))
     var isLoading = MutableStateFlow(false)
+    val errorMessage = MutableStateFlow("")
 
     init {
         getResponse()
@@ -35,9 +33,14 @@ class MainScreenViewModel @Inject constructor(
             try {
                 response.value = recipeFeedApi.getAll()
                 isSuccessful.value = response.value.isSuccessful
-                getRandomRecipe()
+                if (response.value.isSuccessful) {
+                    getRandomRecipe()
+                } else {
+                    errorMessage.value = "Failed to fetch recipes: ${response.value.message()}"
+                }
             } catch (e: Exception) {
                 isSuccessful.value = false
+                errorMessage.value = "Error: ${e.message}"
             }
             isLoading.value = false
         }
@@ -45,10 +48,14 @@ class MainScreenViewModel @Inject constructor(
 
     fun getRandomRecipe() {
         viewModelScope.launch {
-            if (response.value.isSuccessful)
-                if(response.value.body()!= null)
-                recipe.value = response.value.body()!!.random()
-
+            if (response.value.isSuccessful) {
+                val recipes = response.value.body().orEmpty()
+                if (recipes.isNotEmpty()) {
+                    recipe.value = recipes.random()
+                } else {
+                    errorMessage.value = "No recipes available."
+                }
+            }
         }
     }
 }

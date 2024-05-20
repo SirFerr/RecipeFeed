@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -45,9 +46,8 @@ fun MainScreenCard(
 
         ) {
         Column(
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.main_padding))
-                .verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxWidth().wrapContentSize()
+                .padding(dimensionResource(id = R.dimen.main_padding)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
