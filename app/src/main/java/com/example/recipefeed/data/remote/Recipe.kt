@@ -1,4 +1,4 @@
-package com.example.recipefeed.data.remote.recipe
+package com.example.recipefeed.data.remote
 
 import java.util.UUID
 

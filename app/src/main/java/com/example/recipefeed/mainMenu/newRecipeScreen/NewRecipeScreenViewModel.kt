@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
-import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +29,6 @@ class NewRecipeScreenViewModel @Inject constructor(
                     recipeFeedApi.addRecipe(
                         recipe,
                         it,
-                        token = tokenSharedPreferencesManager.getToken()
                     )
                 }
                 if (response?.isSuccessful == true) {

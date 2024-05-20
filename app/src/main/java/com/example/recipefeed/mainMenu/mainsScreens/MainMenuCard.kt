@@ -23,7 +23,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.mainMenu.CustomAsyncImage
 import kotlin.io.encoding.Base64

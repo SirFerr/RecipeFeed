@@ -49,7 +49,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.utils.convertToMultipart
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi

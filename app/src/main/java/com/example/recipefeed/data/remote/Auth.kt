@@ -1,4 +1,4 @@
-package com.example.recipefeed.data.remote.auth
+package com.example.recipefeed.data.remote
 
 data class Auth(
     val name : String  = "",

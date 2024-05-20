@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
-import com.example.recipefeed.data.remote.auth.Auth
+import com.example.recipefeed.data.remote.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +16,7 @@ import javax.inject.Inject
 class LoginScreenViewModel @Inject constructor(
     private val tokenSharedPreferencesManager: TokenSharedPreferencesManager,
     private val recipeFeedApi: RecipeFeedApi
-) :
-    ViewModel() {
+) : ViewModel() {
     var textUsername = MutableStateFlow("")
     var textPassword = MutableStateFlow("")
     val token = MutableStateFlow("")
@@ -39,8 +38,14 @@ class LoginScreenViewModel @Inject constructor(
                 )
                 isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
-                    token.value = response.body()?.token!!
-                    saveToken(token.value)
+                    response.body()?.let {
+                        val receivedToken = it.token.trim()
+                        Log.d("LoginScreenViewModel", "Received token: '$receivedToken'")
+                        token.value = receivedToken
+                        saveToken(receivedToken)
+                    }
+                } else {
+                    isSuccessful.value = false
                 }
             } catch (e: Exception) {
                 Log.e("signIn", e.message.toString())
@@ -49,7 +54,7 @@ class LoginScreenViewModel @Inject constructor(
         }
     }
 
-    fun saveToken(string: String) {
-        tokenSharedPreferencesManager.saveToken(string)
+    private fun saveToken(token: String) {
+        tokenSharedPreferencesManager.saveToken(token)
     }
 }

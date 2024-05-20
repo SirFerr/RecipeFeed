@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
-import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -33,7 +33,7 @@ class MainScreenViewModel @Inject constructor(
         viewModelScope.launch {
             isLoading.value = true
             try {
-                response.value = recipeFeedApi.getAll(tokenSharedPreferencesManager.getToken())
+                response.value = recipeFeedApi.getAll()
                 isSuccessful.value = response.value.isSuccessful
                 getRandomRecipe()
             } catch (e: Exception) {
@@ -46,6 +46,7 @@ class MainScreenViewModel @Inject constructor(
     fun getRandomRecipe() {
         viewModelScope.launch {
             if (response.value.isSuccessful)
+                if(response.value.body()!= null)
                 recipe.value = response.value.body()!!.random()
 
         }

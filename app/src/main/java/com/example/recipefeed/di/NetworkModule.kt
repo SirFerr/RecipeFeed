@@ -1,5 +1,7 @@
 package com.example.recipefeed.di
 
+import com.example.recipefeed.data.local.TokenSharedPreferencesManager
+import com.example.recipefeed.data.remote.AuthInterceptor
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.utils.Constants.BASE_URL
 import dagger.Module
@@ -18,14 +20,16 @@ import javax.inject.Singleton
 object NetworkModule {
     @Singleton
     @Provides
-    fun provideRecipeFeedApi(): RecipeFeedApi {
+    fun provideRecipeFeedApi(tokenSharedPreferencesManager: TokenSharedPreferencesManager): RecipeFeedApi {
+
+        val authInterceptor = AuthInterceptor(tokenSharedPreferencesManager)
 
         val client = OkHttpClient.Builder()
-            // Configure timeouts and other settings as needed
+            .addInterceptor(authInterceptor)
             .connectTimeout(5, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.SECONDS)
             .writeTimeout(5, TimeUnit.SECONDS)
-            .retryOnConnectionFailure(true) // Enable retry on connection failure
+            .retryOnConnectionFailure(true)
             .build()
 
         return Retrofit.Builder()

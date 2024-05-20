@@ -3,8 +3,8 @@ package com.example.recipefeed.view.mainMenu.searchScreen
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
+import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
-import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,8 +57,8 @@ class SearchRecipesViewModel @Inject constructor(
                 isLoading.value = true
                 val response = recipeFeedApi.getByName(
                     searchText.value,
-                    tokenSharedPreferencesManager.getToken()
-                )
+
+                    )
                 isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
                     recipes.value = response.body()!!

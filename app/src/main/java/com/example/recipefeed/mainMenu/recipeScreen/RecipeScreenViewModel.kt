@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
-import com.example.recipefeed.data.remote.recipe.Recipe
+import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -31,7 +31,7 @@ class RecipeScreenViewModel @Inject constructor(
             isLoading.value = true
             try {
                 val response =
-                    recipeFeedApi.getById(id, token = tokenSharedPreferencesManager.getToken())
+                    recipeFeedApi.getById(id,)
                 if (response.isSuccessful)
                     idRecipe.value = response.body()!!
             } catch (e: Exception) {
