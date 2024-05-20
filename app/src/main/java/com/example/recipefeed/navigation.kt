@@ -1,4 +1,4 @@
-package com.example.recipefeed.view
+package com.example.recipefeed
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -22,10 +22,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
+import com.example.recipefeed.loginAndSignUp.loginScreen.LogInScreen
+import com.example.recipefeed.loginAndSignUp.signUpScreen.SignUpScreen
 import com.example.recipefeed.scaffold.scaffold
 import com.example.recipefeed.utils.Destinations
-import com.example.recipefeed.view.loginAndSignUp.loginScreen.LogInScreen
-import com.example.recipefeed.view.loginAndSignUp.signUpScreen.SignUpScreen
 import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
 import com.example.recipefeed.view.mainMenu.addedRecipesScreen.AddedRecipesScreen
 import com.example.recipefeed.view.mainMenu.editRecipeScreen.EditRecipeScreen

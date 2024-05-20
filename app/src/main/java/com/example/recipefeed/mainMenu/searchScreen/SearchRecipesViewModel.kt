@@ -2,6 +2,7 @@ package com.example.recipefeed.view.mainMenu.searchScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
+import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor(
     private val recipeFeedApi: RecipeFeedApi,
-    private val searchHistorySharedPreferencesManager: SearchHistorySharedPreferencesManager
+    private val searchHistorySharedPreferencesManager: SearchHistorySharedPreferencesManager,
+    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+
 ) :
     ViewModel() {
 
@@ -40,9 +43,10 @@ class SearchRecipesViewModel @Inject constructor(
 
 
     fun search() {
-        if (searchText.value != ""){
+        if (searchText.value != "") {
             getByName()
-        searchHistorySharedPreferencesManager.saveString(value = searchText.value)}
+            searchHistorySharedPreferencesManager.saveString(value = searchText.value)
+        }
         searchHistory.value = searchHistorySharedPreferencesManager.getLastTenStrings()
         isSearching.value = false
     }
@@ -51,7 +55,10 @@ class SearchRecipesViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 isLoading.value = true
-                val response = recipeFeedApi.getByName(searchText.value)
+                val response = recipeFeedApi.getByName(
+                    searchText.value,
+                    tokenSharedPreferencesManager.getToken()
+                )
                 isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
                     recipes.value = response.body()!!

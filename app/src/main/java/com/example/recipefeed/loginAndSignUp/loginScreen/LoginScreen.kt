@@ -1,5 +1,6 @@
-package com.example.recipefeed.view.loginAndSignUp.loginScreen
+package com.example.recipefeed.loginAndSignUp.loginScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,14 +15,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.loginAndSignUp.customTextField
 import com.example.recipefeed.utils.Destinations
-import com.example.recipefeed.view.loginAndSignUp.customTextField
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +34,9 @@ fun LogInScreen(
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
     val token by viewModel.token.collectAsState()
+    val isSuccessful by viewModel.isSuccessful.collectAsState()
+
+    val context  = LocalContext.current
 
     if (token != "") {
         navController?.navigate(Destinations.mainGroup) {
@@ -64,11 +69,15 @@ fun LogInScreen(
             )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
             Button(onClick = {
-                navController?.navigate(Destinations.mainGroup) {
-                    popUpTo(Destinations.login) {
-                        inclusive = true
+                viewModel.signIn()
+                if (isSuccessful)
+                    navController?.navigate(Destinations.mainGroup) {
+                        popUpTo(Destinations.login) {
+                            inclusive = true
+                        }
                     }
-                    viewModel.saveToken("1")
+                else{
+                    Toast.makeText(context,"err",Toast.LENGTH_SHORT).show()
                 }
 
             }) {

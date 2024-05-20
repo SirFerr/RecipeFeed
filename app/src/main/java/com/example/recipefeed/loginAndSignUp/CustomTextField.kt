@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.loginAndSignUp
+package com.example.recipefeed.loginAndSignUp
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextField

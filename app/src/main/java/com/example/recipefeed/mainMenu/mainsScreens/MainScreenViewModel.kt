@@ -2,19 +2,21 @@ package com.example.recipefeed.view.mainMenu.mainsScreens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @HiltViewModel
 
-class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+class MainScreenViewModel @Inject constructor(
+    private val recipeFeedApi: RecipeFeedApi,
+    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+) :
     ViewModel() {
 
 
@@ -31,7 +33,7 @@ class MainScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeF
         viewModelScope.launch {
             isLoading.value = true
             try {
-                response.value = recipeFeedApi.getAll()
+                response.value = recipeFeedApi.getAll(tokenSharedPreferencesManager.getToken())
                 isSuccessful.value = response.value.isSuccessful
                 getRandomRecipe()
             } catch (e: Exception) {

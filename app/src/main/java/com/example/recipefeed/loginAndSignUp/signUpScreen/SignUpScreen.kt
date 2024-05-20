@@ -1,4 +1,4 @@
-package com.example.recipefeed.view.loginAndSignUp.signUpScreen
+package com.example.recipefeed.loginAndSignUp.signUpScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.view.loginAndSignUp.customTextField
+import com.example.recipefeed.loginAndSignUp.customTextField
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,9 +72,8 @@ fun SignUpScreen(
             Button(onClick = {
                 if (textPasswordAgain != "" && textPassword != "" && textUsername != "") {
                     if (textPasswordAgain == textPassword) {
+                        viewModel.signUp()
                         navController?.popBackStack()
-
-
                     } else {
                         Toast.makeText(
                             context,

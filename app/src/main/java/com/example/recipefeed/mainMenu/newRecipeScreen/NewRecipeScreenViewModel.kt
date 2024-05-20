@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,13 +16,22 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class NewRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+class NewRecipeScreenViewModel @Inject constructor(
+    private val recipeFeedApi: RecipeFeedApi,
+    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+) :
     ViewModel() {
 
     fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?, context: Context) {
         viewModelScope.launch {
             try {
-                val response = imagePart?.let { recipeFeedApi.addRecipe(recipe, it) }
+                val response = imagePart?.let {
+                    recipeFeedApi.addRecipe(
+                        recipe,
+                        it,
+                        token = tokenSharedPreferencesManager.getToken()
+                    )
+                }
                 if (response?.isSuccessful == true) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Successful", Toast.LENGTH_SHORT).show()

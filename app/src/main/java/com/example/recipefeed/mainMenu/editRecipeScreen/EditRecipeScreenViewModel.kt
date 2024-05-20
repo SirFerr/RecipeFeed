@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.recipe.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,10 @@ import okhttp3.MultipartBody
 import javax.inject.Inject
 
 @HiltViewModel
-class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+class EditRecipeScreenViewModel @Inject constructor(
+    private val recipeFeedApi: RecipeFeedApi,
+    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+) :
     ViewModel() {
     val recipe = MutableStateFlow(Recipe())
 
@@ -25,7 +29,7 @@ class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: R
         viewModelScope.launch {
 
             try {
-                val response = recipeFeedApi.getById(id)
+                val response = recipeFeedApi.getById(id,tokenSharedPreferencesManager.getToken())
                 if (response.isSuccessful)
                     recipe.value = response.body()!!
             } catch (e: Exception) {
@@ -36,7 +40,7 @@ class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: R
     fun editRecipe(recipe: Recipe, imagePart: MultipartBody.Part?, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = imagePart?.let { recipeFeedApi.updateRecipe(recipe.id, recipe, it) }
+                val response = imagePart?.let { recipeFeedApi.updateRecipe(recipe.id, recipe, it,tokenSharedPreferencesManager.getToken()) }
                 if (response?.isSuccessful == true) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(context, "Successful", Toast.LENGTH_SHORT).show()
@@ -55,7 +59,7 @@ class EditRecipeScreenViewModel @Inject constructor(private val recipeFeedApi: R
     fun deleteRecipeById(id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.deleteById(id)
+                val response = recipeFeedApi.deleteById(id,tokenSharedPreferencesManager.getToken())
                 Log.d("delete", response.isSuccessful.toString())
             } catch (e: Exception) {
 
