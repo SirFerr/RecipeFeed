@@ -5,5 +5,6 @@ data class Auth(
     val email: String = "",
     val password: String = "",
     val token: String ="",
-    val role: String = "USER"
+    val role: String = "USER",
+    val error: String = ""
 )

@@ -2,9 +2,8 @@ package com.example.recipefeed.view.mainMenu.mainsScreens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefeed.data.local.TokenSharedPreferencesManager
-import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
+import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -20,8 +19,6 @@ class MainScreenViewModel @Inject constructor(
     val recipe = MutableStateFlow(Recipe())
     val isSuccessful = MutableStateFlow(true)
     var response = MutableStateFlow(Response.success(emptyList<Recipe>()))
-    var isLoading = MutableStateFlow(false)
-    val errorMessage = MutableStateFlow("")
 
     init {
         getResponse()
@@ -29,20 +26,15 @@ class MainScreenViewModel @Inject constructor(
 
     fun getResponse() {
         viewModelScope.launch {
-            isLoading.value = true
             try {
                 response.value = recipeFeedApi.getAll()
                 isSuccessful.value = response.value.isSuccessful
                 if (response.value.isSuccessful) {
                     getRandomRecipe()
-                } else {
-                    errorMessage.value = "Failed to fetch recipes: ${response.value.message()}"
                 }
             } catch (e: Exception) {
                 isSuccessful.value = false
-                errorMessage.value = "Error: ${e.message}"
             }
-            isLoading.value = false
         }
     }
 
@@ -53,7 +45,7 @@ class MainScreenViewModel @Inject constructor(
                 if (recipes.isNotEmpty()) {
                     recipe.value = recipes.random()
                 } else {
-                    errorMessage.value = "No recipes available."
+                    getResponse()
                 }
             }
         }

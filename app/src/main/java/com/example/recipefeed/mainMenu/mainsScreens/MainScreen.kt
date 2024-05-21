@@ -39,7 +39,7 @@ fun MainScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(dimensionResource(id = R.dimen.main_padding)),
+                ,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -36,7 +36,7 @@ fun LogInScreen(
     val token by viewModel.token.collectAsState()
     val isSuccessful by viewModel.isSuccessful.collectAsState()
 
-    val context  = LocalContext.current
+    val context = LocalContext.current
 
     if (token != "") {
         navController?.navigate(Destinations.mainGroup) {
@@ -69,16 +69,18 @@ fun LogInScreen(
             )
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
             Button(onClick = {
-                viewModel.signIn()
-                if (isSuccessful)
-                    navController?.navigate(Destinations.mainGroup) {
-                        popUpTo(Destinations.login) {
-                            inclusive = true
+                viewModel.signIn(
+                    isSuccess = {
+                        navController?.navigate(Destinations.mainGroup) {
+                            popUpTo(Destinations.login) {
+                                inclusive = true
+                            }
                         }
+                    },
+                    isError = {
+                        Toast.makeText(context, "err", Toast.LENGTH_SHORT).show()
                     }
-                else{
-                    Toast.makeText(context,"err",Toast.LENGTH_SHORT).show()
-                }
+                )
 
             }) {
                 Text(text = stringResource(id = R.string.login))
@@ -88,7 +90,6 @@ fun LogInScreen(
 
             }) {
                 Text(text = stringResource(id = R.string.signup))
-
             }
 
 
