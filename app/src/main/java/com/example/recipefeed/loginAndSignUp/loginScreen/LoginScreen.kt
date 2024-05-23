@@ -34,7 +34,6 @@ fun LogInScreen(
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
     val token by viewModel.token.collectAsState()
-    val isSuccessful by viewModel.isSuccessful.collectAsState()
 
     val context = LocalContext.current
 

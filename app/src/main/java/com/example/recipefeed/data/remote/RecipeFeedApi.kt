@@ -34,6 +34,12 @@ interface RecipeFeedApi {
         @Path("name") name: String,
     ): Response<List<Recipe>>
 
+    @GET("api/recipe/getRandom")
+    suspend fun getRandom(): Response<Recipe>
+
+    @GET("/api/userRecipes/getById/{id}")
+    suspend fun getUserRecipes(@Path("id") id: Int): Response<Recipe>
+
     @DELETE("api/recipe/deleteRecipe/{id}")
     suspend fun deleteById(
         @Path("id") id: Int,

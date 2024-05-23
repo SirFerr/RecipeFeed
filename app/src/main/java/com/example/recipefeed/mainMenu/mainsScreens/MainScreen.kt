@@ -48,7 +48,7 @@ fun MainScreen(
                     MainScreenCard(navController, recipe)
                 else
                     ErrorNetworkCard {
-                        viewModel.getResponse()
+                        viewModel.getRandomRecipe()
                     }
             }
             Row(
