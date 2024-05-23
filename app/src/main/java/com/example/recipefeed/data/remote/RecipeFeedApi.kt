@@ -38,7 +38,9 @@ interface RecipeFeedApi {
     suspend fun getRandom(): Response<Recipe>
 
     @GET("/api/userRecipes/getById/{id}")
-    suspend fun getUserRecipes(@Path("id") id: Int): Response<Recipe>
+    suspend fun getUserRecipes(
+        @Path("id") id: Int
+    ): Response<Recipe>
 
     @DELETE("api/recipe/deleteRecipe/{id}")
     suspend fun deleteById(
@@ -54,9 +56,13 @@ interface RecipeFeedApi {
     ): Response<Recipe>
 
     @POST("auth/signup")
-    suspend fun signUp(@Body auth: Auth): Response<Auth>
+    suspend fun signUp(
+        @Body auth: Auth
+    ): Response<Auth>
 
     @POST("auth/signin")
-    suspend fun signIn(@Body auth: Auth): Response<Auth>
+    suspend fun signIn(
+        @Body auth: Auth
+    ): Response<Auth>
 
 }
