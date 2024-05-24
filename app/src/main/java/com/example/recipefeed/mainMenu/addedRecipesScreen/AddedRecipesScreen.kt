@@ -33,7 +33,7 @@ fun AddedRecipesScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
 
-    UpdateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
+    UpdateBox(isLoading = isLoading, exec = { viewModel.getAddedRecipes() }) {
         LazyColumn(
             state = rememberLazyListState(),
 
@@ -51,7 +51,7 @@ fun AddedRecipesScreen(
             } else {
                 item {
                     ErrorNetworkCard {
-                        viewModel.getAllRecipes()
+                        viewModel.getAddedRecipes()
                     }
                 }
             }

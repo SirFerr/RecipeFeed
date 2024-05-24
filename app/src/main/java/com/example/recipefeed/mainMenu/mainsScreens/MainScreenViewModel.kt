@@ -38,4 +38,15 @@ class MainScreenViewModel @Inject constructor(
             }
         }
     }
+
+    fun addToFavourites() {
+        viewModelScope.launch {
+            try {
+                val response = recipeFeedApi.addToFavourites(recipe.value)
+                isSuccessful.value = response.isSuccessful
+            } catch (e: Exception) {
+                isSuccessful.value = false
+            }
+        }
+    }
 }

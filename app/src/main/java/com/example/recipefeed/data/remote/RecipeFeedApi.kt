@@ -5,7 +5,6 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -37,11 +36,6 @@ interface RecipeFeedApi {
     @GET("api/recipe/getRandom")
     suspend fun getRandom(): Response<Recipe>
 
-    @GET("/api/userRecipes/getById/{id}")
-    suspend fun getUserRecipes(
-        @Path("id") id: Int
-    ): Response<Recipe>
-
     @DELETE("api/recipe/deleteRecipe/{id}")
     suspend fun deleteById(
         @Path("id") id: Int,
@@ -65,4 +59,16 @@ interface RecipeFeedApi {
         @Body auth: Auth
     ): Response<Auth>
 
+    @GET("/api/recipe/getUsersRecipes")
+    suspend fun getUsersRecipes(
+    ): Response<List<Recipe>>
+
+    @POST("/api/recipe/addToFavourites")
+    suspend fun addToFavourites(
+        @Body recipe: Recipe
+    ): Response<FavouriteRecipe>
+
+    @GET("/api/recipe/getFavouritesRecipes")
+    suspend fun getFavouritesRecipes(
+    ): Response<List<FavouriteRecipe>>
 }

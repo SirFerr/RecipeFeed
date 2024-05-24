@@ -66,6 +66,7 @@ fun MainScreen(
                 }
                 IconButton(modifier = Modifier.wrapContentSize(),
                     onClick = {
+                        viewModel.addToFavourites()
                         viewModel.getRandomRecipe()
                     }) {
                     Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)

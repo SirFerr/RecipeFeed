@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
+import com.example.recipefeed.utils.Destinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -17,9 +18,11 @@ class RecipeScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val idRecipe = MutableStateFlow(Recipe())
+    val recipe = MutableStateFlow(Recipe())
     val isLoading = MutableStateFlow(false)
     val isLiked = MutableStateFlow(false)
+    val isSuccessful = MutableStateFlow(true)
+
 
 
     fun changeLike() {
@@ -33,10 +36,21 @@ class RecipeScreenViewModel @Inject constructor(
                 val response =
                     recipeFeedApi.getById(id,)
                 if (response.isSuccessful)
-                    idRecipe.value = response.body()!!
+                    recipe.value = response.body()!!
             } catch (e: Exception) {
             }
             isLoading.value = false
+        }
+    }
+
+    fun addToFavourites() {
+        viewModelScope.launch {
+            try {
+                val response = recipeFeedApi.addToFavourites(recipe.value)
+                isSuccessful.value = response.isSuccessful
+            } catch (e: Exception) {
+                isSuccessful.value = false
+            }
         }
     }
 }

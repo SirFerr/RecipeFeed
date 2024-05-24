@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipefeed.R
 import com.example.recipefeed.view.mainMenu.CustomAsyncImage
@@ -40,12 +38,15 @@ fun RecipeScreen(
     id: Int = -1,
     viewModel: RecipeScreenViewModel = hiltViewModel()
 ) {
-    val recipe by viewModel.idRecipe.collectAsState()
+    val recipe by viewModel.recipe.collectAsState()
     val isLiked by viewModel.isLiked.collectAsState()
     viewModel.getById(id)
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.changeLike() }) {
+            FloatingActionButton(onClick = {
+                viewModel.changeLike()
+                viewModel.addToFavourites()
+            }) {
                 Icon(
                     imageVector = if (isLiked) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
                     contentDescription = null
@@ -108,5 +109,7 @@ fun RecipeScreen(
         }
 
     }
+
+
 }
 

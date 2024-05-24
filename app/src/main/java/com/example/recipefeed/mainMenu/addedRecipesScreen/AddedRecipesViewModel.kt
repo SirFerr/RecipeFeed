@@ -1,7 +1,6 @@
 package com.example.recipefeed.view.mainMenu.addedRecipesScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,14 +23,14 @@ class AddedRecipesViewModel @Inject constructor(
         MutableStateFlow<List<Recipe>>(listOf())
 
     init {
-        getAllRecipes()
+        getAddedRecipes()
     }
 
-    fun getAllRecipes() {
+    fun getAddedRecipes() {
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.getAll()
+                val response = recipeFeedApi.getUsersRecipes()
                 isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful)
                     recipes.value = response.body()!!

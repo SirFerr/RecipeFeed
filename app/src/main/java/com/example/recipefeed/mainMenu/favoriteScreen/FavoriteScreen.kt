@@ -38,7 +38,7 @@ fun FavoriteScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
 
-    UpdateBox(isLoading = isLoading, exec = { viewModel.getAllRecipes() }) {
+    UpdateBox(isLoading = isLoading, exec = { viewModel.getFavouritesRecipes() }) {
         LazyColumn(
             state = rememberLazyListState(),
 
@@ -55,7 +55,7 @@ fun FavoriteScreen(
             } else {
                 item {
                     ErrorNetworkCard {
-                        viewModel.getAllRecipes()
+                        viewModel.getFavouritesRecipes()
                     }
                 }
             }
