@@ -47,8 +47,6 @@ fun ListItem(
     navController: NavController? = null,
     icon: ImageVector = Icons.Filled.Favorite
 ) {
-    val context = LocalContext.current
-
     val _icon by remember { mutableStateOf(icon) }
 
 

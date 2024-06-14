@@ -8,6 +8,7 @@ class TokenSharedPreferencesManager(context: Context) {
 
     companion object {
         private const val SHARED_PREFERENCES_NAME= "token"
+        private const val TOKEN_NAME = "auth_token"
     }
 
     private val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -16,19 +17,19 @@ class TokenSharedPreferencesManager(context: Context) {
         val trimmedToken = token.trim()
         Log.d("TokenSharedPreferences", "Saving token: '$trimmedToken'")
         sharedPreferences.edit {
-            putString("auth_token", trimmedToken)
+            putString(TOKEN_NAME, trimmedToken)
         }
     }
 
     fun getToken(): String {
-        val token = sharedPreferences.getString(SHARED_PREFERENCES_NAME, "")?.trim() ?: ""
+        val token = sharedPreferences.getString(TOKEN_NAME, "")?.trim() ?: ""
         Log.d("TokenSharedPreferences", "Retrieved token: '$token'")
         return token
     }
 
     fun deleteToken() {
         sharedPreferences.edit {
-            remove(SHARED_PREFERENCES_NAME)
+            remove(TOKEN_NAME)
         }
     }
 
