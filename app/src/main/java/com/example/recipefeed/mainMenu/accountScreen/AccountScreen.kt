@@ -25,9 +25,9 @@ fun AccountScreen(
 ) {
 
     val list = listOf(
-        AccountScreenCards("Create recipe", Destinations.newRecipe, navController),
-        AccountScreenCards("Show created recipes", Destinations.addedRecipes, navController),
-        AccountScreenCards("LogOut", Destinations.loginGroup, firstNavController)
+        AccountScreenCards("Create recipe", Destinations.NEW_RECIPE, navController),
+        AccountScreenCards("Show created recipes", Destinations.ADDED_RECIPES, navController),
+        AccountScreenCards("LogOut", Destinations.LOGIN_GROUP, firstNavController)
     )
 
     Column(

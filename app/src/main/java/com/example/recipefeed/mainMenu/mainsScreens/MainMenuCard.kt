@@ -41,7 +41,7 @@ fun MainScreenCard(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                navController.navigate("${Destinations.recipe}/${recipe.id}")
+                navController.navigate("${Destinations.RECIPE}/${recipe.id}")
             }
     ) {
         val imageBytes = Base64.decode(recipe.imageData)

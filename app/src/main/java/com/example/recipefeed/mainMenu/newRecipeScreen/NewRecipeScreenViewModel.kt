@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
@@ -17,8 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewRecipeScreenViewModel @Inject constructor(
-    private val recipeFeedApi: RecipeFeedApi,
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+    private val repository: Repository
 ) :
     ViewModel() {
 
@@ -26,7 +26,7 @@ class NewRecipeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = imagePart?.let {
-                    recipeFeedApi.addRecipe(
+                    repository.addRecipe(
                         recipe,
                         it,
                     )

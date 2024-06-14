@@ -1,6 +1,7 @@
 package com.example.recipefeed.view.mainMenu.favoriteScreen
 
 import androidx.lifecycle.ViewModel
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.data.remote.RecipeFeedApi
@@ -14,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteRecipesViewModel @Inject constructor(
-    private val recipeFeedApi: RecipeFeedApi,
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+    private val repository: Repository
+
 ) : ViewModel() {
 
     var isLoading = MutableStateFlow(true)
@@ -35,7 +36,7 @@ class FavoriteRecipesViewModel @Inject constructor(
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.getFavouritesRecipes()
+                val response = repository.getFavouritesRecipes()
                 isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
                     recipes.value = response.body()!!.map { it.recipe }

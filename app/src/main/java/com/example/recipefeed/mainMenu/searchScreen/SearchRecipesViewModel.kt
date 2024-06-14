@@ -1,10 +1,8 @@
 package com.example.recipefeed.view.mainMenu.searchScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
-import com.example.recipefeed.data.local.TokenSharedPreferencesManager
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,10 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchRecipesViewModel @Inject constructor(
-    private val recipeFeedApi: RecipeFeedApi,
-    private val searchHistorySharedPreferencesManager: SearchHistorySharedPreferencesManager,
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
-
+    private val repository: Repository
 ) :
     ViewModel() {
 
@@ -34,7 +29,7 @@ class SearchRecipesViewModel @Inject constructor(
     val searchHistory = MutableStateFlow<List<String>>(listOf())
 
     init {
-        searchHistory.value = searchHistorySharedPreferencesManager.getLastTenStrings()
+        searchHistory.value = repository.getSearchHistory()
 //        val timer = Timer("schedule", true)
 //        timer.scheduleAtFixedRate(2000, 2000) {
 //            search()
@@ -45,9 +40,9 @@ class SearchRecipesViewModel @Inject constructor(
     fun search() {
         if (searchText.value != "") {
             getByName()
-            searchHistorySharedPreferencesManager.saveString(value = searchText.value)
+            repository.saveRequest(value = searchText.value)
         }
-        searchHistory.value = searchHistorySharedPreferencesManager.getLastTenStrings()
+        searchHistory.value = repository.getSearchHistory()
         isSearching.value = false
     }
 
@@ -55,7 +50,7 @@ class SearchRecipesViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 isLoading.value = true
-                val response = recipeFeedApi.getByName(
+                val response = repository.getRecipesByName(
                     searchText.value,
 
                     )

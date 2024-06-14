@@ -57,7 +57,7 @@ fun ListItem(
         Modifier
             .fillMaxWidth()
             .size(1f.dp, 70.dp)
-            .clickable { navController?.navigate("${Destinations.recipe}/${recipe.id}") },
+            .clickable { navController?.navigate("${Destinations.RECIPE}/${recipe.id}") },
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
     ) {
         Row(
@@ -98,7 +98,7 @@ fun ListItem(
                 .weight(1f)
                 .aspectRatio(1f), onClick = {
                 if (_icon == Icons.Filled.Edit) {
-                    navController?.navigate("${Destinations.editRecipe}/${recipe.id}")
+                    navController?.navigate("${Destinations.EDIT_RECIPE}/${recipe.id}")
                 }
             }) {
                 Icon(imageVector = _icon, contentDescription = null)

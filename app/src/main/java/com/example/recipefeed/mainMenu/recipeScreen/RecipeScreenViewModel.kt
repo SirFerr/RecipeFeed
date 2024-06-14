@@ -2,6 +2,7 @@ package com.example.recipefeed.view.mainMenu.recipeScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
@@ -13,8 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeScreenViewModel @Inject constructor(
-    private val recipeFeedApi: RecipeFeedApi,
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+    private val repository: Repository
 ) :
     ViewModel() {
 
@@ -34,7 +34,7 @@ class RecipeScreenViewModel @Inject constructor(
             isLoading.value = true
             try {
                 val response =
-                    recipeFeedApi.getById(id,)
+                    repository.getRecipeById(id,)
                 if (response.isSuccessful)
                     recipe.value = response.body()!!
             } catch (e: Exception) {
@@ -46,7 +46,7 @@ class RecipeScreenViewModel @Inject constructor(
     fun addToFavourites() {
         viewModelScope.launch {
             try {
-                val response = recipeFeedApi.addToFavourites(recipe.value)
+                val response = repository.addToFavourites(recipe.value)
                 isSuccessful.value = response.isSuccessful
             } catch (e: Exception) {
                 isSuccessful.value = false

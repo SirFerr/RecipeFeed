@@ -29,7 +29,7 @@ fun AccountListCard(accountScreenCards: AccountScreenCards, viewModel: AccountSc
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                if (accountScreenCards.route == Destinations.loginGroup) {
+                if (accountScreenCards.route == Destinations.LOGIN_GROUP) {
                     isLogOut = true
                 } else
                     accountScreenCards.navController?.navigate(accountScreenCards.route)

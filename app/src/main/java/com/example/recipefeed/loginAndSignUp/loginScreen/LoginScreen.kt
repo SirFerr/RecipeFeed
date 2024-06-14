@@ -38,8 +38,8 @@ fun LogInScreen(
     val context = LocalContext.current
 
     if (token != "") {
-        navController?.navigate(Destinations.mainGroup) {
-            popUpTo(Destinations.login) {
+        navController?.navigate(Destinations.MAIN_GROUP) {
+            popUpTo(Destinations.LOGIN) {
                 inclusive = true
             }
         }
@@ -70,8 +70,8 @@ fun LogInScreen(
             Button(onClick = {
                 viewModel.signIn(
                     isSuccess = {
-                        navController?.navigate(Destinations.mainGroup) {
-                            popUpTo(Destinations.login) {
+                        navController?.navigate(Destinations.MAIN_GROUP) {
+                            popUpTo(Destinations.LOGIN) {
                                 inclusive = true
                             }
                         }
@@ -85,7 +85,7 @@ fun LogInScreen(
                 Text(text = stringResource(id = R.string.login))
             }
             Button(onClick = {
-                navController?.navigate(Destinations.signUp)
+                navController?.navigate(Destinations.SIGNUP)
 
             }) {
                 Text(text = stringResource(id = R.string.signup))

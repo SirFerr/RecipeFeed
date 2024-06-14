@@ -2,7 +2,7 @@ package com.example.recipefeed.loginAndSignUp.signUpScreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.remote.RecipeFeedApi
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +12,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpScreenViewModel @Inject constructor(private val recipeFeedApi: RecipeFeedApi) :
+class SignUpScreenViewModel @Inject constructor(
+    private val repository: Repository
+) :
     ViewModel() {
     var textUsername = MutableStateFlow("")
     var textPassword = MutableStateFlow("")
@@ -23,7 +25,7 @@ class SignUpScreenViewModel @Inject constructor(private val recipeFeedApi: Recip
     fun signUp() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.signUp(
+                val response = repository.signUp(
                     Auth(
                         textUsername.value,
                         textUsername.value,

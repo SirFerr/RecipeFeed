@@ -1,7 +1,7 @@
 package com.example.recipefeed.view.mainMenu.addedRecipesScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.remote.RecipeFeedApi
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddedRecipesViewModel @Inject constructor(
-    private val recipeFeedApi: RecipeFeedApi,
+    private val repository: Repository
+
 ) : ViewModel() {
     var isLoading = MutableStateFlow(true)
 
@@ -30,7 +31,7 @@ class AddedRecipesViewModel @Inject constructor(
         isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.getUsersRecipes()
+                val response = repository.getUsersRecipes()
                 isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful)
                     recipes.value = response.body()!!

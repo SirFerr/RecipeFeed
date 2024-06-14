@@ -1,6 +1,7 @@
 package com.example.recipefeed.loginAndSignUp.loginScreen
 
 import androidx.lifecycle.ViewModel
+import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.Auth
 import com.example.recipefeed.data.remote.RecipeFeedApi
@@ -14,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager,
-    private val recipeFeedApi: RecipeFeedApi
+    private val repository: Repository
 ) : ViewModel() {
     var textUsername = MutableStateFlow("")
     var textPassword = MutableStateFlow("")
@@ -23,13 +23,13 @@ class LoginScreenViewModel @Inject constructor(
     val isSuccessful = MutableStateFlow(false)
 
     init {
-        token.value = tokenSharedPreferencesManager.getToken()
+        token.value = repository.getToken()
     }
 
     fun signIn(isSuccess: () -> Unit, isError: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = recipeFeedApi.signIn(
+                val response = repository.signIn(
                     Auth(
                         textUsername.value,
                         textUsername.value,
@@ -42,7 +42,7 @@ class LoginScreenViewModel @Inject constructor(
                         if (it.error == "") {
                             val receivedToken = it.token.trim()
                             token.value = receivedToken
-                            tokenSharedPreferencesManager.saveToken(receivedToken)
+                            repository.saveToken(receivedToken)
                             isSuccessful.value = true
                             withContext(Dispatchers.Main) {
                                 isSuccess()
