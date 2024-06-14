@@ -4,6 +4,10 @@ import android.content.Context
 
 class SearchHistorySharedPreferencesManager(context: Context) {
 
+    companion object {
+        private const val SHARED_PREFERENCES_NAME= "search_history"
+        private const val LAST_TEN_KEY = "last_ten"
+    }
 
     private val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
@@ -26,8 +30,5 @@ class SearchHistorySharedPreferencesManager(context: Context) {
             ?: emptyList()
     }
 
-    companion object {
-        private const val SHARED_PREFERENCES_NAME= "search_history"
-        private const val LAST_TEN_KEY = "last_ten"
-    }
+
 }

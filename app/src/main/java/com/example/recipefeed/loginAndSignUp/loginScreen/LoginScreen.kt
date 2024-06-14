@@ -37,7 +37,7 @@ fun LogInScreen(
 
     val context = LocalContext.current
 
-    if (token != "") {
+    if (token.isNotEmpty()) {
         navController?.navigate(Destinations.MAIN_GROUP) {
             popUpTo(Destinations.LOGIN) {
                 inclusive = true

@@ -6,6 +6,10 @@ import androidx.core.content.edit
 
 class TokenSharedPreferencesManager(context: Context) {
 
+    companion object {
+        private const val SHARED_PREFERENCES_NAME= "token"
+    }
+
     private val sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 
     fun saveToken(token: String) {
@@ -27,8 +31,6 @@ class TokenSharedPreferencesManager(context: Context) {
             remove(SHARED_PREFERENCES_NAME)
         }
     }
-    companion object {
-        private const val SHARED_PREFERENCES_NAME= "token"
-    }
+
 }
 
