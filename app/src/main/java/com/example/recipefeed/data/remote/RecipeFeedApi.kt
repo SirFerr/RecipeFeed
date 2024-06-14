@@ -12,9 +12,9 @@ import retrofit2.http.Path
 
 interface RecipeFeedApi {
 
-    companion object{
+    companion object {
         private const val API_RECIPE_START = "api/recipe/"
-        private const val API_AUTH_START ="auth/"
+        private const val API_AUTH_START = "auth/"
     }
 
     //Recipe
@@ -22,60 +22,60 @@ interface RecipeFeedApi {
     suspend fun getAllRecipes(
     ): Response<List<Recipe>>
 
-    @GET(API_RECIPE_START +"getById/{id}")
+    @GET(API_RECIPE_START + "getById/{id}")
     suspend fun getRecipeById(
         @Path("id") id: Int
     ): Response<Recipe>
 
     @Multipart
-    @POST(API_RECIPE_START +"addRecipe")
+    @POST(API_RECIPE_START + "addRecipe")
     suspend fun addRecipe(
         @Part("data") recipe: Recipe,
         @Part imagePart: MultipartBody.Part
     ): Response<Recipe>
 
-    @GET(API_RECIPE_START +"getByNameLike/{name}")
+    @GET(API_RECIPE_START + "getByNameLike/{name}")
     suspend fun getRecipeByName(
         @Path("name") name: String,
     ): Response<List<Recipe>>
 
-    @GET(API_RECIPE_START +"getRandom")
+    @GET(API_RECIPE_START + "getRandom")
     suspend fun getRandomRecipe(): Response<Recipe>
 
-    @DELETE(API_RECIPE_START +"deleteRecipe/{id}")
+    @DELETE(API_RECIPE_START + "deleteRecipe/{id}")
     suspend fun deleteRecipeById(
         @Path("id") id: Int,
     ): Response<Recipe>
 
     @Multipart
-    @POST(API_RECIPE_START +"updateRecipe/{id}")
+    @POST(API_RECIPE_START + "updateRecipe/{id}")
     suspend fun updateRecipe(
         @Path("id") id: Int,
         @Part("data") recipe: Recipe,
         @Part imagePart: MultipartBody.Part,
     ): Response<Recipe>
 
-    @GET(API_RECIPE_START +"getUsersRecipes")
+    @GET(API_RECIPE_START + "getUsersRecipes")
     suspend fun getUsersRecipes(
     ): Response<List<Recipe>>
 
-    @POST(API_RECIPE_START +"addToFavourites")
+    @POST(API_RECIPE_START + "addToFavourites")
     suspend fun addRecipeToFavourites(
         @Body recipe: Recipe
     ): Response<FavouriteRecipe>
 
-    @GET(API_RECIPE_START +"getFavouritesRecipes")
+    @GET(API_RECIPE_START + "getFavouritesRecipes")
     suspend fun getFavouritesRecipes(
     ): Response<List<FavouriteRecipe>>
 
 
     //Auth
-    @POST(API_AUTH_START+"signup")
+    @POST(API_AUTH_START + "signup")
     suspend fun signUp(
         @Body auth: Auth
     ): Response<Auth>
 
-    @POST(API_AUTH_START+"signin")
+    @POST(API_AUTH_START + "signin")
     suspend fun signIn(
         @Body auth: Auth
     ): Response<Auth>

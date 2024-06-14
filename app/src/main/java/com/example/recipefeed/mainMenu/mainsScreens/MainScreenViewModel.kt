@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,8 +18,8 @@ class MainScreenViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    val recipe = MutableStateFlow(Recipe())
-    val isSuccessful = MutableStateFlow(true)
+    private val _mainState = MutableStateFlow<MainState>(MainState.Loading)
+    val mainState: StateFlow<MainState> = _mainState.asStateFlow()
 
     init {
         getRandomRecipe()
@@ -26,17 +27,19 @@ class MainScreenViewModel @Inject constructor(
 
 
     fun getRandomRecipe() {
+        _mainState.value=MainState.Loading
         viewModelScope.launch {
             try {
                 val response = repository.getRandomRecipe()
-                isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        recipe.value = it
+                        _mainState.value = MainState.Success(it)
                     }
+                } else {
+                    _mainState.value = MainState.Error(response.errorBody().toString())
                 }
             } catch (e: Exception) {
-                isSuccessful.value = false
+                _mainState.value = MainState.Error(e.message.toString())
             }
         }
     }
@@ -44,11 +47,22 @@ class MainScreenViewModel @Inject constructor(
     fun addToFavourites() {
         viewModelScope.launch {
             try {
-                val response = repository.addToFavourites(recipe.value)
-                isSuccessful.value = response.isSuccessful
+                if(mainState.value is MainState.Success){
+                    repository.addToFavourites(
+                        (mainState.value as MainState.Success).recipe
+                    )
+                }
+                else{
+                    getRandomRecipe()
+                }
             } catch (e: Exception) {
-                isSuccessful.value = false
             }
         }
     }
+}
+
+sealed class MainState {
+    object Loading : MainState()
+    data class Success(val recipe: Recipe) : MainState()
+    data class Error(val message: String) : MainState()
 }

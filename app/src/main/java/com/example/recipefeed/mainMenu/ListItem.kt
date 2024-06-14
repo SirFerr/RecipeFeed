@@ -1,6 +1,7 @@
 package com.example.recipefeed.view.mainMenu
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,12 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -47,10 +48,7 @@ fun ListItem(
     navController: NavController? = null,
     icon: ImageVector = Icons.Filled.Favorite
 ) {
-    val _icon by remember { mutableStateOf(icon) }
-
-
-
+    var showShimmer by remember { mutableStateOf(true) }
     Card(
         Modifier
             .fillMaxWidth()
@@ -75,9 +73,12 @@ fun ListItem(
                 contentDescription = null,
                 modifier = Modifier
                     .weight(1f)
+                    .background(
+                        ShimmerEffect(showShimmer)
+                    )
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
                 contentScale = ContentScale.Crop,
-                loading = { }
+                onLoading = { showShimmer = true }, onSuccess = { showShimmer = false }
             )
             Column(
                 Modifier
@@ -88,18 +89,18 @@ fun ListItem(
             ) {
                 Text(text = recipe.recipeName, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = "Likes: "+recipe.recipeLikes.toString(),
+                    text = "Likes: " + recipe.recipeLikes.toString(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
             IconButton(modifier = Modifier
                 .weight(1f)
                 .aspectRatio(1f), onClick = {
-                if (_icon == Icons.Filled.Edit) {
+                if (icon == Icons.Filled.Edit) {
                     navController?.navigate("${Destinations.EDIT_RECIPE}/${recipe.id}")
                 }
             }) {
-                Icon(imageVector = _icon, contentDescription = null)
+                Icon(imageVector = icon, contentDescription = null)
             }
         }
     }
