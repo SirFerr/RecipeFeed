@@ -156,25 +156,29 @@ fun SwipeCard(
     Box(modifier = Modifier
         .offset { IntOffset(offset.roundToInt(), 0) }
         .pointerInput(Unit) {
-            detectHorizontalDragGestures(onDragEnd = {
-                offset = 0f
-            }) { change, dragAmount ->
+            detectHorizontalDragGestures(
+                onDragEnd = {
+                    when {
+                        offset > swipeThreshold -> {
+                            dismissRight = true
+                        }
 
-                offset += (dragAmount / density) * sensitivityFactor
-                when {
-                    offset > swipeThreshold -> {
-                        dismissRight = true
+                        offset < -swipeThreshold -> {
+                            dismissLeft = true
+                        }
                     }
-
-                    offset < -swipeThreshold -> {
-                        dismissLeft = true
-                    }
+                    offset = 0f
+                },
+                onDragCancel = {
+                    offset = 0f
                 }
+            ) { change, dragAmount ->
+                offset += (dragAmount / density) * sensitivityFactor
                 if (change.positionChange() != Offset.Zero) change.consume()
             }
         }
         .graphicsLayer(
-            alpha = 10f - animateFloatAsState(if (dismissRight) 1f else 0f).value,
+            alpha = 10f - animateFloatAsState(if (dismissRight || dismissLeft) 1f else 0f).value,
             rotationZ = animateFloatAsState(offset / 50).value
         )) {
         content()
