@@ -11,17 +11,25 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -37,6 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -67,8 +76,8 @@ fun NewRecipeScreen(
 
     var selectImages by remember { mutableStateOf<Uri?>(null) }
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        if(it!=null)
-        selectImages = it
+        if (it != null)
+            selectImages = it
     }
     val context = LocalContext.current
 
@@ -77,11 +86,51 @@ fun NewRecipeScreen(
             .fillMaxSize()
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
             .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+
 
         ) {
         Spacer(modifier = Modifier)
+        Text(text = "Photo", style = MaterialTheme.typography.titleLarge)
+        Card(
+            onClick = { galleryLauncher.launch("image/*") }, modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+        ) {
+            if (selectImages != null)
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
+
+                    AsyncImage(
+                        model = selectImages,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
+                        contentScale = ContentScale.Crop
+                    )
+                    IconButton(onClick = { selectImages = null }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                    }
+                }
+            else {
+                Column(
+                    Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.pick_image),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+
+            }
+        }
+
+        HorizontalDivider()
+        Text(text = "Main information", style = MaterialTheme.typography.titleLarge)
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
             value = recipeName,
             onValueChange = { recipeName = it },
@@ -92,24 +141,7 @@ fun NewRecipeScreen(
                 )
             })
 
-        Button(
-            onClick = { galleryLauncher.launch("image/*") }, modifier = Modifier
-        ) {
-            Text(
-                text = stringResource(id = R.string.pick_image),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        if (selectImages!=null)
-        AsyncImage(
-            model = selectImages,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentSize()
-                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-            contentScale = ContentScale.FillWidth
-        )
+
 
 
         OutlinedTextField(modifier = Modifier.fillMaxWidth(),
@@ -144,23 +176,23 @@ fun NewRecipeScreen(
             })
 
         Spacer(Modifier.weight(1f))
-        Button(modifier = Modifier.wrapContentSize(), onClick = {
-
-
-
-            viewModel.addRecipes(
-                Recipe(
-                    recipeName = recipeName,
-                    description = description,
-                    timeToCook = timeToCook,
-                    ingredients = ingredients
-                ),
-                convertToMultipart(selectImages, context), context
-            )
-
-
-        }) {
-            Text(text = stringResource(id = R.string.complete))
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
+            onClick = {
+                viewModel.addRecipes(
+                    Recipe(
+                        recipeName = recipeName,
+                        description = description,
+                        timeToCook = timeToCook,
+                        ingredients = ingredients
+                    ),
+                    convertToMultipart(selectImages, context), context
+                )
+            }) {
+            Text(text = stringResource(id = R.string.complete), modifier = Modifier.padding(
+                dimensionResource(id = R.dimen.main_padding)))
         }
         Spacer(modifier = Modifier)
     }
