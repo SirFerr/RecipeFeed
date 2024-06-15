@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.recipefeed.view.mainMenu.recipeScreen
 
 import android.graphics.BitmapFactory
@@ -7,14 +9,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -26,7 +33,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.view.mainMenu.CustomAsyncImage
 import kotlin.io.encoding.Base64
@@ -36,28 +45,41 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun RecipeScreen(
     id: Int = -1,
+    navController: NavHostController,
     viewModel: RecipeScreenViewModel = hiltViewModel()
 ) {
     val recipe by viewModel.recipe.collectAsState()
     val isLiked by viewModel.isLiked.collectAsState()
     viewModel.getById(id)
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.changeLike()
-                viewModel.addToFavourites()
-            }) {
-                Icon(
-                    imageVector = if (isLiked) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
-                    contentDescription = null
-                )
-            }
+        topBar = {
+            TopAppBar(title = { /*TODO*/ },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.navigateUp() },
+                        modifier = Modifier
+                            .size(30.dp)
+                            .wrapContentSize()
+                    ) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {
+                   IconButton(onClick = {  viewModel.changeLike()
+                       viewModel.addToFavourites() }) {
+                       Icon(
+                           imageVector = if (isLiked) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
+                           contentDescription = null
+                       )
+                   }
+                }
+            )
         }
     )
     {
-        it
         Column(
             Modifier
+                .padding(it)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(dimensionResource(id = R.dimen.main_padding)),
