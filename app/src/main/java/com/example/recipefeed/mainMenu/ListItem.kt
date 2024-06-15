@@ -6,16 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,60 +46,55 @@ fun ListItem(
     icon: ImageVector = Icons.Filled.Favorite
 ) {
     var showShimmer by remember { mutableStateOf(true) }
-    Card(
+
+    Column(
         Modifier
             .fillMaxWidth()
-            .size(1f.dp, 70.dp)
             .clickable { navController?.navigate("${Destinations.RECIPE}/${recipe.id}") },
-        shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
     ) {
+        val imageBytes = Base64.decode(recipe.imageData)
+        val image by remember {
+            mutableStateOf(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
+        }
+        SubcomposeAsyncImage(
+            model = image,
+            contentDescription = null,
+            modifier = Modifier
+                .height(200.dp)
+                .background(
+                    ShimmerEffect(showShimmer)
+                )
+                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
+            contentScale = ContentScale.Crop,
+            onLoading = { showShimmer = true }, onSuccess = { showShimmer = false }
+        )
+        Text(text = recipe.recipeName, style = MaterialTheme.typography.titleLarge)
+
         Row(
             Modifier
-                .padding(dimensionResource(id = R.dimen.sub_padding))
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            val imageBytes = Base64.decode(recipe.imageData)
-            val image by remember {
-                mutableStateOf(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
-            }
-            SubcomposeAsyncImage(
-                model = image,
-                contentDescription = null,
-                modifier = Modifier
-                    .weight(1f)
-                    .background(
-                        ShimmerEffect(showShimmer)
-                    )
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
-                contentScale = ContentScale.Crop,
-                onLoading = { showShimmer = true }, onSuccess = { showShimmer = false }
+
+            Text(
+                text = "Likes: " + recipe.recipeLikes.toString(),
+                style = MaterialTheme.typography.bodyMedium
             )
-            Column(
-                Modifier
-                    .weight(2.5f)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(text = recipe.recipeName, style = MaterialTheme.typography.titleMedium)
-                Text(
-                    text = "Likes: " + recipe.recipeLikes.toString(),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            IconButton(modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f), onClick = {
+            IconButton(modifier = Modifier, onClick = {
                 if (icon == Icons.Filled.Edit) {
                     navController?.navigate("${Destinations.EDIT_RECIPE}/${recipe.id}")
                 }
             }) {
                 Icon(imageVector = icon, contentDescription = null)
+
             }
         }
-    }
 
+    }
 }
+
+
