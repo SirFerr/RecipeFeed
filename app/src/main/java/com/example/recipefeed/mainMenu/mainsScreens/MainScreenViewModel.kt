@@ -21,13 +21,40 @@ class MainScreenViewModel @Inject constructor(
     private val _mainState = MutableStateFlow<MainState>(MainState.Loading)
     val mainState: StateFlow<MainState> = _mainState.asStateFlow()
 
+    private val _nextRecipe = MutableStateFlow<Recipe>(Recipe())
+    val nextRecipe: StateFlow<Recipe> = _nextRecipe.asStateFlow()
+
     init {
         getRandomRecipe()
+        getNextRandomRecipe()
     }
 
-
+    fun onSwipeLeft(){
+        _mainState.value = MainState.Success(nextRecipe.value)
+        getNextRandomRecipe()
+//        addToFavourites()
+    }
+    fun onSwipeRight(){
+        _mainState.value = MainState.Success(nextRecipe.value)
+        getNextRandomRecipe()
+    }
+    fun getNextRandomRecipe(){
+        viewModelScope.launch {
+            try {
+                val response = repository.getRandomRecipe()
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        _nextRecipe.value = it
+                    }
+                } else {
+                    _mainState.value = MainState.Error(response.errorBody().toString())
+                }
+            } catch (e: Exception) {
+                _mainState.value = MainState.Error(e.message.toString())
+            }
+        }
+    }
     fun getRandomRecipe() {
-        _mainState.value=MainState.Loading
         viewModelScope.launch {
             try {
                 val response = repository.getRandomRecipe()
@@ -38,10 +65,12 @@ class MainScreenViewModel @Inject constructor(
                 } else {
                     _mainState.value = MainState.Error(response.errorBody().toString())
                 }
+
             } catch (e: Exception) {
                 _mainState.value = MainState.Error(e.message.toString())
             }
         }
+
     }
 
     fun addToFavourites() {
