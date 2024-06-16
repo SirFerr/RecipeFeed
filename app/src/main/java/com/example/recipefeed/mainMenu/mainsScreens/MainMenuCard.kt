@@ -56,7 +56,7 @@ fun MainScreenCard(
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
-            loading = { CircularProgressIndicator() },
+            loading = { },
         )
 
         Card(

@@ -189,7 +189,7 @@ private fun SearchList(
 
                     }
                 } else
-                    items(recipes, key = { it.id }) {
+                    items(recipes) {
 
                         ListItem(it, navController)
                     }

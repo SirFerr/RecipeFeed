@@ -72,7 +72,7 @@ fun AddedRecipesScreen(
                 item { }
 
                 if (isSuccessful) {
-                    items(recipes, key = { it.id }) {
+                    items(recipes) {
                         ListItem(it, navController, Icons.Filled.Edit)
                     }
                 } else {

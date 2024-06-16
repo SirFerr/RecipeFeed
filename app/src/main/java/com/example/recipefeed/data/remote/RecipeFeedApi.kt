@@ -18,6 +18,7 @@ interface RecipeFeedApi {
     }
 
     //Recipe
+
     @GET(API_RECIPE_START + "getAll")
     suspend fun getAllRecipes(
     ): Response<List<Recipe>>

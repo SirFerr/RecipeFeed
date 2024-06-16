@@ -46,7 +46,7 @@ fun FavoriteScreen(
         ) {
             item { }
             if (isSuccessful) {
-                items(recipes, key = { it.id }) {
+                items(recipes) {
                     ListItem(it, navController)
                 }
             } else {

@@ -2,16 +2,13 @@ package com.example.recipefeed.loginAndSignUp.loginScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
-import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.Auth
-import com.example.recipefeed.data.remote.RecipeFeedApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,15 +19,33 @@ class LoginScreenViewModel @Inject constructor(
     var textPassword = MutableStateFlow("")
     val token = MutableStateFlow("")
     val isSuccessful = MutableStateFlow(false)
+    val isTokenWork = MutableStateFlow(false)
 
     init {
         token.value = repository.getToken()
+        checkToken()
     }
+
+    fun checkToken() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                if (repository.getRandomRecipe().isSuccessful and token.value.isNotEmpty()) {
+                    isTokenWork.value = true
+                } else {
+                    isTokenWork.value = false
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+
+    }
+
 
     fun signIn(isSuccess: () -> Unit, isError: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (textUsername.value == "e" && textPassword.value == "e"){
+                if (textUsername.value == "e" && textPassword.value == "e") {
                     isSuccessful.value = true
                     repository.saveToken("e")
                 }
@@ -52,8 +67,7 @@ class LoginScreenViewModel @Inject constructor(
                             withContext(Dispatchers.Main) {
                                 isSuccess()
                             }
-                        }
-                        else {
+                        } else {
                             isSuccessful.value = false
                             withContext(Dispatchers.Main) {
                                 isError()
