@@ -34,9 +34,10 @@ fun LogInScreen(
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
     val token by viewModel.token.collectAsState()
+    val isTokenWork by viewModel.isTokenWork.collectAsState()
     val context = LocalContext.current
 
-    if (token.isNotEmpty()) {
+    if (isTokenWork) {
         navController?.navigate(Destinations.MAIN_GROUP) {
             popUpTo(Destinations.LOGIN) {
                 inclusive = true

@@ -22,25 +22,28 @@ class LoginScreenViewModel @Inject constructor(
     val isTokenWork = MutableStateFlow(false)
 
     init {
-        token.value = repository.getToken()
+        // Проверяем токен при инициализации ViewModel
         checkToken()
     }
 
-    fun checkToken() {
+    private fun checkToken() {
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                if (repository.getRandomRecipe().isSuccessful and token.value.isNotEmpty()) {
-                    isTokenWork.value = true
-                } else {
-                    isTokenWork.value = false
+            val savedToken = repository.getToken()
+            if (savedToken != null) {
+                val isValid = repository.isTokenValid(savedToken)
+                withContext(Dispatchers.Main) {
+                    if (isValid) {
+                        token.value = savedToken
+                        isTokenWork.value = true
+                        isSuccessful.value = true
+                    } else {
+                        isTokenWork.value = false
+                        isSuccessful.value = false
+                    }
                 }
-            } catch (e: Exception) {
-
             }
         }
-
     }
-
 
     fun signIn(isSuccess: () -> Unit, isError: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -88,6 +91,4 @@ class LoginScreenViewModel @Inject constructor(
             }
         }
     }
-
-
 }

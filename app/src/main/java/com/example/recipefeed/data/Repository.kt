@@ -18,11 +18,11 @@ class Repository @Inject constructor(
     private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
 ) {
 
-    //RecipeFeedApi
+    /// RecipeFeedApi ///
     suspend fun getAllRecipes(): Response<List<Recipe>> {
         return recipeFeedApi.getAllRecipes()
     }
-
+    //recipe
     suspend fun getRecipeById(id: Int): Response<Recipe> {
         return recipeFeedApi.getRecipeById(id)
     }
@@ -45,14 +45,7 @@ class Repository @Inject constructor(
 
     suspend fun updateRecipe(id: Int, recipe: Recipe, imagePart: MultipartBody.Part): Response<Recipe> {
         return recipeFeedApi.updateRecipe(id, recipe, imagePart)
-    }
 
-    suspend fun signUp(auth: Auth): Response<Auth> {
-        return recipeFeedApi.signUp(auth)
-    }
-
-    suspend fun signIn(auth: Auth): Response<Auth> {
-        return recipeFeedApi.signIn(auth)
     }
 
     suspend fun getUsersRecipes(): Response<List<Recipe>> {
@@ -66,9 +59,26 @@ class Repository @Inject constructor(
     suspend fun getFavouritesRecipes(): Response<List<FavouriteRecipe>> {
         return recipeFeedApi.getFavouritesRecipes()
     }
+    // auth
+    suspend fun signUp(auth: Auth): Response<Auth> {
+        return recipeFeedApi.signUp(auth)
+    }
+
+    suspend fun signIn(auth: Auth): Response<Auth> {
+        return recipeFeedApi.signIn(auth)
+    }
+    suspend fun isTokenValid(token: String): Boolean {
+        return try {
+            val response = recipeFeedApi.getRandomRecipe()
+            response.isSuccessful
+        } catch (e: Exception) {
+            false
+        }
+    }
 
 
-    //TokenSharedPreferencesManager
+
+    ///TokenSharedPreferencesManager///
     fun saveToken(token: String) {
        return tokenSharedPreferencesManager.saveToken(token)
     }
@@ -82,7 +92,7 @@ class Repository @Inject constructor(
     }
 
 
-    //SearchHistorySharedPreferencesManager
+    ///SearchHistorySharedPreferencesManager///
     fun saveRequest(value: String) {
         return searchHistorySharedPreferencesManager.saveRequest(value)
     }
