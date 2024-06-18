@@ -1,4 +1,4 @@
-package com.example.recipefeed.utils
+package com.example.recipefeed.mainMenu.recipeEdit
 
 import android.content.Context
 import android.graphics.Bitmap

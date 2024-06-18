@@ -6,8 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.utils.convertToMultipart
+import com.example.recipefeed.mainMenu.recipeEdit.convertToMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -17,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NewRecipeScreenViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    @ApplicationContext private val context: Context
 ) :
     ViewModel() {
 
@@ -29,7 +31,7 @@ class NewRecipeScreenViewModel @Inject constructor(
     var selectImages = MutableStateFlow<Any?>(null)
 
 
-    fun addRecipes(context: Context) {
+    fun addRecipes() {
         viewModelScope.launch {
             try {
                 val response = convertToMultipart(selectImages.value, context)?.let {

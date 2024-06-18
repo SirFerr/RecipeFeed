@@ -88,13 +88,6 @@ fun ShimmerEffect(showShimmer: Boolean = true, targetValue: Float = 2000f): Brus
 }
 
 @Composable
-fun ShimmerComponent(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.background(ShimmerEffect())
-    )
-}
-
-@Composable
 fun ErrorNetworkCard(modifier: Modifier = Modifier.fillMaxSize(), exec: () -> Unit) {
     Card(
         modifier = modifier
@@ -132,16 +125,4 @@ fun ErrorNetworkCard(modifier: Modifier = Modifier.fillMaxSize(), exec: () -> Un
         }
 
     }
-}
-
-@Composable
-fun CustomAsyncImage(image: Any?) {
-    SubcomposeAsyncImage(
-        model = image,
-        contentDescription = null,
-        modifier = Modifier
-            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-            .height(250.dp),
-        loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
-    )
 }

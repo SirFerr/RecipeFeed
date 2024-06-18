@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -17,10 +18,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,13 +34,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.view.mainMenu.CustomAsyncImage
+import com.example.recipefeed.view.mainMenu.UpdateBox
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -61,7 +67,7 @@ fun RecipeScreen(
                             .size(30.dp)
                             .wrapContentSize()
                     ) {
-                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 },
                 actions = {
@@ -89,7 +95,15 @@ fun RecipeScreen(
             val alignmentStartModifier = Modifier.align(Alignment.Start)
             val imageBytes = Base64.decode(recipe.imageData)
             val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-            CustomAsyncImage(image)
+
+            SubcomposeAsyncImage(
+                model = image,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+                    .height(250.dp),
+                loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
+            )
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 text = recipe.recipeName,

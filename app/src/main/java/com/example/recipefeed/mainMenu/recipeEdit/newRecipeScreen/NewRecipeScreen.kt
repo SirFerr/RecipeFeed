@@ -108,9 +108,7 @@ fun NewRecipeScreen(
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    viewModel.addRecipes(
-                        context
-                    )
+                    viewModel.addRecipes()
                 }
             ) {
                 Text(

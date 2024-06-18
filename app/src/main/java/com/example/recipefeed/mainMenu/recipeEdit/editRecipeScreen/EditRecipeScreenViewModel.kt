@@ -8,8 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.utils.convertToMultipart
+import com.example.recipefeed.mainMenu.recipeEdit.convertToMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 @HiltViewModel
 class EditRecipeScreenViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    @ApplicationContext private val context: Context
+
 ) :
     ViewModel() {
     val recipe = MutableStateFlow(Recipe())
@@ -82,7 +85,7 @@ class EditRecipeScreenViewModel @Inject constructor(
         }
     }
 
-    fun editRecipe(context: Context) {
+    fun editRecipe() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = convertToMultipart(selectImages.value, context)?.let {
