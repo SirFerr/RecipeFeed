@@ -27,21 +27,17 @@ import com.example.recipefeed.utils.Destinations
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun LogInScreen(
-    navController: NavHostController? = null,
+    navController: NavHostController,
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
     val token by viewModel.token.collectAsState()
-    val isTokenWork by viewModel.isTokenWork.collectAsState()
     val context = LocalContext.current
 
-    if (isTokenWork) {
-        navController?.navigate(Destinations.MAIN_GROUP) {
-            popUpTo(Destinations.LOGIN) {
-                inclusive = true
-            }
+    if (token.isNotEmpty()) {
+        navController.navigate(Destinations.MAIN_GROUP) {
+            popUpTo(Destinations.LOGIN_GROUP) { inclusive = true }
         }
     }
     Box(
@@ -70,14 +66,12 @@ fun LogInScreen(
             Button(onClick = {
                 viewModel.signIn(
                     isSuccess = {
-                        navController?.navigate(Destinations.MAIN_GROUP) {
-                            popUpTo(Destinations.LOGIN) {
-                                inclusive = true
-                            }
+                        navController.navigate(Destinations.MAIN_GROUP) {
+                            popUpTo(Destinations.LOGIN_GROUP) { inclusive = true }
                         }
                     },
                     isError = {
-                        Toast.makeText(context, "err", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                 )
 
@@ -85,7 +79,7 @@ fun LogInScreen(
                 Text(text = stringResource(id = R.string.login))
             }
             Button(onClick = {
-                navController?.navigate(Destinations.SIGNUP)
+                navController.navigate(Destinations.SIGNUP)
 
             }) {
                 Text(text = stringResource(id = R.string.signup))

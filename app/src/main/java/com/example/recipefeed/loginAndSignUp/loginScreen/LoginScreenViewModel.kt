@@ -19,33 +19,13 @@ class LoginScreenViewModel @Inject constructor(
     var textPassword = MutableStateFlow("")
     val token = MutableStateFlow("")
     val isSuccessful = MutableStateFlow(false)
-    val isTokenWork = MutableStateFlow(false)
 
     init {
-        // Проверяем токен при инициализации ViewModel
-        checkToken()
+        token.value = repository.getToken()
     }
 
-    private fun checkToken() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val savedToken = repository.getToken()
-            if (savedToken != null) {
-                val isValid = repository.isTokenValid(savedToken)
-                withContext(Dispatchers.Main) {
-                    if (isValid) {
-                        token.value = savedToken
-                        isTokenWork.value = true
-                        isSuccessful.value = true
-                    } else {
-                        isTokenWork.value = false
-                        isSuccessful.value = false
-                    }
-                }
-            }
-        }
-    }
 
-    fun signIn(isSuccess: () -> Unit, isError: () -> Unit) {
+    fun signIn(isSuccess: () -> Unit, isError: (String) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 if (textUsername.value == "e" && textPassword.value == "e") {
@@ -54,9 +34,8 @@ class LoginScreenViewModel @Inject constructor(
                 }
                 val response = repository.signIn(
                     Auth(
-                        textUsername.value,
-                        textUsername.value,
-                        textPassword.value,
+                        email =  textUsername.value,
+                        password =  textPassword.value,
                     )
                 )
 
@@ -73,20 +52,20 @@ class LoginScreenViewModel @Inject constructor(
                         } else {
                             isSuccessful.value = false
                             withContext(Dispatchers.Main) {
-                                isError()
+                                isError(it.error)
                             }
                         }
                     }
                 } else {
                     isSuccessful.value = false
                     withContext(Dispatchers.Main) {
-                        isError()
+                        isError("response is not success")
                     }
                 }
             } catch (e: Exception) {
                 isSuccessful.value = false
                 withContext(Dispatchers.Main) {
-                    isError()
+                    isError(e.message.toString())
                 }
             }
         }

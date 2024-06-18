@@ -1,4 +1,4 @@
-package com.example.recipefeed.scaffold.bottom
+package com.example.recipefeed.mainMenu.scaffold.bottom
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons

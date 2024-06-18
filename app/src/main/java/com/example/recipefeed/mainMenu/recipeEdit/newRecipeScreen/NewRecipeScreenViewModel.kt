@@ -5,14 +5,13 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
-import com.example.recipefeed.data.local.TokenSharedPreferencesManager
-import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
+import com.example.recipefeed.utils.convertToMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
 import javax.inject.Inject
 
 
@@ -22,13 +21,26 @@ class NewRecipeScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    fun addRecipes(recipe: Recipe, imagePart: MultipartBody.Part?, context: Context) {
+    val recipeName = MutableStateFlow("")
+    val description = MutableStateFlow("")
+    val ingredients = MutableStateFlow("")
+    val timeToCook = MutableStateFlow("")
+
+    var selectImages = MutableStateFlow<Any?>(null)
+
+
+    fun addRecipes(context: Context) {
         viewModelScope.launch {
             try {
-                val response = imagePart?.let {
+                val response = convertToMultipart(selectImages.value, context)?.let {
                     repository.addRecipe(
-                        recipe,
-                        it,
+                        Recipe(
+                            recipeName = recipeName.value,
+                            description = description.value,
+                            timeToCook = timeToCook.value,
+                            ingredients = ingredients.value
+                        ),
+                        it
                     )
                 }
                 if (response?.isSuccessful == true) {
@@ -45,4 +57,27 @@ class NewRecipeScreenViewModel @Inject constructor(
             }
         }
     }
+
+    //Setters
+    fun setRecipeName(string: String) {
+        recipeName.value = string
+    }
+
+    fun setDescription(string: String) {
+        description.value = string
+    }
+
+    fun setIngredients(string: String) {
+        ingredients.value = string
+    }
+
+    fun setTimeToCook(string: String) {
+        timeToCook.value = string
+    }
+
+    fun setSelectImages(any: Any?) {
+        selectImages.value = any
+    }
+
+
 }

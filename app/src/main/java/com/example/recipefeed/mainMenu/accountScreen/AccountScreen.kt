@@ -16,12 +16,11 @@ import com.example.recipefeed.R
 import com.example.recipefeed.utils.Destinations
 
 
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun AccountScreen(
-    navController: NavHostController? = null,
-    firstNavController: NavHostController? = null,
-    viewModel: AccountScreenViewModel = hiltViewModel()
+    navController: NavHostController,
+    firstNavController: NavHostController,
+    viewModel: AccountScreenViewModel = hiltViewModel(),
 ) {
 
     val list = listOf(

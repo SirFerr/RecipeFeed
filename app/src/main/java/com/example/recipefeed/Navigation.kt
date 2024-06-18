@@ -19,7 +19,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.recipefeed.loginAndSignUp.loginScreen.LogInScreen
 import com.example.recipefeed.loginAndSignUp.signUpScreen.SignUpScreen
-import com.example.recipefeed.scaffold.scaffold
+import com.example.recipefeed.mainMenu.scaffold.ScaffoldWithBottom
 import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
 import com.example.recipefeed.view.mainMenu.addedRecipesScreen.AddedRecipesScreen
@@ -31,43 +31,50 @@ import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
 
 @Composable
-fun navigation(): NavHostController {
+fun Navigation(): NavHostController {
     val focusManager = LocalFocusManager.current
+
     val firstNavController = rememberNavController()
+
+    //Anim settings
     val duration = 700
-    NavHost(navController = firstNavController,
+    val enterTransition = fadeIn(animationSpec = tween(duration))
+    val exitTransition = fadeOut(animationSpec = tween(duration))
+
+
+    NavHost(
+        navController = firstNavController,
         startDestination = Destinations.LOGIN_GROUP,
         modifier = Modifier.clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { focusManager.clearFocus() },
-        enterTransition = { fadeIn(animationSpec = tween(duration)) },
-        exitTransition = { fadeOut(animationSpec = tween(duration)) })
+        enterTransition = { enterTransition },
+        exitTransition = { exitTransition },
+    )
     {
         navigation(Destinations.LOGIN, Destinations.LOGIN_GROUP) {
-            composable(Destinations.LOGIN) { LogInScreen(firstNavController) }
-            composable(Destinations.SIGNUP) { SignUpScreen(firstNavController) }
+            composable(Destinations.LOGIN) { LogInScreen(navController = firstNavController) }
+            composable(Destinations.SIGNUP) { SignUpScreen(navController = firstNavController) }
         }
         composable(Destinations.MAIN_GROUP) {
             val navController = rememberNavController()
-            scaffold(navController = navController, screen = {
+            ScaffoldWithBottom(navController = navController, screen = {
                 NavHost(
                     navController = navController,
                     startDestination = Destinations.MAIN,
                     modifier = Modifier.padding(it),
-                    enterTransition = { fadeIn(animationSpec = tween(duration)) },
-                    exitTransition = { fadeOut(animationSpec = tween(duration)) }
+                    enterTransition = { enterTransition },
+                    exitTransition = { exitTransition }
                 ) {
                     composable(Destinations.MAIN) {
                         MainScreen(
                             navController = navController
                         )
-
                     }
                     composable(Destinations.FAVORITE) {
                         FavoriteScreen(
                             navController = navController
                         )
-
                     }
                     composable(Destinations.SEARCH) {
                         SearchScreen(
@@ -77,8 +84,8 @@ fun navigation(): NavHostController {
 
                     composable(Destinations.ACCOUNT) {
                         AccountScreen(
-                            navController,
-                            firstNavController
+                            navController =  navController,
+                            firstNavController = firstNavController
                         )
                     }
                     composable("${Destinations.RECIPE}/{id}", listOf(navArgument("id") {
@@ -86,21 +93,21 @@ fun navigation(): NavHostController {
                     })) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("id")
                         if (id != null) {
-                            RecipeScreen(id,navController)
+                            RecipeScreen(id = id, navController = navController)
                         }
                     }
                     composable(Destinations.NEW_RECIPE) {
-                        NewRecipeScreen(navController)
+                        NewRecipeScreen(navController = navController)
                     }
                     composable(Destinations.ADDED_RECIPES) {
-                        AddedRecipesScreen(navController)
+                        AddedRecipesScreen(navController = navController)
                     }
                     composable("${Destinations.EDIT_RECIPE}/{id}", listOf(navArgument("id") {
                         type = NavType.IntType
                     })) { backStackEntry ->
                         val id = backStackEntry.arguments?.getInt("id")
                         if (id != null) {
-                            EditRecipeScreen(navController, id)
+                            EditRecipeScreen(navController = navController, id = id)
                         }
                     }
 

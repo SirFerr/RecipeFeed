@@ -7,7 +7,6 @@
 
 package com.example.recipefeed.view.mainMenu.newRecipeScreen
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -31,10 +30,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,10 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.mainMenu.recipeEdit.ImagePickerCard
 import com.example.recipefeed.mainMenu.recipeEdit.MainInformationSection
-import com.example.recipefeed.utils.convertToMultipart
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
@@ -57,14 +52,14 @@ fun NewRecipeScreen(
     navController: NavHostController,
     viewModel: NewRecipeScreenViewModel = hiltViewModel()
 ) {
-    var recipeName by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var ingredients by remember { mutableStateOf("") }
-    var timeToCook by remember { mutableStateOf("") }
-    var selectImages by remember { mutableStateOf<Uri?>(null) }
+    val recipeName by viewModel.recipeName.collectAsState()
+    val description by viewModel.description.collectAsState()
+    val ingredients by viewModel.ingredients.collectAsState()
+    val timeToCook by viewModel.timeToCook.collectAsState()
+    val selectImages by viewModel.selectImages.collectAsState()
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        if (it != null) selectImages = it
+        if (it != null) viewModel.setSelectImages(it)
     }
     val context = LocalContext.current
 
@@ -94,16 +89,16 @@ fun NewRecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
         ) {
             Spacer(modifier = Modifier)
-            ImagePickerCard(selectImages, galleryLauncher) { selectImages = null }
+            ImagePickerCard(selectImages, galleryLauncher) { viewModel.setSelectImages(it) }
 
             HorizontalDivider()
 
             MainInformationSection(
                 recipeName, description, ingredients, timeToCook,
-                onRecipeNameChange = { recipeName = it },
-                onDescriptionChange = { description = it },
-                onIngredientsChange = { ingredients = it },
-                onTimeToCookChange = { timeToCook = it }
+                onRecipeNameChange = { viewModel.setRecipeName(it) },
+                onDescriptionChange = { viewModel.setDescription(it) },
+                onIngredientsChange = { viewModel.setIngredients(it) },
+                onTimeToCookChange = { viewModel.setTimeToCook(it) }
             )
 
             Spacer(Modifier.weight(1f))
@@ -114,13 +109,7 @@ fun NewRecipeScreen(
                     .align(Alignment.CenterHorizontally),
                 onClick = {
                     viewModel.addRecipes(
-                        Recipe(
-                            recipeName = recipeName,
-                            description = description,
-                            timeToCook = timeToCook,
-                            ingredients = ingredients
-                        ),
-                        convertToMultipart(selectImages, context), context
+                        context
                     )
                 }
             ) {

@@ -1,4 +1,6 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalEncodingApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalEncodingApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.example.recipefeed.view.mainMenu.editRecipeScreen
 
@@ -73,29 +75,19 @@ fun EditRecipeScreen(
     viewModel: EditRecipeScreenViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
-
-    val recipe by viewModel.recipe.collectAsState()
     viewModel.getById(id)
 
-    var recipeName by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var ingredients by remember { mutableStateOf("") }
-    var timeToCook by remember { mutableStateOf("") }
-    var isDelete by remember { mutableStateOf(false) }
+    val recipeName by viewModel.recipeName.collectAsState()
+    val description by viewModel.description.collectAsState()
+    val ingredients by viewModel.ingredients.collectAsState()
+    val timeToCook by viewModel.timeToCook.collectAsState()
+    val selectImages by viewModel.selectImages.collectAsState()
 
-    val imageBytes = Base64.decode(recipe.imageData)
-    var selectImages by remember { mutableStateOf<Any?>("") }
+    val isDelete by viewModel.isDelete.collectAsState()
 
-    LaunchedEffect(recipe) {
-        selectImages = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
-        recipeName = recipe.recipeName
-        description = recipe.description
-        ingredients = recipe.ingredients
-        timeToCook = recipe.timeToCook
-    }
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
-        if (it != null) selectImages = it
+        if (it != null) viewModel.setSelectImages(it)
     }
 
     Scaffold(topBar = {
@@ -112,7 +104,7 @@ fun EditRecipeScreen(
             },
             actions = {
             IconButton(
-                onClick = { isDelete = true },
+                onClick = { viewModel.changeIsDelete() },
                 modifier = Modifier
                     .size(30.dp)
                     .wrapContentSize()
@@ -132,16 +124,16 @@ fun EditRecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
 
-            ImagePickerCard(selectImages, galleryLauncher) { selectImages = null }
+            ImagePickerCard(selectImages, galleryLauncher) { viewModel.setSelectImages(null) }
 
             HorizontalDivider()
 
             MainInformationSection(
                 recipeName, description, ingredients, timeToCook,
-                onRecipeNameChange = { recipeName = it },
-                onDescriptionChange = { description = it },
-                onIngredientsChange = { ingredients = it },
-                onTimeToCookChange = { timeToCook = it }
+                onRecipeNameChange = { viewModel.setRecipeName(it) },
+                onDescriptionChange = { viewModel.setDescription(it) },
+                onIngredientsChange = { viewModel.setIngredients(it) },
+                onTimeToCookChange = { viewModel.setTimeToCook(it) }
             )
 
             Spacer(Modifier.weight(1f))
@@ -151,15 +143,7 @@ fun EditRecipeScreen(
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    viewModel.editRecipe(
-                        Recipe(
-                            recipeName = recipeName,
-                            description = description,
-                            timeToCook = timeToCook,
-                            ingredients = ingredients
-                        ),
-                        convertToMultipart(selectImages, context), context
-                    )
+                    viewModel.editRecipe(context)
                 }
             ) {
                 Text(
@@ -173,9 +157,9 @@ fun EditRecipeScreen(
 
         if (isDelete) {
             DeleteRecipeDialog(
-                onDismiss = { isDelete = false },
+                onDismiss = { viewModel.changeIsDelete() },
                 onConfirm = {
-                    isDelete = false
+                    viewModel.changeIsDelete()
                     viewModel.deleteRecipeById(id)
                     navController.popBackStack()
                 }
