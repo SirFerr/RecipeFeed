@@ -1,42 +1,72 @@
-package com.example.recipefeed.view.mainMenu.newRecipeScreen
+package com.example.recipefeed.view.mainMenu.editRecipeScreen
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.mainMenu.recipeEdit.convertToMultipart
+import com.example.recipefeed.screens.mainGroup.recipeEdit.convertToMultipart
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
-
+@OptIn(ExperimentalEncodingApi::class)
 @HiltViewModel
-class NewRecipeScreenViewModel @Inject constructor(
+class EditRecipeScreenViewModel @Inject constructor(
     private val repository: Repository,
     @ApplicationContext private val context: Context
+
 ) :
     ViewModel() {
+    val recipe = MutableStateFlow(Recipe())
 
     val recipeName = MutableStateFlow("")
     val description = MutableStateFlow("")
     val ingredients = MutableStateFlow("")
     val timeToCook = MutableStateFlow("")
+    val isDelete = MutableStateFlow(false)
 
     var selectImages = MutableStateFlow<Any?>(null)
 
 
-    fun addRecipes() {
+    fun getById(id: Int) {
         viewModelScope.launch {
             try {
+                val response = repository.getRecipeById(id)
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        recipe.value = it
+                        recipeName.value = it.recipeName
+                        description.value = it.description
+                        ingredients.value = it.ingredients
+                        timeToCook.value = it.timeToCook
+                        val imageBytes = Base64.decode(recipe.value.imageData)
+                        selectImages.value =
+                            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    fun editRecipe() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
                 val response = convertToMultipart(selectImages.value, context)?.let {
-                    repository.addRecipe(
-                        Recipe(
+                    repository.updateRecipe(
+                        recipe.value.id, Recipe(
                             recipeName = recipeName.value,
                             description = description.value,
                             timeToCook = timeToCook.value,
@@ -56,6 +86,17 @@ class NewRecipeScreenViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
+            }
+        }
+    }
+
+    fun deleteRecipeById(id: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = repository.deleteRecipeById(id)
+                Log.d("delete", response.isSuccessful.toString())
+            } catch (e: Exception) {
+
             }
         }
     }
@@ -81,5 +122,7 @@ class NewRecipeScreenViewModel @Inject constructor(
         selectImages.value = any
     }
 
-
+    fun changeIsDelete() {
+        isDelete.value = !isDelete.value
+    }
 }

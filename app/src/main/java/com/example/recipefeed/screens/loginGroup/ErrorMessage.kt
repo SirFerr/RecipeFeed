@@ -1,4 +1,4 @@
-package com.example.recipefeed.loginAndSignUp
+package com.example.recipefeed.screens.loginGroup
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text

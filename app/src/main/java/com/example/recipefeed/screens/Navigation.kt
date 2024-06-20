@@ -1,4 +1,4 @@
-package com.example.recipefeed
+package com.example.recipefeed.screens
 
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -17,9 +17,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.example.recipefeed.loginAndSignUp.loginScreen.LogInScreen
-import com.example.recipefeed.loginAndSignUp.signUpScreen.SignUpScreen
-import com.example.recipefeed.mainMenu.scaffold.ScaffoldWithBottom
+import com.example.recipefeed.screens.loginGroup.loginScreen.LogInScreen
+import com.example.recipefeed.screens.loginGroup.signUpScreen.SignUpScreen
+import com.example.recipefeed.screens.mainGroup.scaffold.ScaffoldWithBottom
+import com.example.recipefeed.screens.serverNotAvaivableScreen.ServerNotAvailableScreen
 import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
 import com.example.recipefeed.view.mainMenu.addedRecipesScreen.AddedRecipesScreen
@@ -52,9 +53,13 @@ fun Navigation(): NavHostController {
         exitTransition = { exitTransition },
     )
     {
+
         navigation(Destinations.LOGIN, Destinations.LOGIN_GROUP) {
             composable(Destinations.LOGIN) { LogInScreen(navController = firstNavController) }
             composable(Destinations.SIGNUP) { SignUpScreen(navController = firstNavController) }
+        }
+        composable(Destinations.SERVER_NOT_AVAILABLE){
+            ServerNotAvailableScreen()
         }
         composable(Destinations.MAIN_GROUP) {
             val navController = rememberNavController()

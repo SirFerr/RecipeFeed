@@ -1,21 +1,23 @@
 package com.example.recipefeed.utils
 
 object Constants {
-
     const val BASE_URL = "http://192.168.1.2:8080/"
 }
 
 object Destinations {
-    const val LOGIN_GROUP = "loginGroup"
-    const val LOGIN = "logIn"
-    const val SIGNUP = "signUp"
-    const val MAIN_GROUP = "mainGroup"
-    const val MAIN = "main"
-    const val SEARCH = "search"
-    const val RECIPE = "recipe"
-    const val FAVORITE= "favorite"
-    const val ACCOUNT = "account"
-    const val NEW_RECIPE = "newRecipe"
-    const val ADDED_RECIPES="addedRecipes"
-    const val EDIT_RECIPE = "editRecipe"
+    const val LOGIN_GROUP = "LOGIN_GROUP"
+    const val LOGIN = "LOGIN"
+    const val SIGNUP = "SIGNUP"
+
+    const val MAIN_GROUP = "MAIN_GROUP"
+    const val MAIN = "MAIN"
+    const val SEARCH = "SEARCH"
+    const val RECIPE = "RECIPE"
+    const val FAVORITE= "FAVORITE"
+    const val ACCOUNT = "ACCOUNT"
+    const val NEW_RECIPE = "NEW_RECIPE"
+    const val ADDED_RECIPES="ADDED_RECIPES"
+    const val EDIT_RECIPE = "EDIT_RECIPE"
+
+    const val SERVER_NOT_AVAILABLE ="SERVER_NOT_AVAILABLE"
 }

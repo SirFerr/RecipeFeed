@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.mainMenu.TagItem
+import com.example.recipefeed.screens.mainGroup.TagItem
 import com.example.recipefeed.view.mainMenu.CircularLoad
 import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
 import com.example.recipefeed.view.mainMenu.ListItem
@@ -137,7 +137,8 @@ private fun TagsGrid(viewModel: SearchRecipesViewModel) {
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())) {
+            .verticalScroll(rememberScrollState())
+    ) {
         FlowRow(
             modifier = Modifier
                 .fillMaxSize()

@@ -1,4 +1,4 @@
-package com.example.recipefeed.loginAndSignUp.loginScreen
+package com.example.recipefeed.screens.loginGroup.loginScreen
 
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository

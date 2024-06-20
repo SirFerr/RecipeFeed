@@ -1,11 +1,9 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalMaterial3Api::class,
-    ExperimentalEncodingApi::class,
+    ExperimentalMaterial3Api::class, ExperimentalEncodingApi::class,
     ExperimentalMaterial3Api::class
 )
 
-package com.example.recipefeed.view.mainMenu.newRecipeScreen
+package com.example.recipefeed.view.mainMenu.editRecipeScreen
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -40,28 +39,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.recipefeed.R
-import com.example.recipefeed.mainMenu.recipeEdit.ImagePickerCard
-import com.example.recipefeed.mainMenu.recipeEdit.MainInformationSection
+import com.example.recipefeed.screens.mainGroup.recipeEdit.DeleteRecipeDialog
+import com.example.recipefeed.screens.mainGroup.recipeEdit.ImagePickerCard
+import com.example.recipefeed.screens.mainGroup.recipeEdit.MainInformationSection
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalEncodingApi::class)
 @Composable
-fun NewRecipeScreen(
-    navController: NavHostController,
-    viewModel: NewRecipeScreenViewModel = hiltViewModel()
+fun EditRecipeScreen(
+    navController: NavHostController = rememberNavController(),
+    id: Int = 1,
+    viewModel: EditRecipeScreenViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    viewModel.getById(id)
+
     val recipeName by viewModel.recipeName.collectAsState()
     val description by viewModel.description.collectAsState()
     val ingredients by viewModel.ingredients.collectAsState()
     val timeToCook by viewModel.timeToCook.collectAsState()
     val selectImages by viewModel.selectImages.collectAsState()
 
+    val isDelete by viewModel.isDelete.collectAsState()
+
+
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) viewModel.setSelectImages(it)
     }
-    val context = LocalContext.current
 
     Scaffold(topBar = {
         TopAppBar(title = { },
@@ -76,9 +83,17 @@ fun NewRecipeScreen(
                 }
             },
             actions = {
-
+                IconButton(
+                    onClick = { viewModel.changeIsDelete() },
+                    modifier = Modifier
+                        .size(30.dp)
+                        .wrapContentSize()
+                ) {
+                    Icon(imageVector = Icons.Filled.Delete, contentDescription = null)
+                }
             })
     }) {
+
         Column(
             Modifier
                 .fillMaxSize()
@@ -86,10 +101,10 @@ fun NewRecipeScreen(
                 .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
-            Spacer(modifier = Modifier)
-            ImagePickerCard(selectImages, galleryLauncher) { viewModel.setSelectImages(it) }
+
+            ImagePickerCard(selectImages, galleryLauncher) { viewModel.setSelectImages(null) }
 
             HorizontalDivider()
 
@@ -108,7 +123,7 @@ fun NewRecipeScreen(
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
                 onClick = {
-                    viewModel.addRecipes()
+                    viewModel.editRecipe()
                 }
             ) {
                 Text(
@@ -119,5 +134,17 @@ fun NewRecipeScreen(
 
             Spacer(modifier = Modifier)
         }
+
+        if (isDelete) {
+            DeleteRecipeDialog(
+                onDismiss = { viewModel.changeIsDelete() },
+                onConfirm = {
+                    viewModel.changeIsDelete()
+                    viewModel.deleteRecipeById(id)
+                    navController.popBackStack()
+                }
+            )
+        }
     }
+
 }

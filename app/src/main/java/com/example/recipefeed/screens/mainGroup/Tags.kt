@@ -1,4 +1,4 @@
-package com.example.recipefeed.mainMenu
+package com.example.recipefeed.screens.mainGroup
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth

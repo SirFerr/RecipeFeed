@@ -1,4 +1,4 @@
-package com.example.recipefeed.loginAndSignUp.signUpScreen
+package com.example.recipefeed.screens.loginGroup.signUpScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
