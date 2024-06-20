@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.loginAndSignUp.ErrorMessage
-import com.example.recipefeed.loginAndSignUp.customTextField
+import com.example.recipefeed.screens.loginGroup.ErrorMessage
+import com.example.recipefeed.screens.loginGroup.CustomTextField
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,15 +67,15 @@ fun SignUpScreen(
 
             )
             {
-                customTextField(
+                CustomTextField(
                     stringResource(id = R.string.username_field),
                     textValue = viewModel.textUsername
                 )
-                customTextField(
+                CustomTextField(
                     stringResource(id = R.string.password_field),
                     textValue = viewModel.textPassword
                 )
-                customTextField(
+                CustomTextField(
                     stringResource(id = R.string.password_again_field),
                     textValue = viewModel.textPasswordAgain
                 )

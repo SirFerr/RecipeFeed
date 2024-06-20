@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun customTextField(stringRes: String, textValue: MutableStateFlow<String>) {
+fun CustomTextField(stringRes: String, textValue: MutableStateFlow<String>) {
 
     val text by textValue.collectAsState()
     OutlinedTextField(

@@ -19,8 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.loginAndSignUp.ErrorMessage
-import com.example.recipefeed.loginAndSignUp.customTextField
+import com.example.recipefeed.screens.loginGroup.ErrorMessage
+import com.example.recipefeed.screens.loginGroup.CustomTextField
 import com.example.recipefeed.utils.Destinations
 
 
@@ -49,11 +49,11 @@ fun LogInScreen(
         )
         {
 
-            customTextField(
+            CustomTextField(
                 stringResource(id = R.string.username_field),
                 textValue = viewModel.textUsername
             )
-            customTextField(
+            CustomTextField(
                 stringResource(id = R.string.password_field),
                 textValue = viewModel.textPassword
             )
