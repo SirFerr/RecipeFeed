@@ -1,27 +1,25 @@
 package com.example.recipefeed.loginAndSignUp.loginScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
+import com.example.recipefeed.loginAndSignUp.ErrorMessage
 import com.example.recipefeed.loginAndSignUp.customTextField
 import com.example.recipefeed.utils.Destinations
 
@@ -33,7 +31,6 @@ fun LogInScreen(
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
     val token by viewModel.token.collectAsState()
-    val context = LocalContext.current
 
     if (token.isNotEmpty()) {
         navController.navigate(Destinations.MAIN_GROUP) {
@@ -41,14 +38,12 @@ fun LogInScreen(
         }
     }
     Box(
-        Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.large_padding)),
+        modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
 
         Column(
-            modifier = Modifier,
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         )
@@ -62,7 +57,9 @@ fun LogInScreen(
                 stringResource(id = R.string.password_field),
                 textValue = viewModel.textPassword
             )
-            Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)))
+
+            ErrorMessage(textValue = viewModel.errorMessage)
+
             Button(onClick = {
                 viewModel.signIn(
                     isSuccess = {
@@ -70,15 +67,13 @@ fun LogInScreen(
                             popUpTo(Destinations.LOGIN_GROUP) { inclusive = true }
                         }
                     },
-                    isError = {
-                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                    }
                 )
 
             }) {
                 Text(text = stringResource(id = R.string.login))
             }
-            Button(onClick = {
+
+            TextButton(onClick = {
                 navController.navigate(Destinations.SIGNUP)
 
             }) {

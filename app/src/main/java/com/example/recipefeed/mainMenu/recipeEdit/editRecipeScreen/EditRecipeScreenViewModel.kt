@@ -38,30 +38,7 @@ class EditRecipeScreenViewModel @Inject constructor(
 
     var selectImages = MutableStateFlow<Any?>(null)
 
-    //Setters
-    fun setRecipeName(string: String) {
-        recipeName.value = string
-    }
 
-    fun setDescription(string: String) {
-        description.value = string
-    }
-
-    fun setIngredients(string: String) {
-        ingredients.value = string
-    }
-
-    fun setTimeToCook(string: String) {
-        timeToCook.value = string
-    }
-
-    fun setSelectImages(any: Any?) {
-        selectImages.value = any
-    }
-
-    fun changeIsDelete() {
-        isDelete.value = !isDelete.value
-    }
 
     fun getById(id: Int) {
         viewModelScope.launch {
@@ -123,5 +100,30 @@ class EditRecipeScreenViewModel @Inject constructor(
 
             }
         }
+    }
+
+    //Setters
+    fun setRecipeName(string: String) {
+        recipeName.value = string
+    }
+
+    fun setDescription(string: String) {
+        description.value = string
+    }
+
+    fun setIngredients(string: String) {
+        ingredients.value = string
+    }
+
+    fun setTimeToCook(string: String) {
+        timeToCook.value = string
+    }
+
+    fun setSelectImages(any: Any?) {
+        selectImages.value = any
+    }
+
+    fun changeIsDelete() {
+        isDelete.value = !isDelete.value
     }
 }

@@ -1,6 +1,5 @@
 package com.example.recipefeed.loginAndSignUp.signUpScreen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Auth
@@ -9,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,24 +19,47 @@ class SignUpScreenViewModel @Inject constructor(
     var textUsername = MutableStateFlow("")
     var textPassword = MutableStateFlow("")
     var textPasswordAgain = MutableStateFlow("")
-    val isSuccessful = MutableStateFlow(true)
 
+    val errorMessage = MutableStateFlow("")
+    fun setErrorMessage(string: String = "") {
+        errorMessage.value = string
+    }
 
-    fun signUp() {
+    fun signUp(isSuccess: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = repository.signUp(
-                    Auth(
-                        textUsername.value,
-                        textUsername.value,
-                        textPassword.value,
-                    )
-                )
-                Log.d("signUp", response.body().toString())
-                isSuccessful.value = response.isSuccessful
+                if (textUsername.value != "" && textPassword.value != "" && textPasswordAgain.value != "") {
+                    if (textPasswordAgain.value == textPassword.value) {
+                        val response = repository.signUp(
+                            Auth(
+                                name = textUsername.value,
+                                email = textUsername.value,
+                                password = textPassword.value,
+                                role = "USER"
+                            )
+                        )
+
+                        if (response.body()?.error == "") {
+                            withContext(Dispatchers.Main) {
+                                isSuccess()
+                            }
+                        } else {
+                            setErrorMessage(response.body()?.error.toString())
+
+                        }
+                    } else {
+                        setErrorMessage("Password not compared!")
+
+                    }
+                } else {
+                    setErrorMessage("Field not fill!")
+
+                }
+
 
             } catch (e: Exception) {
-                isSuccessful.value = false
+                setErrorMessage("Response is not success " + e.toString())
+
             }
         }
     }

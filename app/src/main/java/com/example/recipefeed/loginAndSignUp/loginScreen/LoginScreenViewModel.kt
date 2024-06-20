@@ -19,54 +19,62 @@ class LoginScreenViewModel @Inject constructor(
     var textPassword = MutableStateFlow("")
     val token = MutableStateFlow("")
     val isSuccessful = MutableStateFlow(false)
+    val errorMessage = MutableStateFlow("")
 
     init {
         token.value = repository.getToken()
     }
 
+    fun setErrorMessage(string: String = "") {
+        errorMessage.value = string
+    }
 
-    fun signIn(isSuccess: () -> Unit, isError: (String) -> Unit) {
+    fun signIn(isSuccess: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 if (textUsername.value == "e" && textPassword.value == "e") {
                     isSuccessful.value = true
                     repository.saveToken("e")
                 }
-                val response = repository.signIn(
-                    Auth(
-                        email =  textUsername.value,
-                        password =  textPassword.value,
+                if (textUsername.value != "" && textPassword.value != "") {
+                    val response = repository.signIn(
+                        Auth(
+                            email = textUsername.value,
+                            password = textPassword.value,
+                        )
                     )
-                )
 
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        if (it.error == "") {
-                            val receivedToken = it.token.trim()
-                            token.value = receivedToken
-                            repository.saveToken(receivedToken)
-                            isSuccessful.value = true
-                            withContext(Dispatchers.Main) {
-                                isSuccess()
-                            }
-                        } else {
-                            isSuccessful.value = false
-                            withContext(Dispatchers.Main) {
-                                isError(it.error)
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            if (it.error == "") {
+                                val receivedToken = it.token.trim()
+                                token.value = receivedToken
+                                repository.saveToken(receivedToken)
+                                isSuccessful.value = true
+                                withContext(Dispatchers.Main) {
+                                    setErrorMessage()
+                                    isSuccess()
+                                }
+                            } else {
+                                isSuccessful.value = false
+                                setErrorMessage(it.error)
+
                             }
                         }
+                    } else {
+                        isSuccessful.value = false
+
+                        setErrorMessage("response is not success")
+
                     }
                 } else {
-                    isSuccessful.value = false
-                    withContext(Dispatchers.Main) {
-                        isError("response is not success")
-                    }
+                    setErrorMessage("Field not fill!")
                 }
             } catch (e: Exception) {
                 isSuccessful.value = false
-                withContext(Dispatchers.Main) {
-                    isError(e.message.toString())
-                }
+
+                setErrorMessage(e.message.toString())
+
             }
         }
     }

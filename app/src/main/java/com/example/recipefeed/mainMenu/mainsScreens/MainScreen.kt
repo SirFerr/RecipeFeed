@@ -139,7 +139,6 @@ fun SwipeCard(
 
     LaunchedEffect(dismissRight) {
         if (dismissRight) {
-            delay(300)
             onSwipeRight.invoke()
             dismissRight = false
         }
@@ -147,7 +146,6 @@ fun SwipeCard(
 
     LaunchedEffect(dismissLeft) {
         if (dismissLeft) {
-            delay(300)
             onSwipeLeft.invoke()
             dismissLeft = false
         }
