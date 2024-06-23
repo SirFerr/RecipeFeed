@@ -12,10 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-
 class MainScreenViewModel @Inject constructor(
     private val repository: Repository
-
 ) : ViewModel() {
 
     private val _mainState = MutableStateFlow<MainState>(MainState.Loading)
@@ -25,70 +23,56 @@ class MainScreenViewModel @Inject constructor(
     val nextRecipe: StateFlow<Recipe> = _nextRecipe.asStateFlow()
 
     init {
-        getRandomRecipe()
-        getNextRandomRecipe()
+        fetchRandomRecipe(true)
+        fetchRandomRecipe(false)
     }
 
-    fun onSwipeLeft(){
+    fun onSwipeLeft() {
         _mainState.value = MainState.Success(nextRecipe.value)
-        getNextRandomRecipe()
-//        addToFavourites()
+        fetchRandomRecipe(false)
     }
-    fun onSwipeRight(){
+
+    fun onSwipeRight() {
         _mainState.value = MainState.Success(nextRecipe.value)
-        getNextRandomRecipe()
+        fetchRandomRecipe(false)
     }
-    fun getNextRandomRecipe(){
+
+    private fun fetchRandomRecipe(isInitial: Boolean) {
         viewModelScope.launch {
             try {
                 val response = repository.getRandomRecipe()
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        _nextRecipe.value = it
+                        if (isInitial) {
+                            _mainState.value = MainState.Success(it)
+                        } else {
+                            _nextRecipe.value = it
+                        }
                     }
                 } else {
-                    _mainState.value = MainState.Error(response.errorBody().toString())
+                    _mainState.value = MainState.Error(response.errorBody()?.string() ?: "Unknown error")
                 }
             } catch (e: Exception) {
-                _mainState.value = MainState.Error(e.message.toString())
+                _mainState.value = MainState.Error(e.message ?: "Unknown error")
             }
         }
-    }
-    fun getRandomRecipe() {
-        viewModelScope.launch {
-            try {
-                val response = repository.getRandomRecipe()
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        _mainState.value = MainState.Success(it)
-                    }
-                } else {
-                    _mainState.value = MainState.Error(response.errorBody().toString())
-                }
-
-            } catch (e: Exception) {
-                _mainState.value = MainState.Error(e.message.toString())
-            }
-        }
-
     }
 
     fun addToFavourites() {
         viewModelScope.launch {
             try {
-                if(mainState.value is MainState.Success){
-                    repository.addToFavourites(
-                        (mainState.value as MainState.Success).recipe
-                    )
-                }
-                else{
-                    getRandomRecipe()
+                if (mainState.value is MainState.Success) {
+                    repository.addToFavourites((mainState.value as MainState.Success).recipe)
+                } else {
+                    fetchRandomRecipe(true)
                 }
             } catch (e: Exception) {
+                // Handle exception if needed
             }
         }
     }
 }
+
 
 sealed class MainState {
     object Loading : MainState()

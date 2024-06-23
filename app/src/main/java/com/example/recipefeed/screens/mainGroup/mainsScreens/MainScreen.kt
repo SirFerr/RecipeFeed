@@ -82,7 +82,7 @@ fun MainScreen(
                             .fillMaxWidth(0.5f)
                             .padding(dimensionResource(id = R.dimen.main_padding))
                     ) {
-                        viewModel.getRandomRecipe()
+                        viewModel.onSwipeLeft()
                     }
 
                 is MainState.Loading ->
@@ -97,6 +97,7 @@ fun MainScreen(
 
 }
 
+
 @Composable
 private fun MainScreenButtons(viewModel: MainScreenViewModel) {
     Row(
@@ -108,16 +109,13 @@ private fun MainScreenButtons(viewModel: MainScreenViewModel) {
     ) {
         IconButton(modifier = Modifier.wrapContentSize(),
             onClick = {
-                viewModel.getRandomRecipe()
-                viewModel.getNextRandomRecipe()
+                viewModel.onSwipeLeft()
             }) {
             Icon(imageVector = Icons.Filled.FavoriteBorder, contentDescription = null)
         }
         IconButton(modifier = Modifier.wrapContentSize(),
             onClick = {
-//                viewModel.addToFavourites()
-                viewModel.getRandomRecipe()
-                viewModel.getNextRandomRecipe()
+                viewModel.onSwipeRight()
             }) {
             Icon(imageVector = Icons.Filled.Favorite, contentDescription = null)
         }
