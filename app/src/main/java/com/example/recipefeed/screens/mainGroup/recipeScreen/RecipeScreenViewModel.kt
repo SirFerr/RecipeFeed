@@ -3,10 +3,7 @@ package com.example.recipefeed.view.mainMenu.recipeScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
-import com.example.recipefeed.data.local.TokenSharedPreferencesManager
-import com.example.recipefeed.data.remote.RecipeFeedApi
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.utils.Destinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +21,6 @@ class RecipeScreenViewModel @Inject constructor(
     val isSuccessful = MutableStateFlow(true)
 
 
-
     fun changeLike() {
         isLiked.value = !isLiked.value
     }
@@ -34,7 +30,7 @@ class RecipeScreenViewModel @Inject constructor(
             isLoading.value = true
             try {
                 val response =
-                    repository.getRecipeById(id,)
+                    repository.getRecipeById(id)
                 if (response.isSuccessful)
                     recipe.value = response.body()!!
             } catch (e: Exception) {

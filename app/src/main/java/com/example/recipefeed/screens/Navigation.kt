@@ -19,9 +19,9 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.recipefeed.screens.loginGroup.loginScreen.LogInScreen
 import com.example.recipefeed.screens.loginGroup.signUpScreen.SignUpScreen
+import com.example.recipefeed.screens.mainGroup.accountScreen.settingsScreen.SettingsScreen
 import com.example.recipefeed.screens.mainGroup.scaffold.ScaffoldWithBottom
 import com.example.recipefeed.screens.serverNotAvaivableScreen.ServerNotAvailableScreen
-import com.example.recipefeed.utils.Destinations
 import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
 import com.example.recipefeed.view.mainMenu.addedRecipesScreen.AddedRecipesScreen
 import com.example.recipefeed.view.mainMenu.editRecipeScreen.EditRecipeScreen
@@ -31,8 +31,28 @@ import com.example.recipefeed.view.mainMenu.newRecipeScreen.NewRecipeScreen
 import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
 
+
+object Destinations {
+    const val LOGIN_GROUP = "LOGIN_GROUP"
+    const val LOGIN = "LOGIN"
+    const val SIGNUP = "SIGNUP"
+
+    const val MAIN_GROUP = "MAIN_GROUP"
+    const val MAIN = "MAIN"
+    const val SEARCH = "SEARCH"
+    const val RECIPE = "RECIPE"
+    const val FAVORITE= "FAVORITE"
+    const val ACCOUNT = "ACCOUNT"
+    const val NEW_RECIPE = "NEW_RECIPE"
+    const val ADDED_RECIPES="ADDED_RECIPES"
+    const val EDIT_RECIPE = "EDIT_RECIPE"
+    const val SETTINGS = "SETTINGS"
+
+    const val SERVER_NOT_AVAILABLE ="SERVER_NOT_AVAILABLE"
+}
+
 @Composable
-fun Navigation(): NavHostController {
+fun Navigation( onThemeUpdated: () -> Unit): NavHostController {
     val focusManager = LocalFocusManager.current
 
     val firstNavController = rememberNavController()
@@ -106,6 +126,9 @@ fun Navigation(): NavHostController {
                     }
                     composable(Destinations.ADDED_RECIPES) {
                         AddedRecipesScreen(navController = navController)
+                    }
+                    composable(Destinations.SETTINGS) {
+                        SettingsScreen(onThemeUpdated = onThemeUpdated,navController = navController)
                     }
                     composable("${Destinations.EDIT_RECIPE}/{id}", listOf(navArgument("id") {
                         type = NavType.IntType

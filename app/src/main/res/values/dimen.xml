@@ -5,4 +5,6 @@
     <dimen name="sub_padding">8.dp</dimen>
     <dimen name="small_padding">4.dp</dimen>
     <dimen name="rounded_corner">8.dp</dimen>
+
+    <dimen name="icon_size">30.dp</dimen>
 </resources>

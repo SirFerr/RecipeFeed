@@ -64,8 +64,6 @@ fun RecipeScreen(
                     IconButton(
                         onClick = { navController.navigateUp() },
                         modifier = Modifier
-                            .size(30.dp)
-                            .wrapContentSize()
                     ) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }

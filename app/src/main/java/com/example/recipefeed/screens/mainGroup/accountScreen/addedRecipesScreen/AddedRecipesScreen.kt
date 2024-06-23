@@ -49,8 +49,6 @@ fun AddedRecipesScreen(
                 IconButton(
                     onClick = { navController.navigateUp() },
                     modifier = Modifier
-                        .size(30.dp)
-                        .wrapContentSize()
                 ) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                 }

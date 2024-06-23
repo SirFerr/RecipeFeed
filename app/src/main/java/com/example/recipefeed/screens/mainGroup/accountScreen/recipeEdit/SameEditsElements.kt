@@ -1,4 +1,4 @@
-package com.example.recipefeed.screens.mainGroup.recipeEdit
+package com.example.recipefeed.screens.mainGroup.accountScreen.recipeEdit
 
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher

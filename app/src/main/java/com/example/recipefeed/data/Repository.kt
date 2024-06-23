@@ -1,5 +1,6 @@
 package com.example.recipefeed.data
 
+import com.example.recipefeed.data.local.AppSettingsSharedPreferencesManager
 import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
 import com.example.recipefeed.data.remote.Auth
@@ -15,7 +16,8 @@ import javax.inject.Singleton
 class Repository @Inject constructor(
     private val recipeFeedApi: RecipeFeedApi,
     private val searchHistorySharedPreferencesManager: SearchHistorySharedPreferencesManager,
-    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager
+    private val tokenSharedPreferencesManager: TokenSharedPreferencesManager,
+    private val appSettingsSharedPreferencesManager: AppSettingsSharedPreferencesManager
 ) {
 
     /// RecipeFeedApi ///
@@ -100,6 +102,15 @@ class Repository @Inject constructor(
 
     fun getSearchHistory(): List<String> {
         return searchHistorySharedPreferencesManager.getSearchHistory()
+    }
+
+    ///AppSettingsSharedPreferencesManager///
+    fun setThemeIsDark(boolean: Boolean){
+        return appSettingsSharedPreferencesManager.setThemeIsDark(boolean)
+    }
+
+    fun isThemeDark():Boolean{
+        return appSettingsSharedPreferencesManager.isThemeDark()
     }
 
 }

@@ -19,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.loginGroup.ErrorMessage
+import com.example.recipefeed.screens.Destinations
 import com.example.recipefeed.screens.loginGroup.CustomTextField
-import com.example.recipefeed.utils.Destinations
+import com.example.recipefeed.screens.loginGroup.ErrorMessage
 
 
 @OptIn(ExperimentalMaterial3Api::class)

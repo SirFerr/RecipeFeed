@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipefeed.R
-import com.example.recipefeed.utils.Destinations
+import com.example.recipefeed.screens.Destinations
 
 @Composable
 fun bottomNavigation(navController: NavController) {
@@ -57,7 +57,6 @@ fun bottomNavigation(navController: NavController) {
                 selected = currentRoute == it.route,
                 onClick = {
                     navController.navigate(it.route) {
-
 
 
                         navController.graph.startDestinationRoute?.let { route ->

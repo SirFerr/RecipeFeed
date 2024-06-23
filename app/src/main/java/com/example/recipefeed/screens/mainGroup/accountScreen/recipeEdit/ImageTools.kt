@@ -1,4 +1,4 @@
-package com.example.recipefeed.screens.mainGroup.recipeEdit
+package com.example.recipefeed.screens.mainGroup.accountScreen.recipeEdit
 
 import android.content.Context
 import android.graphics.Bitmap
