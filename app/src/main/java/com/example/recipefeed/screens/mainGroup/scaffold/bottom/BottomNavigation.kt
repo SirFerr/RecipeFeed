@@ -1,6 +1,6 @@
 package com.example.recipefeed.screens.mainGroup.scaffold.bottom
 
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
@@ -13,14 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipefeed.R
 import com.example.recipefeed.screens.Destinations
 
 @Composable
-fun bottomNavigation(navController: NavController) {
+fun BottomNavigation(navController: NavController) {
 
     val list = listOf(
         NavBarItem(
@@ -49,7 +48,7 @@ fun bottomNavigation(navController: NavController) {
     val currentRoute = backStackEntry?.destination?.route
 
     NavigationBar(
-        Modifier.height(55.dp)
+        modifier = Modifier.wrapContentSize()
     ) {
         list.forEach {
             NavigationBarItem(
