@@ -27,7 +27,7 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.screens.Destinations
+import com.example.recipefeed.screens.navigation.Destinations
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 

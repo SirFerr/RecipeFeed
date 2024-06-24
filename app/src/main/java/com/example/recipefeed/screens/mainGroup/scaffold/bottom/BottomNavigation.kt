@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.Destinations
+import com.example.recipefeed.screens.navigation.Destinations
 
 @Composable
 fun BottomNavigation(navController: NavController) {

@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.example.recipefeed.data.local.AppSettingsSharedPreferencesManager
-import com.example.recipefeed.screens.Navigation
+import com.example.recipefeed.screens.navigation.Navigation
 import com.example.recipefeed.ui.theme.RecipeFeedTheme
 import dagger.hilt.android.AndroidEntryPoint
 
