@@ -53,6 +53,7 @@ import com.example.recipefeed.view.mainMenu.ListItem
 fun SearchScreen(
     navController: NavHostController,
     viewModel: SearchRecipesViewModel = hiltViewModel(),
+    name: String,
 ) {
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
@@ -62,6 +63,11 @@ fun SearchScreen(
         targetValue = if (!isSearching) dimensionResource(id = R.dimen.main_padding) else 0.dp,
         animationSpec = tween(durationMillis = 300)
     )
+
+    if (name.isNotEmpty()){
+        viewModel.searchText.value = name
+        viewModel.search()
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

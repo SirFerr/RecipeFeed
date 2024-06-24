@@ -23,7 +23,10 @@ import com.example.recipefeed.view.mainMenu.newRecipeScreen.NewRecipeScreen
 import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
 
-fun NavGraphBuilder.mainGroupGraph(firstNavController: NavHostController, onThemeUpdated: () -> Unit) {
+fun NavGraphBuilder.mainGroupGraph(
+    firstNavController: NavHostController,
+    onThemeUpdated: () -> Unit
+) {
 
     // Anim settings
     val duration = 700
@@ -46,20 +49,35 @@ fun NavGraphBuilder.mainGroupGraph(firstNavController: NavHostController, onThem
     }
 }
 
-private fun NavGraphBuilder.mainScreenGraph(navController: NavHostController, firstNavController: NavHostController, onThemeUpdated: () -> Unit) {
+private fun NavGraphBuilder.mainScreenGraph(
+    navController: NavHostController,
+    firstNavController: NavHostController,
+    onThemeUpdated: () -> Unit
+) {
     composable(Destinations.MainGroup.Main.route) {
         MainScreen(navController = navController)
     }
     composable(Destinations.MainGroup.Favorite.route) {
         FavoriteScreen(navController = navController)
     }
-    composable(Destinations.MainGroup.Search.route) {
-        SearchScreen(navController = navController)
+    composable(
+        Destinations.MainGroup.Search.route + "?name={name}",
+        listOf(navArgument("name") {
+            type = NavType.StringType
+            defaultValue = ""
+        })
+    ) {
+        val name = it.arguments?.getString("name").orEmpty()
+
+        SearchScreen(navController = navController, name = name)
     }
     composable(Destinations.MainGroup.Account.route) {
         AccountScreen(navController = navController, firstNavController = firstNavController)
     }
-    composable("${Destinations.MainGroup.Recipe.route}/{id}", listOf(navArgument("id") { type = NavType.IntType })) { backStackEntry ->
+    composable(
+        "${Destinations.MainGroup.Recipe.route}/{id}",
+        listOf(navArgument("id") { type = NavType.IntType })
+    ) { backStackEntry ->
         val id = backStackEntry.arguments?.getInt("id")
         if (id != null) {
             RecipeScreen(id = id, navController = navController)
@@ -74,7 +92,10 @@ private fun NavGraphBuilder.mainScreenGraph(navController: NavHostController, fi
     composable(Destinations.MainGroup.Settings.route) {
         SettingsScreen(onThemeUpdated = onThemeUpdated, navController = navController)
     }
-    composable("${Destinations.MainGroup.EditRecipe.route}/{id}", listOf(navArgument("id") { type = NavType.IntType })) { backStackEntry ->
+    composable(
+        "${Destinations.MainGroup.EditRecipe.route}/{id}",
+        listOf(navArgument("id") { type = NavType.IntType })
+    ) { backStackEntry ->
         val id = backStackEntry.arguments?.getInt("id")
         if (id != null) {
             EditRecipeScreen(navController = navController, id = id)
