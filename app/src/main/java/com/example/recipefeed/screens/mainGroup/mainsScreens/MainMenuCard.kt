@@ -43,7 +43,7 @@ fun MainScreenCard(
             .fillMaxSize(0.95f)
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
             .clickable {
-                navController.navigate("${Destinations.RECIPE}/${recipe.id}")
+                navController.navigate("${Destinations.MainGroup.Recipe.route}/${recipe.id}")
             }
     ) {
         val imageBytes = Base64.decode(recipe.imageData)

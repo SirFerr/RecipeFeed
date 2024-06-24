@@ -30,7 +30,7 @@ class SearchRecipesViewModel @Inject constructor(
 
     val tags = MutableStateFlow<List<String>>(
         listOf(
-            "Vegetarian",
+            "1",
             "Vegan",
             "Gluten-Free",
             "Dairy-Free",
@@ -105,6 +105,9 @@ class SearchRecipesViewModel @Inject constructor(
         if (searchText.value != "") {
             getByName()
             repository.saveRequest(value = searchText.value)
+        }
+        else{
+            recipes.value = listOf()
         }
         searchHistory.value = repository.getSearchHistory()
         isSearching.value = false

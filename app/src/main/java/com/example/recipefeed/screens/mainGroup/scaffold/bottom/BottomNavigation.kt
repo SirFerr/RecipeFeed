@@ -24,22 +24,22 @@ fun BottomNavigation(navController: NavController) {
     val list = listOf(
         NavBarItem(
             stringResource(id = R.string.home_title),
-            Destinations.MAIN,
+            Destinations.MainGroup.Main.route,
             Icons.Filled.Home
         ),
         NavBarItem(
             stringResource(id = R.string.search_title),
-            Destinations.SEARCH,
+            Destinations.MainGroup.Search.route,
             Icons.Filled.Search
         ),
         NavBarItem(
             stringResource(id = R.string.favorite_title),
-            Destinations.FAVORITE,
+            Destinations.MainGroup.Favorite.route,
             Icons.Filled.Star
         ),
         NavBarItem(
             stringResource(id = R.string.account_title),
-            Destinations.ACCOUNT,
+            Destinations.MainGroup.Account.route,
             Icons.Filled.AccountCircle
         ),
     )

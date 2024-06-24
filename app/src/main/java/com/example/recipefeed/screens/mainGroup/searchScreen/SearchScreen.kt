@@ -77,7 +77,7 @@ fun SearchScreen(
             active = isSearching,
             onActiveChange = { viewModel.isSearching.value = !viewModel.isSearching.value },
             placeholder = { Text(text = stringResource(id = R.string.search_title)) },
-            shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)),
+
             modifier = Modifier
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
                 .fillMaxWidth()
@@ -147,7 +147,10 @@ private fun TagsGrid(viewModel: SearchRecipesViewModel) {
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             tags.forEach {
-                TagItem(string = it)
+                TagItem(string = it, onClick = {
+                    viewModel.searchText.value = it
+                    viewModel.search()
+                })
             }
         }
         Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))

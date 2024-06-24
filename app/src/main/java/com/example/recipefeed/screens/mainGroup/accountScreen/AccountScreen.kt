@@ -38,17 +38,17 @@ fun AccountScreen(
 ) {
 
     val personalListItems = listOf(
-        AccountScreenCards("Create recipe", Destinations.NEW_RECIPE, navController),
-        AccountScreenCards("Show created recipes", Destinations.ADDED_RECIPES, navController),
+        AccountScreenCards("Create recipe", Destinations.MainGroup.NewRecipe.route, navController),
+        AccountScreenCards("Show created recipes", Destinations.MainGroup.AddedRecipes.route, navController),
     )
 
     val appListItems = listOf(
         AccountScreenCards(
             "Settings",
-            Destinations.SETTINGS,
+            Destinations.MainGroup.Settings.route,
             navController
         ),
-        AccountScreenCards("LogOut", Destinations.LOGIN_GROUP, firstNavController)
+        AccountScreenCards("LogOut", Destinations.LoginGroup.route, firstNavController)
     )
 
     Column(
@@ -106,7 +106,7 @@ fun AccountListCard(accountScreenCards: AccountScreenCards, viewModel: AccountSc
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                if (accountScreenCards.route == Destinations.LOGIN_GROUP) {
+                if (accountScreenCards.route == Destinations.LoginGroup.route) {
                     isLogOut = true
                 } else
                     accountScreenCards.navController?.navigate(accountScreenCards.route)

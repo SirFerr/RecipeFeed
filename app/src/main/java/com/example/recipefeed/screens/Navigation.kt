@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -31,119 +32,123 @@ import com.example.recipefeed.view.mainMenu.newRecipeScreen.NewRecipeScreen
 import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
 
+sealed class Destinations(val route: String) {
+    object LoginGroup : Destinations("LOGIN_GROUP") {
+        object Login : Destinations("LOGIN")
+        object SignUp : Destinations("SIGNUP")
+    }
 
-object Destinations {
-    const val LOGIN_GROUP = "LOGIN_GROUP"
-    const val LOGIN = "LOGIN"
-    const val SIGNUP = "SIGNUP"
+    object MainGroup : Destinations("MAIN_GROUP") {
+        object Main : Destinations("MAIN")
+        object Search : Destinations("SEARCH")
+        object Recipe : Destinations("RECIPE")
+        object Favorite : Destinations("FAVORITE")
+        object Account : Destinations("ACCOUNT")
+        object NewRecipe : Destinations("NEW_RECIPE")
+        object AddedRecipes : Destinations("ADDED_RECIPES")
+        object EditRecipe : Destinations("EDIT_RECIPE")
+        object Settings : Destinations("SETTINGS")
+    }
 
-    const val MAIN_GROUP = "MAIN_GROUP"
-    const val MAIN = "MAIN"
-    const val SEARCH = "SEARCH"
-    const val RECIPE = "RECIPE"
-    const val FAVORITE= "FAVORITE"
-    const val ACCOUNT = "ACCOUNT"
-    const val NEW_RECIPE = "NEW_RECIPE"
-    const val ADDED_RECIPES="ADDED_RECIPES"
-    const val EDIT_RECIPE = "EDIT_RECIPE"
-    const val SETTINGS = "SETTINGS"
-
-    const val SERVER_NOT_AVAILABLE ="SERVER_NOT_AVAILABLE"
+    object ServerNotAvailable : Destinations("SERVER_NOT_AVAILABLE")
 }
 
 @Composable
-fun Navigation( onThemeUpdated: () -> Unit): NavHostController {
+fun Navigation(onThemeUpdated: () -> Unit): NavHostController {
     val focusManager = LocalFocusManager.current
 
     val firstNavController = rememberNavController()
 
-    //Anim settings
+    // Anim settings
     val duration = 700
     val enterTransition = fadeIn(animationSpec = tween(duration))
     val exitTransition = fadeOut(animationSpec = tween(duration))
 
-
     NavHost(
         navController = firstNavController,
-        startDestination = Destinations.LOGIN_GROUP,
+        startDestination = Destinations.LoginGroup.route,
         modifier = Modifier.clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) { focusManager.clearFocus() },
         enterTransition = { enterTransition },
         exitTransition = { exitTransition },
-    )
-    {
-
-        navigation(Destinations.LOGIN, Destinations.LOGIN_GROUP) {
-            composable(Destinations.LOGIN) { LogInScreen(navController = firstNavController) }
-            composable(Destinations.SIGNUP) { SignUpScreen(navController = firstNavController) }
-        }
-        composable(Destinations.SERVER_NOT_AVAILABLE){
-            ServerNotAvailableScreen()
-        }
-        composable(Destinations.MAIN_GROUP) {
-            val navController = rememberNavController()
-            ScaffoldWithBottom(navController = navController, screen = {
-                NavHost(
-                    navController = navController,
-                    startDestination = Destinations.MAIN,
-                    modifier = Modifier.padding(it),
-                    enterTransition = { enterTransition },
-                    exitTransition = { exitTransition }
-                ) {
-                    composable(Destinations.MAIN) {
-                        MainScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(Destinations.FAVORITE) {
-                        FavoriteScreen(
-                            navController = navController
-                        )
-                    }
-                    composable(Destinations.SEARCH) {
-                        SearchScreen(
-                            navController = navController
-                        )
-                    }
-
-                    composable(Destinations.ACCOUNT) {
-                        AccountScreen(
-                            navController =  navController,
-                            firstNavController = firstNavController
-                        )
-                    }
-                    composable("${Destinations.RECIPE}/{id}", listOf(navArgument("id") {
-                        type = NavType.IntType
-                    })) { backStackEntry ->
-                        val id = backStackEntry.arguments?.getInt("id")
-                        if (id != null) {
-                            RecipeScreen(id = id, navController = navController)
-                        }
-                    }
-                    composable(Destinations.NEW_RECIPE) {
-                        NewRecipeScreen(navController = navController)
-                    }
-                    composable(Destinations.ADDED_RECIPES) {
-                        AddedRecipesScreen(navController = navController)
-                    }
-                    composable(Destinations.SETTINGS) {
-                        SettingsScreen(onThemeUpdated = onThemeUpdated,navController = navController)
-                    }
-                    composable("${Destinations.EDIT_RECIPE}/{id}", listOf(navArgument("id") {
-                        type = NavType.IntType
-                    })) { backStackEntry ->
-                        val id = backStackEntry.arguments?.getInt("id")
-                        if (id != null) {
-                            EditRecipeScreen(navController = navController, id = id)
-                        }
-                    }
-
-                }
-            })
-
-        }
+    ) {
+        loginGraph(firstNavController)
+        serverNotAvailableGraph()
+        mainGraph(firstNavController, onThemeUpdated)
     }
 
     return firstNavController
+}
+
+private fun NavGraphBuilder.loginGraph(navController: NavHostController) {
+    navigation(Destinations.LoginGroup.Login.route, Destinations.LoginGroup.route) {
+        composable(Destinations.LoginGroup.Login.route) { LogInScreen(navController = navController) }
+        composable(Destinations.LoginGroup.SignUp.route) { SignUpScreen(navController = navController) }
+    }
+}
+
+private fun NavGraphBuilder.serverNotAvailableGraph() {
+    composable(Destinations.ServerNotAvailable.route) {
+        ServerNotAvailableScreen()
+    }
+}
+
+private fun NavGraphBuilder.mainGraph(firstNavController: NavHostController, onThemeUpdated: () -> Unit) {
+
+    // Anim settings
+    val duration = 700
+    val enterTransition = fadeIn(animationSpec = tween(duration))
+    val exitTransition = fadeOut(animationSpec = tween(duration))
+
+    composable(Destinations.MainGroup.route) {
+        val navController = rememberNavController()
+        ScaffoldWithBottom(navController = navController, screen = {
+            NavHost(
+                navController = navController,
+                startDestination = Destinations.MainGroup.Main.route,
+                modifier = Modifier.padding(it),
+                enterTransition = { enterTransition },
+                exitTransition = { exitTransition }
+            ) {
+                mainScreenGraph(navController, firstNavController, onThemeUpdated)
+            }
+        })
+    }
+}
+
+private fun NavGraphBuilder.mainScreenGraph(navController: NavHostController, firstNavController: NavHostController, onThemeUpdated: () -> Unit) {
+    composable(Destinations.MainGroup.Main.route) {
+        MainScreen(navController = navController)
+    }
+    composable(Destinations.MainGroup.Favorite.route) {
+        FavoriteScreen(navController = navController)
+    }
+    composable(Destinations.MainGroup.Search.route) {
+        SearchScreen(navController = navController)
+    }
+    composable(Destinations.MainGroup.Account.route) {
+        AccountScreen(navController = navController, firstNavController = firstNavController)
+    }
+    composable("${Destinations.MainGroup.Recipe.route}/{id}", listOf(navArgument("id") { type = NavType.IntType })) { backStackEntry ->
+        val id = backStackEntry.arguments?.getInt("id")
+        if (id != null) {
+            RecipeScreen(id = id, navController = navController)
+        }
+    }
+    composable(Destinations.MainGroup.NewRecipe.route) {
+        NewRecipeScreen(navController = navController)
+    }
+    composable(Destinations.MainGroup.AddedRecipes.route) {
+        AddedRecipesScreen(navController = navController)
+    }
+    composable(Destinations.MainGroup.Settings.route) {
+        SettingsScreen(onThemeUpdated = onThemeUpdated, navController = navController)
+    }
+    composable("${Destinations.MainGroup.EditRecipe.route}/{id}", listOf(navArgument("id") { type = NavType.IntType })) { backStackEntry ->
+        val id = backStackEntry.arguments?.getInt("id")
+        if (id != null) {
+            EditRecipeScreen(navController = navController, id = id)
+        }
+    }
 }

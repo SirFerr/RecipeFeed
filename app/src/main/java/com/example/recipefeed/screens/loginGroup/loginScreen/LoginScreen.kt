@@ -33,8 +33,8 @@ fun LogInScreen(
     val token by viewModel.token.collectAsState()
 
     if (token.isNotEmpty()) {
-        navController.navigate(Destinations.MAIN_GROUP) {
-            popUpTo(Destinations.LOGIN_GROUP) { inclusive = true }
+        navController.navigate(Destinations.MainGroup.route) {
+            popUpTo(Destinations.LoginGroup.route) { inclusive = true }
         }
     }
     Box(
@@ -63,8 +63,8 @@ fun LogInScreen(
             Button(onClick = {
                 viewModel.signIn(
                     isSuccess = {
-                        navController.navigate(Destinations.MAIN_GROUP) {
-                            popUpTo(Destinations.LOGIN_GROUP) { inclusive = true }
+                        navController.navigate(Destinations.MainGroup.route) {
+                            popUpTo(Destinations.LoginGroup.route) { inclusive = true }
                         }
                     },
                 )
@@ -74,7 +74,7 @@ fun LogInScreen(
             }
 
             TextButton(onClick = {
-                navController.navigate(Destinations.SIGNUP)
+                navController.navigate(Destinations.LoginGroup.SignUp.route)
 
             }) {
                 Text(text = stringResource(id = R.string.signup))

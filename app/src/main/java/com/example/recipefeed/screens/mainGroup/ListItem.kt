@@ -49,7 +49,7 @@ fun ListItem(
     Column(
         Modifier
             .fillMaxWidth()
-            .clickable { navController?.navigate("${Destinations.RECIPE}/${recipe.id}") },
+            .clickable { navController?.navigate("${Destinations.MainGroup.Recipe.route}/${recipe.id}") },
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
     ) {
@@ -85,7 +85,7 @@ fun ListItem(
             )
             IconButton(modifier = Modifier, onClick = {
                 if (icon == Icons.Filled.Edit) {
-                    navController?.navigate("${Destinations.EDIT_RECIPE}/${recipe.id}")
+                    navController?.navigate("${Destinations.MainGroup.EditRecipe.route}/${recipe.id}")
                 }
             }) {
                 Icon(imageVector = icon, contentDescription = null)
