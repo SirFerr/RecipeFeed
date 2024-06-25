@@ -38,7 +38,6 @@ import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.view.mainMenu.CircularLoad
 import com.example.recipefeed.view.mainMenu.ErrorNetworkCard
-import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 
@@ -62,6 +61,8 @@ fun MainScreen(
                         val nextRecipe by viewModel.nextRecipe.collectAsState()
 
                         MainScreenCard(navController, nextRecipe)
+
+
                         SwipeCard(
                             onSwipeRight = {
                                 viewModel.onSwipeRight()
