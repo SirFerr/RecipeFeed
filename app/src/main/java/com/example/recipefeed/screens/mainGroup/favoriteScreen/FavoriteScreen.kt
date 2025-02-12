@@ -32,13 +32,7 @@ fun FavoriteScreen(
     navController: NavHostController,
     viewModel: FavoriteRecipesViewModel = hiltViewModel()
 ) {
-
-    val recipes by viewModel.recipes.collectAsState()
-    val isSuccessful by viewModel.isSuccessful.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-
-
-    UpdateBox(isLoading = isLoading, exec = { viewModel.getFavouritesRecipes() }) {
+    UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getFavouritesRecipes() }) {
         LazyColumn(
             state = rememberLazyListState(),
             modifier = Modifier
@@ -47,8 +41,8 @@ fun FavoriteScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             item { }
-            if (isSuccessful) {
-                items(recipes) {
+            if (viewModel.isSuccessful.value) {
+                items(viewModel.recipes.value) {
                     ListItem(it, navController)
                 }
             } else {

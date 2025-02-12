@@ -13,13 +13,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,14 +27,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -48,7 +42,7 @@ import com.example.recipefeed.screens.mainGroup.accountScreen.recipeEdit.MainInf
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 
-@OptIn(ExperimentalEncodingApi::class)
+@OptIn(ExperimentalEncodingApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditRecipeScreen(
     navController: NavHostController = rememberNavController(),
@@ -57,16 +51,6 @@ fun EditRecipeScreen(
 ) {
     val context = LocalContext.current
     viewModel.getById(id)
-
-    val recipeName by viewModel.recipeName.collectAsState()
-    val description by viewModel.description.collectAsState()
-    val ingredients by viewModel.ingredients.collectAsState()
-    val timeToCook by viewModel.timeToCook.collectAsState()
-    val selectImages by viewModel.selectImages.collectAsState()
-
-    val isDelete by viewModel.isDelete.collectAsState()
-
-
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) viewModel.setSelectImages(it)
     }
@@ -79,7 +63,10 @@ fun EditRecipeScreen(
                     modifier = Modifier
 
                 ) {
-                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
                 }
             },
             actions = {
@@ -103,12 +90,18 @@ fun EditRecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
 
-            ImagePickerCard(selectImages, galleryLauncher) { viewModel.setSelectImages(null) }
+            ImagePickerCard(
+                viewModel.selectImages.value,
+                galleryLauncher
+            ) { viewModel.setSelectImages(null) }
 
             HorizontalDivider()
 
             MainInformationSection(
-                recipeName, description, ingredients, timeToCook,
+                viewModel.recipeName.value,
+                viewModel.description.value,
+                viewModel.ingredients.value,
+                viewModel.timeToCook.value,
                 onRecipeNameChange = { viewModel.setRecipeName(it) },
                 onDescriptionChange = { viewModel.setDescription(it) },
                 onIngredientsChange = { viewModel.setIngredients(it) },
@@ -134,7 +127,7 @@ fun EditRecipeScreen(
             Spacer(modifier = Modifier)
         }
 
-        if (isDelete) {
+        if (viewModel.isDelete.value) {
             DeleteRecipeDialog(
                 onDismiss = { viewModel.changeIsDelete() },
                 onConfirm = {

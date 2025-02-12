@@ -5,8 +5,6 @@ package com.example.recipefeed.view.mainMenu.addedRecipesScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -20,11 +18,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
@@ -33,15 +28,12 @@ import com.example.recipefeed.view.mainMenu.ListItem
 import com.example.recipefeed.view.mainMenu.UpdateBox
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddedRecipesScreen(
     navController: NavHostController,
     viewModel: AddedRecipesViewModel = hiltViewModel()
 ) {
-    val recipes by viewModel.recipes.collectAsState()
-    val isSuccessful by viewModel.isSuccessful.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
 
     Scaffold(topBar = {
         TopAppBar(title = { },
@@ -57,7 +49,7 @@ fun AddedRecipesScreen(
 
             })
     }) {
-        UpdateBox(isLoading = isLoading, exec = { viewModel.getAddedRecipes() }) {
+        UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getAddedRecipes() }) {
             LazyColumn(
                 state = rememberLazyListState(),
 
@@ -69,8 +61,8 @@ fun AddedRecipesScreen(
             ) {
                 item { }
 
-                if (isSuccessful) {
-                    items(recipes) {
+                if (viewModel.isSuccessful.value) {
+                    items(viewModel.recipes.value) {
                         ListItem(it, navController, Icons.Filled.Edit)
                     }
                 } else {

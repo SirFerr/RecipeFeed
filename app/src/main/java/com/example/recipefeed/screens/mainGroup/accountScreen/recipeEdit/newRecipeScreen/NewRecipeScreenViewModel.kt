@@ -2,6 +2,8 @@ package com.example.recipefeed.view.mainMenu.newRecipeScreen
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
@@ -23,18 +25,23 @@ class NewRecipeScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val recipeName = MutableStateFlow("")
-    val description = MutableStateFlow("")
-    val ingredients = MutableStateFlow("")
-    val timeToCook = MutableStateFlow("")
+    private var _recipeName = mutableStateOf("")
+    val recipeName: State<String> = _recipeName
+    private var _description = mutableStateOf("")
+    val description: State<String> = _description
+    private var _ingredients = mutableStateOf("")
+    val ingredients: State<String> = _ingredients
+    private var _timeToCook = mutableStateOf("")
+    val timeToCook: State<String> = _timeToCook
 
-    var selectImages = MutableStateFlow<Any?>(null)
+    private var _selectImages = mutableStateOf<Any?>(null)
+    val selectImages: State<Any?> = _selectImages
 
 
     fun addRecipes() {
         viewModelScope.launch {
             try {
-                val response = convertToMultipart(selectImages.value, context)?.let {
+                val response = convertToMultipart(_selectImages.value, context)?.let {
                     repository.addRecipe(
                         Recipe(
                             recipeName = recipeName.value,
@@ -62,23 +69,23 @@ class NewRecipeScreenViewModel @Inject constructor(
 
     //Setters
     fun setRecipeName(string: String) {
-        recipeName.value = string
+        _recipeName.value = string
     }
 
     fun setDescription(string: String) {
-        description.value = string
+        _description.value = string
     }
 
     fun setIngredients(string: String) {
-        ingredients.value = string
+        _ingredients.value = string
     }
 
     fun setTimeToCook(string: String) {
-        timeToCook.value = string
+        _timeToCook.value = string
     }
 
     fun setSelectImages(any: Any?) {
-        selectImages.value = any
+        _selectImages.value = any
     }
 
 

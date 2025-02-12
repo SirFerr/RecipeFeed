@@ -55,17 +55,15 @@ fun SearchScreen(
     viewModel: SearchRecipesViewModel = hiltViewModel(),
     name: String,
 ) {
-    val searchText by viewModel.searchText.collectAsState()
-    val isSearching by viewModel.isSearching.collectAsState()
-    val searchHistory by viewModel.searchHistory.collectAsState()
+
 
     val padding by animateDpAsState(
-        targetValue = if (!isSearching) dimensionResource(id = R.dimen.main_padding) else 0.dp,
+        targetValue = if (!viewModel.isSearching.value) dimensionResource(id = R.dimen.main_padding) else 0.dp,
         animationSpec = tween(durationMillis = 300)
     )
 
     if (name.isNotEmpty()){
-        viewModel.searchText.value = name
+        viewModel.setSearchText(name)
         viewModel.search()
     }
     Column(
@@ -73,15 +71,15 @@ fun SearchScreen(
     ) {
 
         SearchBar(
-            query = searchText,
+            query = viewModel.searchText.value,
             onQueryChange = {
-                viewModel.searchText.value = it
+                viewModel.setSearchText(it)
             },
             onSearch = {
                 viewModel.search()
             },
-            active = isSearching,
-            onActiveChange = { viewModel.isSearching.value = !viewModel.isSearching.value },
+            active = viewModel.isSearching.value,
+            onActiveChange = { viewModel.setIsSearching() },
             placeholder = { Text(text = stringResource(id = R.string.search_title)) },
 
             modifier = Modifier
@@ -99,13 +97,13 @@ fun SearchScreen(
                 }
             }),
             trailingIcon = {
-                if (isSearching)
+                if (viewModel.isSearching.value)
                     IconButton(
                         onClick = {
-                            if (searchText.isNotBlank())
-                                viewModel.searchText.value = ""
+                            if (viewModel.searchText.value.isNotBlank())
+                                viewModel.setSearchText("")
                             else
-                                viewModel.isSearching.value = false
+                                viewModel.setIsSearching(false)
                         }
                     ) {
                         Icon(
@@ -118,18 +116,17 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding)),
                 horizontalAlignment = Alignment.Start
             ) {
-                items(searchHistory.filter { it.lowercase().startsWith(searchText) }) {
+                items(viewModel.searchHistory.value.filter { it.lowercase().startsWith(viewModel.searchText.value) }) {
                     TextButton(modifier = Modifier.fillMaxWidth(),
-                        onClick = { viewModel.searchText.value = it }
+                        onClick = { viewModel.setSearchText(it)}
                     ) {
                         Text(text = it, modifier = Modifier.fillMaxWidth())
                     }
                 }
             }
         }
-        val recipes by viewModel.recipes.collectAsState()
 
-        if (recipes.isEmpty()) {
+        if (viewModel.recipes.value.isEmpty()) {
             TagsGrid(viewModel)
         } else {
             SearchList(navController, viewModel)
@@ -139,7 +136,6 @@ fun SearchScreen(
 
 @Composable
 private fun TagsGrid(viewModel: SearchRecipesViewModel) {
-    val tags by viewModel.tags.collectAsState()
     Column(
         Modifier
             .fillMaxSize()
@@ -152,9 +148,9 @@ private fun TagsGrid(viewModel: SearchRecipesViewModel) {
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
-            tags.forEach {
+            viewModel.tags.value.forEach {
                 TagItem(string = it, onClick = {
-                    viewModel.searchText.value = it
+                    viewModel.setSearchText(it)
                     viewModel.search()
                 })
             }
@@ -171,10 +167,7 @@ private fun SearchList(
     navController: NavHostController,
     viewModel: SearchRecipesViewModel
 ) {
-    val isSuccessful by viewModel.isSuccessful.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val isFound by viewModel.isFound.collectAsState()
-    val recipes by viewModel.recipes.collectAsState()
+
     LazyColumn(
         state = rememberLazyListState(),
         modifier = Modifier
@@ -182,9 +175,9 @@ private fun SearchList(
             .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
     ) {
-        if (!isLoading) {
-            if (isSuccessful) {
-                if (!isFound) {
+        if (!viewModel.isLoading.value) {
+            if (viewModel.isSuccessful.value) {
+                if (!viewModel.isFound.value) {
                     item {
                         Text(
                             text = stringResource(id = R.string.nothing_found),
@@ -199,7 +192,7 @@ private fun SearchList(
 
                     }
                 } else
-                    items(recipes) {
+                    items(viewModel.recipes.value) {
 
                         ListItem(it, navController)
                     }

@@ -1,5 +1,7 @@
 package com.example.recipefeed.screens.loginGroup.loginScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Auth
@@ -15,32 +17,45 @@ import javax.inject.Inject
 class LoginScreenViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-    var textUsername = MutableStateFlow("")
-    var textPassword = MutableStateFlow("")
-    val token = MutableStateFlow("")
-    val isSuccessful = MutableStateFlow(false)
-    val errorMessage = MutableStateFlow("")
+    private var _textUsername = mutableStateOf("")
+    val textUsername: State<String> = _textUsername
+    private var _textPassword = mutableStateOf("")
+    val textPassword: State<String> = _textPassword
+    private val _token = mutableStateOf("")
+    val token: State<String> = _token
+    private val _isSuccessful = mutableStateOf(false)
+    val isSuccessful: State<Boolean> = _isSuccessful
+    private val _errorMessage = mutableStateOf("")
+    val errorMessage: State<String> = _errorMessage
 
     init {
-        token.value = repository.getToken()
+        _token.value = repository.getToken()
     }
 
     fun setErrorMessage(string: String = "") {
-        errorMessage.value = string
+        _errorMessage.value = string
+    }
+
+    fun setTextUsername(string: String){
+        _textUsername.value=string
+    }
+
+    fun setTextPassword(string: String){
+        _textPassword.value=string
     }
 
     fun signIn(isSuccess: () -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (textUsername.value == "e" && textPassword.value == "e") {
-                    isSuccessful.value = true
+                if (_textUsername.value == "e" && _textPassword.value == "e") {
+                    _isSuccessful.value = true
                     repository.saveToken("e")
                 }
-                if (textUsername.value != "" && textPassword.value != "") {
+                if (_textUsername.value != "" && _textPassword.value != "") {
                     val response = repository.signIn(
                         Auth(
-                            email = textUsername.value,
-                            password = textPassword.value,
+                            email = _textPassword.value,
+                            password = _textPassword.value,
                         )
                     )
 
@@ -48,21 +63,21 @@ class LoginScreenViewModel @Inject constructor(
                         response.body()?.let {
                             if (it.error == "") {
                                 val receivedToken = it.token.trim()
-                                token.value = receivedToken
+                                _token.value = receivedToken
                                 repository.saveToken(receivedToken)
-                                isSuccessful.value = true
+                                _isSuccessful.value = true
                                 withContext(Dispatchers.Main) {
                                     setErrorMessage()
                                     isSuccess()
                                 }
                             } else {
-                                isSuccessful.value = false
+                                _isSuccessful.value = false
                                 setErrorMessage(it.error)
 
                             }
                         }
                     } else {
-                        isSuccessful.value = false
+                        _isSuccessful.value = false
 
                         setErrorMessage("response is not success")
 
@@ -71,7 +86,7 @@ class LoginScreenViewModel @Inject constructor(
                     setErrorMessage("Field not fill!")
                 }
             } catch (e: Exception) {
-                isSuccessful.value = false
+                _isSuccessful.value = false
 
                 setErrorMessage(e.message.toString())
 

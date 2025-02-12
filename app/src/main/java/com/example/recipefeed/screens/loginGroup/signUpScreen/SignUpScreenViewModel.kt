@@ -1,5 +1,7 @@
 package com.example.recipefeed.screens.loginGroup.signUpScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Auth
@@ -16,13 +18,33 @@ class SignUpScreenViewModel @Inject constructor(
     private val repository: Repository
 ) :
     ViewModel() {
-    var textUsername = MutableStateFlow("")
-    var textPassword = MutableStateFlow("")
-    var textPasswordAgain = MutableStateFlow("")
 
-    val errorMessage = MutableStateFlow("")
+
+    private var _textUsername = mutableStateOf("")
+    val textUsername: State<String> = _textUsername
+    private var _textPassword = mutableStateOf("")
+    val textPassword: State<String> = _textPassword
+    private val _textPasswordAgain = mutableStateOf("")
+    val textPasswordAgain: State<String> = _textPasswordAgain
+    private val _errorMessage = mutableStateOf("")
+    val errorMessage: State<String> = _errorMessage
+
+    fun setTextUsername(string: String){
+        _textUsername.value=string
+    }
+
+    fun setTextPassword(string: String){
+        _textPassword.value=string
+    }
+
+    fun setTextPasswordAgain(string: String){
+        _textPasswordAgain.value=string
+    }
+
+
+
     fun setErrorMessage(string: String = "") {
-        errorMessage.value = string
+        _errorMessage.value = string
     }
 
     fun signUp(isSuccess: () -> Unit) {

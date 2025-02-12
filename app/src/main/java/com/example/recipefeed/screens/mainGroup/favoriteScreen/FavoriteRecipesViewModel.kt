@@ -1,5 +1,7 @@
 package com.example.recipefeed.view.mainMenu.favoriteScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.local.TokenSharedPreferencesManager
@@ -19,13 +21,14 @@ class FavoriteRecipesViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    var isLoading = MutableStateFlow(true)
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
 
-    val isSuccessful = MutableStateFlow(true)
+    private val _isSuccessful = mutableStateOf(false)
+    val isSuccessful: State<Boolean> = _isSuccessful
 
-
-    val recipes =
-        MutableStateFlow<List<Recipe>>(listOf())
+    private var _recipes = mutableStateOf<List<Recipe>>(emptyList())
+    val recipes: State<List<Recipe>> = _recipes
 
     init {
         getFavouritesRecipes()
@@ -33,18 +36,18 @@ class FavoriteRecipesViewModel @Inject constructor(
     }
 
     fun getFavouritesRecipes() {
-        isLoading.value = true
+        _isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = repository.getFavouritesRecipes()
-                isSuccessful.value = response.isSuccessful
+                _isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
-                    recipes.value = response.body()!!.map { it.recipe }
+                    _recipes.value = response.body()!!.map { it.recipe }
                 }
             } catch (e: Exception) {
-                isSuccessful.value = false
+                _isSuccessful.value = false
             } finally {
-                isLoading.value = false
+                _isLoading.value = false
             }
         }
     }

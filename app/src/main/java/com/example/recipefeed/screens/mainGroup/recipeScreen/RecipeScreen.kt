@@ -54,12 +54,10 @@ fun RecipeScreen(
     navController: NavHostController,
     viewModel: RecipeScreenViewModel = hiltViewModel()
 ) {
-    val recipe by viewModel.recipe.collectAsState()
-    val isLiked by viewModel.isLiked.collectAsState()
     viewModel.getById(id)
     Scaffold(
         topBar = {
-            TopAppBar(title = { /*TODO*/ },
+            TopAppBar(title = {  },
                 navigationIcon = {
                     IconButton(
                         onClick = { navController.navigateUp() },
@@ -72,7 +70,7 @@ fun RecipeScreen(
                    IconButton(onClick = {  viewModel.changeLike()
                        viewModel.addToFavourites() }) {
                        Icon(
-                           imageVector = if (isLiked) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
+                           imageVector = if (viewModel.isLiked.value) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
                            contentDescription = null
                        )
                    }
@@ -91,7 +89,7 @@ fun RecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             val alignmentStartModifier = Modifier.align(Alignment.Start)
-            val imageBytes = Base64.decode(recipe.imageData)
+            val imageBytes = Base64.decode(viewModel.recipe.value.imageData)
             val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
             SubcomposeAsyncImage(
@@ -104,7 +102,7 @@ fun RecipeScreen(
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = recipe.recipeName,
+                text = viewModel.recipe.value.recipeName,
                 style = MaterialTheme.typography.titleLarge
             )
 
@@ -116,7 +114,7 @@ fun RecipeScreen(
                 Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
                     Text(
                         modifier = alignmentStartModifier,
-                        text = recipe.description,
+                        text = viewModel.recipe.value.description,
                     )
                 }
 
@@ -124,15 +122,15 @@ fun RecipeScreen(
 
             Text(
                 modifier = alignmentStartModifier,
-                text = "Likes: " + recipe.recipeLikes.toString(),
+                text = "Likes: " + viewModel.recipe.value.recipeLikes.toString(),
             )
             Text(
                 modifier = alignmentStartModifier,
-                text = stringResource(id = R.string.time_to_cook) + ": " + recipe.timeToCook,
+                text = stringResource(id = R.string.time_to_cook) + ": " + viewModel.recipe.value.timeToCook,
             )
             Text(
                 modifier = alignmentStartModifier,
-                text = stringResource(id = R.string.ingridients) + ": " + recipe.ingredients,
+                text = stringResource(id = R.string.ingridients) + ": " + viewModel.recipe.value.ingredients,
             )
 //                Text(
 //                    text = "Recipe: " + recipe!!.ingredients,

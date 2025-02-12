@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.loginGroup.ErrorMessage
 import com.example.recipefeed.screens.loginGroup.CustomTextField
+import com.example.recipefeed.screens.loginGroup.ErrorMessage
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +48,10 @@ fun SignUpScreen(
                             .size(30.dp)
                             .wrapContentSize()
                     ) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null
+                        )
                     }
                 }
             )
@@ -70,18 +72,23 @@ fun SignUpScreen(
             {
                 CustomTextField(
                     stringResource(id = R.string.username_field),
-                    textValue = viewModel.textUsername
+                    viewModel.textUsername.value,
+                    onChange = { viewModel.setTextUsername(it) }
+
                 )
                 CustomTextField(
                     stringResource(id = R.string.password_field),
-                    textValue = viewModel.textPassword
+                    viewModel.textPassword.value,
+                    onChange = { viewModel.setTextPassword(it) }
+
                 )
                 CustomTextField(
                     stringResource(id = R.string.password_again_field),
-                    textValue = viewModel.textPasswordAgain
+                    viewModel.textPasswordAgain.value,
+                    onChange = { viewModel.setTextPasswordAgain(it) }
                 )
 
-                ErrorMessage(textValue = viewModel.errorMessage)
+                ErrorMessage(viewModel.errorMessage.value)
 
 
                 Button(onClick = {

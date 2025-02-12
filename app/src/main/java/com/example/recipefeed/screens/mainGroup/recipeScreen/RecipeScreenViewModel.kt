@@ -1,5 +1,7 @@
 package com.example.recipefeed.view.mainMenu.recipeScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
@@ -15,27 +17,31 @@ class RecipeScreenViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val recipe = MutableStateFlow(Recipe())
-    val isLoading = MutableStateFlow(false)
-    val isLiked = MutableStateFlow(false)
-    val isSuccessful = MutableStateFlow(true)
 
+    private var _recipe = mutableStateOf(Recipe())
+    val recipe: State<Recipe> = _recipe
+    private var _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
+    private var _isLiked = mutableStateOf(false)
+    val isLiked: State<Boolean> = _isLiked
+    private var _isSuccessful = mutableStateOf(false)
+    val isSuccessful: State<Boolean> = _isSuccessful
 
     fun changeLike() {
-        isLiked.value = !isLiked.value
+        _isLiked.value = !_isLiked.value
     }
 
     fun getById(id: Int) {
         viewModelScope.launch {
-            isLoading.value = true
+            _isLoading.value = true
             try {
                 val response =
                     repository.getRecipeById(id)
                 if (response.isSuccessful)
-                    recipe.value = response.body()!!
+                    _recipe.value = response.body()!!
             } catch (e: Exception) {
             }
-            isLoading.value = false
+            _isLoading.value = false
         }
     }
 
@@ -43,9 +49,9 @@ class RecipeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = repository.addToFavourites(recipe.value)
-                isSuccessful.value = response.isSuccessful
+                _isSuccessful.value = response.isSuccessful
             } catch (e: Exception) {
-                isSuccessful.value = false
+                _isSuccessful.value = false
             }
         }
     }

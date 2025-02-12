@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun ErrorMessage(textValue: MutableStateFlow<String>) {
-    val text by textValue.collectAsState()
+fun ErrorMessage(text: String) {
+
 
     Text(
         text = if (text.isNotEmpty()) text else "",

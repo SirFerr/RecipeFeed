@@ -52,11 +52,6 @@ fun NewRecipeScreen(
     navController: NavHostController,
     viewModel: NewRecipeScreenViewModel = hiltViewModel()
 ) {
-    val recipeName by viewModel.recipeName.collectAsState()
-    val description by viewModel.description.collectAsState()
-    val ingredients by viewModel.ingredients.collectAsState()
-    val timeToCook by viewModel.timeToCook.collectAsState()
-    val selectImages by viewModel.selectImages.collectAsState()
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) viewModel.setSelectImages(it)
@@ -87,12 +82,15 @@ fun NewRecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
         ) {
             Spacer(modifier = Modifier)
-            ImagePickerCard(selectImages, galleryLauncher) { viewModel.setSelectImages(it) }
+            ImagePickerCard(viewModel.selectImages.value, galleryLauncher) { viewModel.setSelectImages(it) }
 
             HorizontalDivider()
 
             MainInformationSection(
-                recipeName, description, ingredients, timeToCook,
+                viewModel.recipeName.value,
+                viewModel.description.value,
+                viewModel.ingredients.value,
+                viewModel.timeToCook.value,
                 onRecipeNameChange = { viewModel.setRecipeName(it) },
                 onDescriptionChange = { viewModel.setDescription(it) },
                 onIngredientsChange = { viewModel.setIngredients(it) },

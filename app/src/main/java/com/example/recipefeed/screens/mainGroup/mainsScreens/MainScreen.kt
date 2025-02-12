@@ -55,12 +55,11 @@ fun MainScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(Modifier.weight(10f), contentAlignment = Alignment.Center) {
-            when (val state = viewModel.mainState.collectAsState().value) {
+            when (val state = viewModel.mainState.value) {
                 is MainState.Success ->
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        val nextRecipe by viewModel.nextRecipe.collectAsState()
 
-                        MainScreenCard(navController, nextRecipe)
+                        MainScreenCard(navController, viewModel.nextRecipe.value)
 
 
                         SwipeCard(
@@ -92,7 +91,7 @@ fun MainScreen(
                 else -> {}
             }
         }
-        if (viewModel.mainState.collectAsState().value is MainState.Success)
+        if (viewModel.mainState.value is MainState.Success)
             MainScreenButtons(viewModel)
     }
 

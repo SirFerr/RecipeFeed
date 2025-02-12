@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.Repository
@@ -28,15 +30,24 @@ class EditRecipeScreenViewModel @Inject constructor(
 
 ) :
     ViewModel() {
-    val recipe = MutableStateFlow(Recipe())
+    private var _recipe = mutableStateOf(Recipe())
+    val recipe: State<Recipe> = _recipe
 
-    val recipeName = MutableStateFlow("")
-    val description = MutableStateFlow("")
-    val ingredients = MutableStateFlow("")
-    val timeToCook = MutableStateFlow("")
-    val isDelete = MutableStateFlow(false)
 
-    var selectImages = MutableStateFlow<Any?>(null)
+    private var _recipeName = mutableStateOf("")
+    val recipeName: State<String> = _recipeName
+    private var _description = mutableStateOf("")
+    val description: State<String> = _description
+    private var _ingredients = mutableStateOf("")
+    val ingredients: State<String> = _ingredients
+    private var _timeToCook = mutableStateOf("")
+    val timeToCook: State<String> = _timeToCook
+    private var _isDelete = mutableStateOf(false)
+    val isDelete: State<Boolean> = _isDelete
+
+    private var _selectImages = mutableStateOf<Any?>(null)
+    val selectImages: State<Any?> = _selectImages
+
 
 
     fun getById(id: Int) {
@@ -45,13 +56,13 @@ class EditRecipeScreenViewModel @Inject constructor(
                 val response = repository.getRecipeById(id)
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        recipe.value = it
-                        recipeName.value = it.recipeName
-                        description.value = it.description
-                        ingredients.value = it.ingredients
-                        timeToCook.value = it.timeToCook
+                        _recipe.value = it
+                        _recipeName.value = it.recipeName
+                        _description.value = it.description
+                        _ingredients.value = it.ingredients
+                        _timeToCook.value = it.timeToCook
                         val imageBytes = Base64.decode(recipe.value.imageData)
-                        selectImages.value =
+                        _selectImages.value =
                             BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
                     }
@@ -103,26 +114,26 @@ class EditRecipeScreenViewModel @Inject constructor(
 
     //Setters
     fun setRecipeName(string: String) {
-        recipeName.value = string
+        _recipeName.value = string
     }
 
     fun setDescription(string: String) {
-        description.value = string
+        _description.value = string
     }
 
     fun setIngredients(string: String) {
-        ingredients.value = string
+        _ingredients.value = string
     }
 
     fun setTimeToCook(string: String) {
-        timeToCook.value = string
+        _timeToCook.value = string
     }
 
     fun setSelectImages(any: Any?) {
-        selectImages.value = any
+        _selectImages.value = any
     }
 
     fun changeIsDelete() {
-        isDelete.value = !isDelete.value
+        _isDelete.value = !_isDelete.value
     }
 }

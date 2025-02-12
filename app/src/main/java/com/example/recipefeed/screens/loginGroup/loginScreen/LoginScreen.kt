@@ -10,8 +10,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -19,9 +17,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.screens.navigation.Destinations
 import com.example.recipefeed.screens.loginGroup.CustomTextField
 import com.example.recipefeed.screens.loginGroup.ErrorMessage
+import com.example.recipefeed.screens.navigation.Destinations
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,9 +28,8 @@ fun LogInScreen(
     navController: NavHostController,
     viewModel: LoginScreenViewModel = hiltViewModel(),
 ) {
-    val token by viewModel.token.collectAsState()
 
-    if (token.isNotEmpty()) {
+    if (viewModel.token.value.isNotEmpty()) {
         navController.navigate(Destinations.MainGroup.route) {
             popUpTo(Destinations.LoginGroup.route) { inclusive = true }
         }
@@ -51,14 +48,16 @@ fun LogInScreen(
 
             CustomTextField(
                 stringResource(id = R.string.username_field),
-                textValue = viewModel.textUsername
+                viewModel.textUsername.value, onChange = { viewModel.setTextUsername(it) }
             )
             CustomTextField(
                 stringResource(id = R.string.password_field),
-                textValue = viewModel.textPassword
+                viewModel.textPassword.value, onChange = {
+                    viewModel.setTextPassword(it)
+                }
             )
 
-            ErrorMessage(textValue = viewModel.errorMessage)
+            ErrorMessage(viewModel.errorMessage.value)
 
             Button(onClick = {
                 viewModel.signIn(

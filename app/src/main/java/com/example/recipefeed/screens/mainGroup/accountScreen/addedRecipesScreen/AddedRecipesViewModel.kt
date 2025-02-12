@@ -1,5 +1,7 @@
 package com.example.recipefeed.view.mainMenu.addedRecipesScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
@@ -15,30 +17,31 @@ class AddedRecipesViewModel @Inject constructor(
     private val repository: Repository
 
 ) : ViewModel() {
-    var isLoading = MutableStateFlow(true)
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
 
-    val isSuccessful = MutableStateFlow(true)
+    private val _isSuccessful = mutableStateOf(false)
+    val isSuccessful: State<Boolean> = _isSuccessful
 
-
-    val recipes =
-        MutableStateFlow<List<Recipe>>(listOf())
+    private var _recipes = mutableStateOf<List<Recipe>>(emptyList())
+    val recipes: State<List<Recipe>> = _recipes
 
     init {
         getAddedRecipes()
     }
 
     fun getAddedRecipes() {
-        isLoading.value = true
+        _isLoading.value = true
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = repository.getUsersRecipes()
-                isSuccessful.value = response.isSuccessful
+                _isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful)
-                    recipes.value = response.body()!!
+                    _recipes.value = response.body()!!
             } catch (e: Exception) {
-                isSuccessful.value = false
+                _isSuccessful.value = false
             } finally {
-                isLoading.value = false
+                _isLoading.value = false
             }
         }
     }

@@ -1,12 +1,13 @@
 package com.example.recipefeed.view.mainMenu.searchScreen
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,19 +17,28 @@ class SearchRecipesViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val searchText = MutableStateFlow("")
+
+    private var _searchText = mutableStateOf("")
+    val searchText: State<String> = _searchText
+
+    private var _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
+    private var _isSearching = mutableStateOf(false)
+    val isSearching: State<Boolean> = _isSearching
+    private var _isSuccessful = mutableStateOf(false)
+    val isSuccessful: State<Boolean> = _isSuccessful
+    private var _isFound = mutableStateOf(false)
+    val isFound: State<Boolean> = _isFound
 
 
-    var isLoading = MutableStateFlow(false)
-    val isSearching = MutableStateFlow(false)
-    val isSuccessful = MutableStateFlow(true)
-    val isFound = MutableStateFlow(true)
+    private var _recipes = mutableStateOf<List<Recipe>>(emptyList())
+    val recipes: State<List<Recipe>> = _recipes
+
+    private var _searchHistory = mutableStateOf<List<String>>(emptyList())
+    val searchHistory: State<List<String>> = _searchHistory
 
 
-    val recipes = MutableStateFlow<List<Recipe>>(listOf())
-    val searchHistory = MutableStateFlow<List<String>>(listOf())
-
-    val tags = MutableStateFlow<List<String>>(
+    val tags = mutableStateOf(
         listOf(
             "1",
             "Vegan",
@@ -93,7 +103,7 @@ class SearchRecipesViewModel @Inject constructor(
     )
 
     init {
-        searchHistory.value = repository.getSearchHistory()
+        _searchHistory.value = repository.getSearchHistory()
 //        val timer = Timer("schedule", true)
 //        timer.scheduleAtFixedRate(2000, 2000) {
 //            search()
@@ -105,32 +115,45 @@ class SearchRecipesViewModel @Inject constructor(
         if (searchText.value != "") {
             getByName()
             repository.saveRequest(value = searchText.value)
+        } else {
+            _recipes.value = listOf()
         }
-        else{
-            recipes.value = listOf()
-        }
-        searchHistory.value = repository.getSearchHistory()
-        isSearching.value = false
+        _searchHistory.value = repository.getSearchHistory()
+        _isSearching.value = false
     }
 
     fun getByName() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                isLoading.value = true
+                _isLoading.value = true
                 val response = repository.getRecipesByName(
                     searchText.value,
 
                     )
-                isSuccessful.value = response.isSuccessful
+                _isSuccessful.value = response.isSuccessful
                 if (response.isSuccessful) {
-                    recipes.value = response.body()!!
-                    isFound.value = response.body()!! != listOf<Recipe>()
+                    _recipes.value = response.body()!!
+                    _isFound.value = response.body()!! != listOf<Recipe>()
                 }
             } catch (e: Exception) {
-                isSuccessful.value = false
+                _isSuccessful.value = false
             } finally {
-                isLoading.value = false
+                _isLoading.value = false
             }
         }
     }
+
+    //Setters
+    fun setSearchText(string: String) {
+        _searchText.value = string
+    }
+
+    fun setIsSearching(boolean: Boolean? = null) {
+        if (boolean != null) {
+            _isSearching.value = boolean
+        } else
+            _isSearching.value = !_isSearching.value
+    }
+
+
 }
