@@ -44,9 +44,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewRecipeScreen(
-    navController: NavHostController,
-    viewModel: NewRecipeScreenViewModel = hiltViewModel()
-) {
+    viewModel: NewRecipeScreenViewModel = hiltViewModel(),
+    onClickBack: () -> Unit,
+    ) {
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) viewModel.setSelectImages(it)
@@ -57,7 +57,7 @@ fun NewRecipeScreen(
         TopAppBar(title = { },
             navigationIcon = {
                 IconButton(
-                    onClick = { navController.navigateUp() },
+                    onClick = onClickBack,
                     modifier = Modifier
                 ) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)

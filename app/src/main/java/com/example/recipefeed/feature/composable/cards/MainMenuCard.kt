@@ -45,8 +45,8 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun MainScreenCard(
-    navController: NavHostController,
-    recipe: Recipe
+    recipe: Recipe,
+    onRecipeClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -54,7 +54,7 @@ fun MainScreenCard(
             .fillMaxSize(0.95f)
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
             .clickable {
-                navController.navigate("${Destinations.MainGroup.Recipe.route}/${recipe.id}")
+                onRecipeClick()
             }
     ) {
         val imageBytes = Base64.decode(recipe.imageData)

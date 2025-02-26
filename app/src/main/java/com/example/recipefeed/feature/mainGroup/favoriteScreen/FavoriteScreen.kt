@@ -19,16 +19,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.feature.mainGroup.composable.ErrorNetworkCard
-import com.example.recipefeed.feature.mainGroup.composable.ListItem
-import com.example.recipefeed.feature.mainGroup.composable.UpdateBox
+import com.example.recipefeed.feature.composable.ErrorNetworkCard
+import com.example.recipefeed.feature.composable.cards.ListItemCard
+import com.example.recipefeed.feature.composable.UpdateBox
+import com.example.recipefeed.feature.navigation.Destinations
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FavoriteScreen(
-    navController: NavHostController,
-    viewModel: FavoriteRecipesViewModel = hiltViewModel()
+    viewModel: FavoriteRecipesViewModel = hiltViewModel(),
+    onRecipeClick: (Int)->Unit
 ) {
     UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getFavouritesRecipes() }) {
         LazyColumn(
@@ -41,7 +42,7 @@ fun FavoriteScreen(
             item { }
             if (viewModel.isSuccessful.value) {
                 items(viewModel.recipes.value) {
-                    ListItem(it, navController)
+                    ListItemCard(it, onRecipeClick = {onRecipeClick(it.id)}, onEditClick = { })
                 }
             } else {
                 item {

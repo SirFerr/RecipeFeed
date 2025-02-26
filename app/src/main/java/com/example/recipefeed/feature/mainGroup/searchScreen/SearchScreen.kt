@@ -39,29 +39,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.feature.mainGroup.composable.TagItem
-import com.example.recipefeed.feature.mainGroup.composable.CircularLoad
-import com.example.recipefeed.feature.mainGroup.composable.ErrorNetworkCard
-import com.example.recipefeed.feature.mainGroup.composable.ListItem
+import com.example.recipefeed.feature.composable.CircularLoad
+import com.example.recipefeed.feature.composable.ErrorNetworkCard
+import com.example.recipefeed.feature.composable.TagsGrid
+import com.example.recipefeed.feature.composable.cards.ListItemCard
+import com.example.recipefeed.feature.composable.cards.TagItem
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
-    navController: NavHostController,
     viewModel: SearchRecipesViewModel = hiltViewModel(),
     name: String,
+    onListItemClick: (Int) -> Unit
 ) {
-
-
     val padding by animateDpAsState(
         targetValue = if (!viewModel.isSearching.value) dimensionResource(id = R.dimen.main_padding) else 0.dp,
         animationSpec = tween(durationMillis = 300)
     )
 
-    if (name.isNotEmpty()){
+    if (name.isNotEmpty()) {
         viewModel.setSearchText(name)
         viewModel.search()
     }
@@ -115,9 +113,11 @@ fun SearchScreen(
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding)),
                 horizontalAlignment = Alignment.Start
             ) {
-                items(viewModel.searchHistory.value.filter { it.lowercase().startsWith(viewModel.searchText.value) }) {
+                items(viewModel.searchHistory.value.filter {
+                    it.lowercase().startsWith(viewModel.searchText.value)
+                }) {
                     TextButton(modifier = Modifier.fillMaxWidth(),
-                        onClick = { viewModel.setSearchText(it)}
+                        onClick = { viewModel.setSearchText(it) }
                     ) {
                         Text(text = it, modifier = Modifier.fillMaxWidth())
                     }
@@ -126,87 +126,59 @@ fun SearchScreen(
         }
 
         if (viewModel.recipes.value.isEmpty()) {
-            TagsGrid(viewModel)
+            TagsGrid(viewModel.tags.value, onClick = { string ->
+                viewModel.setSearchText(string)
+                viewModel.search()
+            })
         } else {
-            SearchList(navController, viewModel)
-        }
-    }
-}
-
-@Composable
-private fun TagsGrid(viewModel: SearchRecipesViewModel) {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-        FlowRow(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            viewModel.tags.value.forEach {
-                TagItem(string = it, onClick = {
-                    viewModel.setSearchText(it)
-                    viewModel.search()
-                })
-            }
-        }
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-
-    }
-
-
-}
-
-@Composable
-private fun SearchList(
-    navController: NavHostController,
-    viewModel: SearchRecipesViewModel
-) {
-
-    LazyColumn(
-        state = rememberLazyListState(),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-    ) {
-        if (!viewModel.isLoading.value) {
-            if (viewModel.isSuccessful.value) {
-                if (!viewModel.isFound.value) {
-                    item {
-                        Text(
-                            text = stringResource(id = R.string.nothing_found),
-                            modifier = Modifier
-                                .padding(
-                                    dimensionResource(id = R.dimen.main_padding)
+            LazyColumn(
+                state = rememberLazyListState(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+            ) {
+                if (!viewModel.isLoading.value) {
+                    if (viewModel.isSuccessful.value) {
+                        if (!viewModel.isFound.value) {
+                            item {
+                                Text(
+                                    text = stringResource(id = R.string.nothing_found),
+                                    modifier = Modifier
+                                        .padding(
+                                            dimensionResource(id = R.dimen.main_padding)
+                                        )
+                                        .fillMaxWidth(),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.titleMedium
                                 )
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleMedium
-                        )
 
-                    }
-                } else
-                    items(viewModel.recipes.value) {
+                            }
+                        } else
+                            items(viewModel.recipes.value) {
 
-                        ListItem(it, navController)
+                                ListItemCard(
+                                    it,
+                                    onRecipeClick = { onListItemClick(it.id) },
+                                    onEditClick = {})
+                            }
+                    } else {
+                        item {
+                            ErrorNetworkCard {
+                                viewModel.getByName()
+                            }
+                        }
                     }
-            } else {
-                item {
-                    ErrorNetworkCard {
-                        viewModel.getByName()
+                } else {
+                    item {
+                        CircularLoad()
                     }
                 }
-            }
-        } else {
-            item {
-                CircularLoad()
+                item { }
             }
         }
-        item { }
     }
 }
+
+
+

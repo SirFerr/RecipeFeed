@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
@@ -23,9 +21,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +35,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import kotlin.io.encoding.Base64
@@ -45,34 +44,33 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun RecipeScreen(
     id: Int = -1,
-    navController: NavHostController,
-    viewModel: RecipeScreenViewModel = hiltViewModel()
+    viewModel: RecipeScreenViewModel = hiltViewModel(),
+
+    onClickBack: () -> Unit,
 ) {
     viewModel.getById(id)
-    Scaffold(
-        topBar = {
-            TopAppBar(title = {  },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navController.navigateUp() },
-                        modifier = Modifier
-                    ) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
-                },
-                actions = {
-                   IconButton(onClick = {  viewModel.changeLike()
-                       viewModel.addToFavourites() }) {
-                       Icon(
-                           imageVector = if (viewModel.isLiked.value) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
-                           contentDescription = null
-                       )
-                   }
-                }
-            )
-        }
-    )
-    {
+    Scaffold(topBar = {
+        TopAppBar(title = { }, navigationIcon = {
+            IconButton(
+                onClick = onClickBack, modifier = Modifier
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null
+                )
+            }
+        }, actions = {
+            IconButton(onClick = {
+                viewModel.changeLike()
+                viewModel.addToFavourites()
+            }) {
+                Icon(
+                    imageVector = if (viewModel.isLiked.value) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
+                    contentDescription = null
+                )
+            }
+        })
+    }) {
         Column(
             Modifier
                 .padding(it)
@@ -92,7 +90,8 @@ fun RecipeScreen(
                 modifier = Modifier
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
                     .height(250.dp),
-                loading = { CircularProgressIndicator() }, contentScale = ContentScale.FillWidth
+                loading = { CircularProgressIndicator() },
+                contentScale = ContentScale.FillWidth
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -101,8 +100,7 @@ fun RecipeScreen(
             )
 
             Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
             ) {
                 Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {

@@ -1,4 +1,4 @@
-package com.example.recipefeed.feature.mainGroup.composable
+package com.example.recipefeed.feature.composable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.ExperimentalMaterialApi

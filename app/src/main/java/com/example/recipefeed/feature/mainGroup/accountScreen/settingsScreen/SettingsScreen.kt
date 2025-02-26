@@ -29,15 +29,15 @@ import com.example.recipefeed.R
 
 @Composable
 fun SettingsScreen(
-    navController: NavHostController,
     viewModel: SettingsScreenViewModel = hiltViewModel(),
-    onThemeUpdated:()->Unit
-) {
+    onThemeUpdated:()->Unit,
+    onClickBack: () -> Unit,
+    ) {
     Scaffold(topBar = {
         TopAppBar(title = { },
             navigationIcon = {
                 IconButton(
-                    onClick = { navController.navigateUp() },
+                    onClick = onClickBack,
                     modifier = Modifier
                 ) {
                     Icon(

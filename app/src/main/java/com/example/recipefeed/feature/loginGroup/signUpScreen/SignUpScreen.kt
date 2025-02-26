@@ -25,15 +25,17 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.feature.loginGroup.CustomTextField
-import com.example.recipefeed.feature.loginGroup.ErrorMessage
+import com.example.recipefeed.feature.composable.CustomTextField
+import com.example.recipefeed.feature.composable.ErrorMessage
+import com.example.recipefeed.view.mainMenu.mainsScreens.MainState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    navController: NavHostController,
-    viewModel: SignUpScreenViewModel = hiltViewModel()
+    viewModel: SignUpScreenViewModel = hiltViewModel(),
+    onBack:()->Unit,
+    onSuccess:()->Unit,
 ) {
 
 
@@ -43,7 +45,9 @@ fun SignUpScreen(
 
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.navigateUp() },
+                        onClick = {
+                            onBack()
+                                  },
                         modifier = Modifier
                             .size(30.dp)
                             .wrapContentSize()
@@ -93,7 +97,7 @@ fun SignUpScreen(
 
                 Button(onClick = {
                     viewModel.signUp(isSuccess = {
-                        navController.navigateUp()
+                        onSuccess()
                     })
                 }) {
                     Text(text = stringResource(id = R.string.complete))

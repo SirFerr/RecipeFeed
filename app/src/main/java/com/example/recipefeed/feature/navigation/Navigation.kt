@@ -13,6 +13,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.recipefeed.feature.loginGroup.LoginGroupNavigation
+import com.example.recipefeed.feature.mainGroup.MainGroupNavigation
 import com.example.recipefeed.feature.serverNotAvaivableScreen.ServerNotAvailableScreen
 
 
@@ -36,8 +38,12 @@ fun Navigation(onThemeUpdated: () -> Unit): NavHostController {
         enterTransition = { enterTransition },
         exitTransition = { exitTransition },
     ) {
-        loginGroupGraph(navController)
-        mainGroupGraph(navController, onThemeUpdated)
+        composable(Destinations.LoginGroup.route){
+            LoginGroupNavigation(navHostController = navController)
+        }
+        composable(Destinations.MainGroup.route){
+            MainGroupNavigation(navHostController = navController, onThemeUpdated = onThemeUpdated)
+        }
 
         composable(Destinations.ServerNotAvailable.route) {
             ServerNotAvailableScreen()

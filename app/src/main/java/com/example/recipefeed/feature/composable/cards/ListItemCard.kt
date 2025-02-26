@@ -1,4 +1,4 @@
-package com.example.recipefeed.feature.mainGroup.composable
+package com.example.recipefeed.feature.composable.cards
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.Recipe
+import com.example.recipefeed.feature.composable.ShimmerEffect
 import com.example.recipefeed.feature.navigation.Destinations
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -40,15 +41,14 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
-fun ListItem(
+fun ListItemCard(
     recipe: Recipe,
-    navController: NavController? = null,
-    icon: ImageVector = Icons.Filled.Favorite
+    icon: ImageVector = Icons.Filled.Favorite,
+    onRecipeClick: () -> Unit,
+    onEditClick: () -> Unit
 ) {
     var showShimmer by remember { mutableStateOf(true) }
-    Card(onClick = {
-        navController?.navigate("${Destinations.MainGroup.Recipe.route}/${recipe.id}")
-    }) {
+    Card(onClick = { onRecipeClick() }) {
         Column(
             Modifier
                 .fillMaxWidth()
@@ -75,27 +75,22 @@ fun ListItem(
             Text(text = recipe.recipeName, style = MaterialTheme.typography.titleLarge)
 
             Row(
-                Modifier
-                    .fillMaxWidth(),
+                Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
-
                 Text(
                     text = "Likes: " + recipe.recipeLikes.toString(),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 IconButton(modifier = Modifier, onClick = {
                     if (icon == Icons.Filled.Edit) {
-                        navController?.navigate("${Destinations.MainGroup.EditRecipe.route}/${recipe.id}")
+                        onEditClick()
                     }
                 }) {
                     Icon(imageVector = icon, contentDescription = null)
-
                 }
             }
-
         }
     }
 }

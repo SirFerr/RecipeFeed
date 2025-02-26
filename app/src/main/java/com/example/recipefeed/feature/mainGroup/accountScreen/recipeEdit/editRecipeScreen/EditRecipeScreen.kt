@@ -33,8 +33,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.mainGroup.accountScreen.recipeEdit.DeleteRecipeDialog
 import com.example.recipefeed.feature.mainGroup.accountScreen.recipeEdit.ImagePickerCard
@@ -45,9 +43,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditRecipeScreen(
-    navController: NavHostController = rememberNavController(),
     id: Int = 1,
     viewModel: EditRecipeScreenViewModel = hiltViewModel(),
+    onClickBack: () -> Unit,
 ) {
     val context = LocalContext.current
     viewModel.getById(id)
@@ -59,7 +57,7 @@ fun EditRecipeScreen(
         TopAppBar(title = { },
             navigationIcon = {
                 IconButton(
-                    onClick = { navController.navigateUp() },
+                    onClick = onClickBack,
                     modifier = Modifier
 
                 ) {
@@ -133,7 +131,7 @@ fun EditRecipeScreen(
                 onConfirm = {
                     viewModel.changeIsDelete()
                     viewModel.deleteRecipeById(id)
-                    navController.popBackStack()
+                    onClickBack()
                 }
             )
         }

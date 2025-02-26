@@ -1,4 +1,4 @@
-package com.example.recipefeed.feature.mainGroup.composable
+package com.example.recipefeed.feature.composable
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat

@@ -21,25 +21,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.feature.mainGroup.composable.ErrorNetworkCard
-import com.example.recipefeed.feature.mainGroup.composable.ListItem
-import com.example.recipefeed.feature.mainGroup.composable.UpdateBox
+import com.example.recipefeed.feature.composable.ErrorNetworkCard
+import com.example.recipefeed.feature.composable.UpdateBox
+import com.example.recipefeed.feature.composable.cards.ListItemCard
 
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AddedRecipesScreen(
-    navController: NavHostController,
-    viewModel: AddedRecipesViewModel = hiltViewModel()
+    viewModel: AddedRecipesViewModel = hiltViewModel(),
+    onClickBack: () -> Unit,
+    onRecipeClick: (Int) -> Unit,
+    onEditClick: (Int) -> Unit
 ) {
 
     Scaffold(topBar = {
         TopAppBar(title = { },
             navigationIcon = {
                 IconButton(
-                    onClick = { navController.navigateUp() },
+                    onClick = onClickBack,
                     modifier = Modifier
                 ) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
@@ -63,7 +64,11 @@ fun AddedRecipesScreen(
 
                 if (viewModel.isSuccessful.value) {
                     items(viewModel.recipes.value) {
-                        ListItem(it, navController, Icons.Filled.Edit)
+                        ListItemCard(
+                            it,
+                            icon = Icons.Filled.Edit,
+                            onRecipeClick = { onRecipeClick(it.id) },
+                            onEditClick = { onEditClick(it.id) })
                     }
                 } else {
                     item {

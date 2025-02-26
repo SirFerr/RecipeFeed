@@ -15,24 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.recipefeed.R
-import com.example.recipefeed.feature.loginGroup.CustomTextField
-import com.example.recipefeed.feature.loginGroup.ErrorMessage
-import com.example.recipefeed.feature.navigation.Destinations
+import com.example.recipefeed.feature.composable.CustomTextField
+import com.example.recipefeed.feature.composable.ErrorMessage
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogInScreen(
-    navController: NavHostController,
     viewModel: LoginScreenViewModel = hiltViewModel(),
+    onTokenIsNotEmpty: () -> Unit,
+    onSuccess: () -> Unit,
+    onSignUp: () -> Unit,
 ) {
 
     if (viewModel.token.value.isNotEmpty()) {
-        navController.navigate(Destinations.MainGroup.route) {
-            popUpTo(Destinations.LoginGroup.route) { inclusive = true }
-        }
+
+        onTokenIsNotEmpty()
     }
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -62,9 +61,8 @@ fun LogInScreen(
             Button(onClick = {
                 viewModel.signIn(
                     isSuccess = {
-                        navController.navigate(Destinations.MainGroup.route) {
-                            popUpTo(Destinations.LoginGroup.route) { inclusive = true }
-                        }
+                        onSuccess()
+
                     },
                 )
 
@@ -73,8 +71,7 @@ fun LogInScreen(
             }
 
             TextButton(onClick = {
-                navController.navigate(Destinations.LoginGroup.SignUp.route)
-
+                onSignUp()
             }) {
                 Text(text = stringResource(id = R.string.signup))
             }

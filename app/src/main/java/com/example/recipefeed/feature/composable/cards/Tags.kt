@@ -1,4 +1,4 @@
-package com.example.recipefeed.feature.mainGroup.composable
+package com.example.recipefeed.feature.composable.cards
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
