@@ -13,8 +13,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipefeed.feature.loginGroup.LoginGroupNavigation
-import com.example.recipefeed.feature.mainGroup.MainGroupNavigation
+import com.example.recipefeed.feature.login.LoginGroupNavigation
+import com.example.recipefeed.feature.main.MainGroupNavigation
 import com.example.recipefeed.feature.serverNotAvaivableScreen.ServerNotAvailableScreen
 
 

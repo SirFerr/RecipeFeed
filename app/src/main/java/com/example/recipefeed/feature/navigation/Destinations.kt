@@ -7,6 +7,7 @@ sealed class Destinations(val route: String) {
     }
 
     object MainGroup : Destinations("MAIN_GROUP") {
+        object RecipesOnApprove : Destinations("Recipes_On_Approve")
         object Main : Destinations("MAIN")
         object Search : Destinations("SEARCH")
         object Recipe : Destinations("RECIPE")

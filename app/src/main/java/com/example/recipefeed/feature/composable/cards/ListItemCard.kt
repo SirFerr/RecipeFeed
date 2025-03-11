@@ -29,12 +29,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.feature.composable.ShimmerEffect
-import com.example.recipefeed.feature.navigation.Destinations
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -43,9 +41,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @Composable
 fun ListItemCard(
     recipe: Recipe,
-    icon: ImageVector = Icons.Filled.Favorite,
-    onRecipeClick: () -> Unit,
-    onEditClick: () -> Unit
+    icon: ImageVector? = Icons.Filled.Favorite,
+    onRecipeClick: () -> Unit = {},
+    onEditClick: () -> Unit = {}
 ) {
     var showShimmer by remember { mutableStateOf(true) }
     Card(onClick = { onRecipeClick() }) {
@@ -83,12 +81,14 @@ fun ListItemCard(
                     text = "Likes: " + recipe.recipeLikes.toString(),
                     style = MaterialTheme.typography.bodyMedium
                 )
-                IconButton(modifier = Modifier, onClick = {
-                    if (icon == Icons.Filled.Edit) {
-                        onEditClick()
+                if (icon != null) {
+                    IconButton(modifier = Modifier, onClick = {
+                        if (icon == Icons.Filled.Edit) {
+                            onEditClick()
+                        }
+                    }) {
+                        Icon(imageVector = icon, contentDescription = null)
                     }
-                }) {
-                    Icon(imageVector = icon, contentDescription = null)
                 }
             }
         }

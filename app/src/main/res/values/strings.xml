@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">RecipeFeed</string>
+    <string name="recipe_on_approve">Approve</string>
     <string name="home_title">Home</string>
     <string name="search_title">Search</string>
     <string name="favorite_title">Favorite</string>
@@ -24,7 +25,7 @@
 
     <string name="title_recipe">Title</string>
     <string name="description_recipe">Description</string>
-    <string name="ingridients">Ingridients</string>
+    <string name="ingredients">Ingredients</string>
     <string name="time_to_cook">Time to cook</string>
 
     <string name="pick_image">Pick Image From Gallery</string>
