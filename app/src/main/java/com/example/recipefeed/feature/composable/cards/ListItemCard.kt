@@ -5,13 +5,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
@@ -36,12 +41,20 @@ import com.example.recipefeed.feature.composable.ShimmerEffect
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+@Preview(showBackground = true)
+@Composable
+fun PreviewListItemCard(){
+    ListItemCard(recipe = Recipe(), reason = "12312")
+}
+
 
 @OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun ListItemCard(
     recipe: Recipe,
     icon: ImageVector? = Icons.Filled.Favorite,
+    isOnApprove: Boolean = false,
+    reason: String = "",
     onRecipeClick: () -> Unit = {},
     onEditClick: () -> Unit = {}
 ) {
@@ -81,16 +94,33 @@ fun ListItemCard(
                     text = "Likes: " + recipe.recipeLikes.toString(),
                     style = MaterialTheme.typography.bodyMedium
                 )
-                if (icon != null) {
-                    IconButton(modifier = Modifier, onClick = {
-                        if (icon == Icons.Filled.Edit) {
-                            onEditClick()
+                if (isOnApprove)
+                    Icon(Icons.Filled.Check, contentDescription = null)
+                else
+                    if (icon != null) {
+                        IconButton(modifier = Modifier, onClick = {
+                            if (icon == Icons.Filled.Edit) {
+                                onEditClick()
+                            }
+                        }) {
+                            Icon(imageVector = icon, contentDescription = null)
                         }
-                    }) {
-                        Icon(imageVector = icon, contentDescription = null)
                     }
+
+            }
+            if (reason.isNotEmpty()) {
+                Spacer(Modifier.size(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Filled.Info,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(Modifier.size(12.dp))
+                    Text(reason)
                 }
             }
+
         }
     }
 }

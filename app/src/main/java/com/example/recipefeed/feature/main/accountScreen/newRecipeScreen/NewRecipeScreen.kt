@@ -9,6 +9,7 @@ package com.example.recipefeed.view.mainMenu.newRecipeScreen
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -45,7 +46,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun NewRecipeScreen(
     viewModel: NewRecipeScreenViewModel = hiltViewModel(),
     onClickBack: () -> Unit,
-    ) {
+) {
 
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         if (it != null) viewModel.setSelectImages(it)
@@ -76,21 +77,35 @@ fun NewRecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
         ) {
             Spacer(modifier = Modifier)
-            ImagePickerCard(viewModel.selectImages.value, galleryLauncher) { viewModel.setSelectImages(it) }
+            ImagePickerCard(
+                viewModel.selectImages.value,
+                galleryLauncher
+            ) { viewModel.setSelectImages(it) }
 
             HorizontalDivider()
 
             MainInformationSection(
-                viewModel.recipeName.value,
-                viewModel.description.value,
-                viewModel.ingredients.value,
-                viewModel.timeToCook.value,
+                recipeName = viewModel.recipeName.value,
+                description = viewModel.description.value,
+                ingredients = viewModel.ingredients.value,
+                ingredientsBase = listOf(),
+                timeToCook = viewModel.timeToCook.value,
                 onRecipeNameChange = { viewModel.setRecipeName(it) },
                 onDescriptionChange = { viewModel.setDescription(it) },
-                onIngredientsChange = { viewModel.setIngredients(it) },
+                onIngredientsChange = { index, ingredient ->
+                    viewModel.changeIngredients(
+                        index,
+                        ingredient
+                    )
+                },
+                onIngredientDelete = {viewModel.deleteIngredient( it)},
                 onTimeToCookChange = { viewModel.setTimeToCook(it) }
             )
-
+            Text(
+                "Add ingredient", modifier = Modifier.clickable {
+                    viewModel.addIngredient()
+                }
+            )
             Spacer(Modifier.weight(1f))
 
             Button(

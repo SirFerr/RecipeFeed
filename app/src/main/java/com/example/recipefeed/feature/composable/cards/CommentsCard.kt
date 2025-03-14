@@ -7,17 +7,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,30 +28,45 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.recipefeed.R
+import com.example.recipefeed.feature.composable.CustomTextField
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewCommentCard() {
-
-    CommentCard(
-        Comment("1", "1", "1"),
-        listOf(Comment("1", "1", "1"), Comment("1", "1", "1"), Comment("1", "1", "1"))
-
-    )
+    Column {
+        CommentCard(
+            Comment(1, "SirFerr", "jgjhgjhjhghjhjhjhjghjghj", "12.12.12"),
+        )
+        Spacer(Modifier.size(12.dp))
+        CommentCard(
+            Comment(1, "SirFerr", "jgjhgjhjhghjhjhjhjghjghj", "12.12.12"),
+            isModerator = true
+        )
+    }
 
 
 }
 
 data class Comment(
+    val id: Int,
     val name: String,
     val text: String,
     val date: String,
+    val isAuthor: Boolean = false,
 )
 
 @Composable
-fun CommentCard(comment: Comment, listReply: List<Comment> = emptyList()) {
-    var isReplyShow by remember { mutableStateOf(false) }
-    Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(10.dp)) {
+fun CommentCard(
+    comment: Comment,
+    isModerator: Boolean = false,
+    onDelete: (Int, String) -> Unit = { id, reason -> }
+) {
+    var isDeleteShow by remember { mutableStateOf(false) }
+    var rejectReason by remember { mutableStateOf("") }
+    Card(
+        Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -62,58 +76,72 @@ fun CommentCard(comment: Comment, listReply: List<Comment> = emptyList()) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(comment.name)
+                Text(comment.name, maxLines = 1)
+                Spacer(Modifier.width(12.dp))
                 Text(comment.date)
+                if (isModerator or comment.isAuthor) {
+                    val iconSize = 24.dp
+                    Spacer(Modifier.weight(1f))
+                    IconButton(
+                        onClick = {
+                            isDeleteShow = true
+                        },
+                        modifier = Modifier.size(iconSize)
+                    ) {
+                        Icon(
+                            Icons.Filled.Delete,
+                            contentDescription = null,
+                        )
+                    }
+                }
             }
             Spacer(Modifier.size(dimensionResource(id = R.dimen.main_padding)))
             Text(comment.text)
-            if (listReply.isNotEmpty())
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    if(isReplyShow){
-                        HorizontalDivider(modifier = Modifier.weight(1f))
-                    }
-                    Spacer(Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-                    IconButton(modifier = Modifier, onClick = {
-                        isReplyShow = !isReplyShow
-                    }) { Icon(Icons.Filled.KeyboardArrowDown, contentDescription = null) }
+        }
+    }
+    if (isDeleteShow)
+        AlertDialog(
+            onDismissRequest = { isDeleteShow = false },
+            dismissButton = {
+                TextButton(onClick = { isDeleteShow = false }) {
+                    Text(text = "dismiss")
                 }
-            if (isReplyShow and listReply.isNotEmpty())
-                LazyColumn(
-                    state = rememberLazyListState(),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
-                    verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-                ) {
-                    items(listReply) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.Start
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (isModerator and rejectReason.isNotEmpty()) {
+                        onDelete(
+                            comment.id,
+                            rejectReason
+                        )
+                    }
+                    if (comment.isAuthor) {
+                        onDelete(
+                            comment.id,
+                            ""
+                        )
+                    }
+
+                }) {
+                    Text(text = "confirm")
+                }
+            },
+            text = {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = "Are you sure you want to delete comment?")
+                    Spacer(Modifier.size(8.dp))
+                    if (isModerator) {
+                        CustomTextField(
+                            stringRes = "Reason",
+                            text = rejectReason
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(comment.name)
-                                Text(comment.date)
-                            }
-                            Spacer(Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-                            Text(comment.text)
-                            Spacer(Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-                            HorizontalDivider(modifier = Modifier.weight(1f))
+                            rejectReason = it
                         }
                     }
                 }
-        }
-    }
+            }
+        )
 }

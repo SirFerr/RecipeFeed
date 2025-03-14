@@ -7,6 +7,7 @@ package com.example.recipefeed.view.mainMenu.editRecipeScreen
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -96,14 +97,26 @@ fun EditRecipeScreen(
             HorizontalDivider()
 
             MainInformationSection(
-                viewModel.recipeName.value,
-                viewModel.description.value,
-                viewModel.ingredients.value,
-                viewModel.timeToCook.value,
+                recipeName = viewModel.recipeName.value,
+                description =  viewModel.description.value,
+                ingredients = viewModel.ingredients.value,
+                ingredientsBase = listOf(),
+                timeToCook = viewModel.timeToCook.value,
                 onRecipeNameChange = { viewModel.setRecipeName(it) },
                 onDescriptionChange = { viewModel.setDescription(it) },
-                onIngredientsChange = { viewModel.setIngredients(it) },
+                onIngredientsChange = { index, ingredient ->
+                    viewModel.changeIngredients(
+                        index,
+                        ingredient
+                    )
+                },
+                onIngredientDelete = {viewModel.deleteIngredient( it)},
                 onTimeToCookChange = { viewModel.setTimeToCook(it) }
+            )
+            Text(
+                "Add ingredient", modifier = Modifier.clickable {
+                    viewModel.addIngredient()
+                }
             )
 
             Spacer(Modifier.weight(1f))

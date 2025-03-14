@@ -3,6 +3,7 @@
 package com.example.recipefeed.view.mainMenu.recipeScreen
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -53,6 +55,7 @@ fun RecipeScreen(
     id: Int = -1,
     viewModel: RecipeScreenViewModel = hiltViewModel(),
     onClickBack: () -> Unit,
+    onComment:(Int)->Unit,
 ) {
 
 
@@ -157,6 +160,16 @@ fun RecipeScreen(
 //                    style = MaterialTheme.typography.bodyLarge
 //                )
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.align(Alignment.End).clickable {
+                    onComment(id)
+                }
+            ) {
+                Text("Comments")
+                Spacer(Modifier.size(12.dp))
+                Icon(Icons.Default.KeyboardArrowRight, contentDescription = null)
+            }
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding) * 4))
         }
 

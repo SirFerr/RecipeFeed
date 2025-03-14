@@ -8,6 +8,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.Ingredient
 import com.example.recipefeed.data.Repository
 import com.example.recipefeed.data.remote.Recipe
 import com.example.recipefeed.feature.main.accountScreen.convertToMultipart
@@ -37,8 +38,8 @@ class EditRecipeScreenViewModel @Inject constructor(
     val recipeName: State<String> = _recipeName
     private var _description = mutableStateOf("")
     val description: State<String> = _description
-    private var _ingredients = mutableStateOf("")
-    val ingredients: State<String> = _ingredients
+    private var _ingredients = mutableStateOf<List<Ingredient>>(listOf())
+    val ingredients: State<List<Ingredient>> = _ingredients
     private var _timeToCook = mutableStateOf("")
     val timeToCook: State<String> = _timeToCook
     private var _isDelete = mutableStateOf(false)
@@ -58,7 +59,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                         _recipe.value = it
                         _recipeName.value = it.recipeName
                         _description.value = it.description
-                        _ingredients.value = it.ingredients
+//                        _ingredients.value = it.ingredients
                         _timeToCook.value = it.timeToCook
                         val imageBytes = Base64.decode(recipe.value.imageData)
                         _selectImages.value =
@@ -80,7 +81,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                             recipeName = recipeName.value,
                             description = description.value,
                             timeToCook = timeToCook.value,
-                            ingredients = ingredients.value
+//                            ingredients = ingredients.value
                         ),
                         it
                     )
@@ -120,8 +121,20 @@ class EditRecipeScreenViewModel @Inject constructor(
         _description.value = string
     }
 
-    fun setIngredients(string: String) {
-        _ingredients.value = string
+    fun addIngredient(){
+        _ingredients.value += Ingredient()
+    }
+
+    fun deleteIngredient(index: Int){
+        _ingredients.value = _ingredients.value.toMutableList().apply {
+            removeAt(index)
+        }
+    }
+
+    fun changeIngredients(index: Int, ingredient: Ingredient) {
+        _ingredients.value = _ingredients.value.toMutableList().also {
+            it[index] = ingredient
+        }
     }
 
     fun setTimeToCook(string: String) {
