@@ -1,6 +1,7 @@
 package com.example.recipefeed.data.repository
 
 import com.example.recipefeed.data.api.ApiService
+import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
 import com.example.recipefeed.data.models.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -10,7 +11,8 @@ import java.io.File
 import javax.inject.Inject
 
 class RecipeRepository @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val searchHistoryManager: SearchHistorySharedPreferencesManager
 ) {
 
     // Users
@@ -60,6 +62,9 @@ class RecipeRepository @Inject constructor(
 
     suspend fun calculateNutrition(recipeId: Int): Result<Nutrition> = handleResponse { apiService.calculateNutrition(recipeId) }
 
+    suspend fun getRecipesOnApprove(skip: Int, limit: Int): Result<List<Recipe>> =
+        handleResponse { apiService.getRecipesOnApprove(skip, limit) }
+
     // Tags
     suspend fun getTagById(tagId: Int): Result<Tag> = handleResponse { apiService.getTagById(tagId) }
 
@@ -105,6 +110,15 @@ class RecipeRepository @Inject constructor(
     suspend fun deleteComment(commentId: Int): Result<Map<String, String>> = handleResponse { apiService.deleteComment(commentId) }
 
     suspend fun rejectComment(commentId: Int, reason: String): Result<Comment> = handleResponse { apiService.rejectComment(commentId, reason) }
+
+    // Методы для работы с историей поиска
+    suspend fun getSearchHistory(): List<String> {
+        return searchHistoryManager.getSearchHistory()
+    }
+
+    suspend fun saveSearchRequest(value: String) {
+        searchHistoryManager.saveRequest(value)
+    }
 
     private suspend fun <T> handleResponse(call: suspend () -> Response<T>): Result<T> {
         return try {

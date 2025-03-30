@@ -47,11 +47,11 @@ fun LogInScreen(
 
             CustomTextField(
                 stringResource(id = R.string.username_field),
-                viewModel.textUsername.value, onChange = { viewModel.setTextUsername(it) }
+                viewModel.textUsername.value, onValueChange = { viewModel.setTextUsername(it) }
             )
             CustomTextField(
                 stringResource(id = R.string.password_field),
-                viewModel.textPassword.value, onChange = {
+                viewModel.textPassword.value, onValueChange = {
                     viewModel.setTextPassword(it)
                 }
             )

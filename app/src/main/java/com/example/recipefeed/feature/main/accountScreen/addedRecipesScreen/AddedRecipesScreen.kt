@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.example.recipefeed.view.mainMenu.addedRecipesScreen
 
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -26,8 +25,7 @@ import com.example.recipefeed.feature.composable.ErrorNetworkCard
 import com.example.recipefeed.feature.composable.UpdateBox
 import com.example.recipefeed.feature.composable.cards.ListItemCard
 
-
-@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddedRecipesScreen(
     viewModel: AddedRecipesViewModel = hiltViewModel(),
@@ -35,54 +33,47 @@ fun AddedRecipesScreen(
     onRecipeClick: (Int) -> Unit,
     onEditClick: (Int) -> Unit
 ) {
-
     Scaffold(topBar = {
-        TopAppBar(title = { },
+        TopAppBar(
+            title = { },
             navigationIcon = {
-                IconButton(
-                    onClick = onClickBack,
-                    modifier = Modifier
-                ) {
+                IconButton(onClick = onClickBack) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                 }
             },
-            actions = {
-
-            })
-    }) {
+            actions = {}
+        )
+    }) { paddingValues ->
         UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getAddedRecipes() }) {
             LazyColumn(
                 state = rememberLazyListState(),
-
                 modifier = Modifier
-                    .padding(it)
+                    .padding(paddingValues)
                     .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
             ) {
                 item { }
 
-                if (viewModel.isSuccessful.value) {
-                    items(viewModel.recipes.value) {
+                if (viewModel.isSuccessful.value && viewModel.recipes.value.isNotEmpty()) {
+                    items(viewModel.recipes.value) { recipe ->
                         ListItemCard(
-                            it,
+                            recipe = recipe,
                             icon = Icons.Filled.Edit,
-                            onRecipeClick = { onRecipeClick(it.id) },
-                            onEditClick = { onEditClick(it.id) })
+                            onRecipeClick = { onRecipeClick(recipe.id) },
+                            onEditClick = { onEditClick(recipe.id) }
+                        )
                     }
-                } else {
+                } else if (!viewModel.isSuccessful.value) {
                     item {
                         ErrorNetworkCard {
                             viewModel.getAddedRecipes()
                         }
                     }
                 }
+
                 item { }
             }
         }
     }
 }
-
-
-
-

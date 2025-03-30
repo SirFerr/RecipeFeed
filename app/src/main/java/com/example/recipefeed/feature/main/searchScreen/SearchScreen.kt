@@ -150,7 +150,6 @@ fun SearchScreen(
                             }
                         } else
                             items(viewModel.recipes.value) {
-
                                 ListItemCard(
                                     it,
                                     onRecipeClick = { onListItemClick(it.id) },

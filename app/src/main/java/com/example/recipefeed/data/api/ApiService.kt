@@ -83,6 +83,12 @@ interface ApiService {
     @GET("recipes/{recipe_id}/nutrition")
     suspend fun calculateNutrition(@Path("recipe_id") recipeId: Int): Response<Nutrition>
 
+    @GET("recipes/on-approve")
+    suspend fun getRecipesOnApprove(
+        @Query("skip") skip: Int,
+        @Query("limit") limit: Int
+    ): Response<List<Recipe>>
+
     // Tags
     @GET("tags/{tag_id}")
     suspend fun getTagById(@Path("tag_id") tagId: Int): Response<Tag>

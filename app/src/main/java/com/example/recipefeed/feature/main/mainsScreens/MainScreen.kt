@@ -20,13 +20,12 @@ import com.example.recipefeed.feature.composable.MainScreenButtons
 import com.example.recipefeed.feature.composable.cards.MainScreenCard
 import com.example.recipefeed.feature.composable.cards.SwipeCard
 
-
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun MainScreen(
-    viewModel: MainScreenViewModel = hiltViewModel(),onRecipeClick: ()->Unit,
+    viewModel: MainScreenViewModel = hiltViewModel(),
+    onRecipeClick: () -> Unit, // Callback для перехода к деталям рецепта
 ) {
-
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
@@ -38,44 +37,41 @@ fun MainScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-
-                    MainScreenCard(viewModel.nextRecipe.value,
-                        onRecipeClick = {})
-                    SwipeCard(onSwipeRight = {
-                        viewModel.onSwipeRight()
-                    }, onSwipeLeft = {
-                        viewModel.onSwipeLeft()
-                    }) {
-                        MainScreenCard(state.recipe, onRecipeClick)
+                    MainScreenCard(
+                        recipe = viewModel.nextRecipe.value, // Предпросмотр следующего рецепта
+                        onRecipeClick = {}
+                    )
+                    SwipeCard(
+                        onSwipeRight = { viewModel.onSwipeRight() },
+                        onSwipeLeft = { viewModel.onSwipeLeft() }
+                    ) {
+                        MainScreenCard(
+                            recipe = state.recipe, // Текущий рецепт
+                            onRecipeClick = onRecipeClick // Передаем callback для клика
+                        )
                     }
                 }
 
                 is MainState.Error -> ErrorNetworkCard(
-                    Modifier
+                    modifier = Modifier
                         .wrapContentSize()
                         .fillMaxWidth(0.5f)
-                        .padding(dimensionResource(id = R.dimen.main_padding))
-                ) {
-                    viewModel.onSwipeLeft()
-                }
+                        .padding(dimensionResource(id = R.dimen.main_padding)),
+                    { viewModel.onSwipeLeft() } // Повторная попытка загрузки
+                )
 
                 is MainState.Loading -> CircularLoad()
 
                 else -> {}
             }
         }
-        if (viewModel.mainState.value is MainState.Success) MainScreenButtons(
-            onSwipeLeft = {
-                viewModel.onSwipeLeft()
-            },
-            onSwipeRight = {
-                viewModel.onSwipeRight()
-            },
+        // Кнопки отображаются только при успешном состоянии
+        if (viewModel.mainState.value is MainState.Success) {
+            MainScreenButtons(
+                onSwipeLeft = { viewModel.onSwipeLeft() },
+                onSwipeRight = { viewModel.onSwipeRight()
+                    viewModel.addToFavourites()},
             )
+        }
     }
-
 }
-
-
-
-

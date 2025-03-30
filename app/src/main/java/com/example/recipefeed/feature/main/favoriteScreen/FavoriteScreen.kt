@@ -22,12 +22,11 @@ import com.example.recipefeed.feature.composable.ErrorNetworkCard
 import com.example.recipefeed.feature.composable.cards.ListItemCard
 import com.example.recipefeed.feature.composable.UpdateBox
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FavoriteScreen(
     viewModel: FavoriteRecipesViewModel = hiltViewModel(),
-    onRecipeClick: (Int)->Unit
+    onRecipeClick: (Int) -> Unit
 ) {
     UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getFavouritesRecipes() }) {
         LazyColumn(
@@ -38,20 +37,18 @@ fun FavoriteScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             item { }
-            if (viewModel.isSuccessful.value) {
-                items(viewModel.recipes.value) {
-                    ListItemCard(it, onRecipeClick = {onRecipeClick(it.id)}, onEditClick = { })
+            if (viewModel.isSuccessful.value && viewModel.recipes.value.isNotEmpty()) {
+                items(viewModel.recipes.value) { recipe ->
+                    ListItemCard(recipe, onRecipeClick = { onRecipeClick(recipe.id) }, onEditClick = { })
                 }
-            } else {
+            } else if (!viewModel.isSuccessful.value) {
                 item {
                     ErrorNetworkCard {
                         viewModel.getFavouritesRecipes()
                     }
                 }
             }
-            item {  Spacer(modifier = Modifier.size(200.dp)) }
+            item { Spacer(modifier = Modifier.size(200.dp)) }
         }
     }
-
-
 }

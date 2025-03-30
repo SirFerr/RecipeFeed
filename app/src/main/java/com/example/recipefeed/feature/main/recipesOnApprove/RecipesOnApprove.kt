@@ -17,8 +17,9 @@ import com.example.recipefeed.feature.composable.cards.ListItemCard
 
 @Composable
 fun RecipesOnApprove(
-    viewModel: RecipesOnApproveViewModel = hiltViewModel(), onClickBack: () -> Unit,
-    onRecipeClick: (Int) -> Unit,
+    viewModel: RecipesOnApproveViewModel = hiltViewModel(),
+    onClickBack: () -> Unit,
+    onRecipeClick: (Int) -> Unit
 ) {
     UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getRecipesOnApprove() }) {
         LazyColumn(
@@ -30,19 +31,28 @@ fun RecipesOnApprove(
         ) {
             item { }
 
-            if (viewModel.isSuccessful.value)
-                items(viewModel.recipes.value) {
-                    ListItemCard(
-                        it,
-                        icon = null,
-                    )
+            if (viewModel.isSuccessful.value) {
+                if (viewModel.recipes.value.isEmpty()) {
+                    item {
+                        // Можно добавить сообщение "Нет рецептов на одобрении"
+                    }
+                } else {
+                    items(viewModel.recipes.value) { recipe ->
+                        ListItemCard(
+                            recipe = recipe,
+                            icon = null,
+                            onRecipeClick = { onRecipeClick(recipe.id) },
+                            onEditClick = {} // Если редактирование не нужно, оставляем пустым
+                        )
+                    }
                 }
-            else
+            } else {
                 item {
                     ErrorNetworkCard {
                         viewModel.getRecipesOnApprove()
                     }
                 }
+            }
 
             item { }
         }

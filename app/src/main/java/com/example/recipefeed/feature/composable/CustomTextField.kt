@@ -17,9 +17,9 @@ fun CustomTextField(
     stringRes: String,
     text: String,
     onFocusAction: () -> Unit = {},
-    onChange: (String) -> Unit,
+    onValueChange: (String) -> Unit,
 
-) {
+    ) {
     val focusManager = LocalFocusManager.current
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -36,5 +36,5 @@ fun CustomTextField(
                 text = stringRes,
             )
         },
-        onValueChange = { onChange(it) })
+        onValueChange = { onValueChange(it) })
 }

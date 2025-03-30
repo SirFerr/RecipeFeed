@@ -2,7 +2,6 @@
 
 package com.example.recipefeed.view.mainMenu.recipeScreen
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,11 +17,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,13 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.CustomTextField
-import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
@@ -55,56 +52,53 @@ fun RecipeScreen(
     id: Int = -1,
     viewModel: RecipeScreenViewModel = hiltViewModel(),
     onClickBack: () -> Unit,
-    onComment:(Int)->Unit,
+    onComment: (Int) -> Unit,
 ) {
-
-
     viewModel.getById(id)
+
     Scaffold(topBar = {
-        TopAppBar(title = { }, navigationIcon = {
-            IconButton(
-                onClick = onClickBack, modifier = Modifier
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null
-                )
-            }
-        }, actions = {
-            if (viewModel.isModerator.value) {
-                Row {
-                    IconButton(onClick = {
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(onClick = {
-                        viewModel.reject()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Filled.Close,
-                            contentDescription = null
-                        )
+        TopAppBar(
+            title = { },
+            navigationIcon = {
+                IconButton(onClick = onClickBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            },
+            actions = {
+                if (viewModel.isModerator.value) {
+                    Row {
+                        IconButton(onClick = { viewModel.setIsApproveShow(true) }) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = "Approve"
+                            )
+                        }
+                        IconButton(onClick = { viewModel.setIsRejectShow(true) }) {
+                            Icon(
+                                imageVector = Icons.Filled.Close,
+                                contentDescription = "Reject"
+                            )
+                        }
                     }
                 }
+                IconButton(onClick = {
+                    viewModel.changeLike()
+                    viewModel.addToFavourites()
+                }) {
+                    Icon(
+                        imageVector = if (viewModel.isLiked.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        contentDescription = "Favorite"
+                    )
+                }
             }
-            IconButton(onClick = {
-                viewModel.changeLike()
-                viewModel.addToFavourites()
-            }) {
-                Icon(
-                    imageVector = if (viewModel.isLiked.value) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
-                    contentDescription = null
-                )
-            }
-
-        })
-    }) {
+        )
+    }) { paddingValues ->
         Column(
-            Modifier
-                .padding(it)
+            modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(dimensionResource(id = R.dimen.main_padding)),
@@ -112,81 +106,92 @@ fun RecipeScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
         ) {
             val alignmentStartModifier = Modifier.align(Alignment.Start)
-            val imageBytes = Base64.decode(viewModel.recipe.value.imageData)
-            val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
-            SubcomposeAsyncImage(
-                model = image,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-                    .height(250.dp),
-                loading = { CircularProgressIndicator() },
-                contentScale = ContentScale.FillWidth
-            )
-            Text(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = viewModel.recipe.value.recipeName,
-                style = MaterialTheme.typography.titleLarge
-            )
+            when {
+                viewModel.isLoading.value -> {
+                    CircularProgressIndicator()
+                }
+                viewModel.isSuccessful.value && viewModel.recipe.value != null -> {
+                    viewModel.recipe.value?.let { recipe ->
+                        // Изображение рецепта
+                        recipe.imageData?.let { base64Image ->
+                            val decodedImage = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+                            SubcomposeAsyncImage(
+                                model = decodedImage,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+                                    .height(250.dp),
+                                loading = { CircularProgressIndicator() },
+                                contentScale = ContentScale.FillWidth
+                            )
+                        }
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
-            ) {
-                Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
+                        Text(
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            text = recipe.name,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                        ) {
+                            Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
+                                Text(
+                                    modifier = alignmentStartModifier,
+                                    text = recipe.description ?: "No description",
+                                )
+                            }
+                        }
+
+                        Text(
+                            modifier = alignmentStartModifier,
+                            text = "Likes: ${recipe.likes}",
+                        )
+
+                        Text(
+                            modifier = alignmentStartModifier,
+                            text = "Steps: ${recipe.steps ?: "No steps provided"}",
+                        )
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .clickable { onComment(id) }
+                        ) {
+                            Text("Comments")
+                            Spacer(Modifier.size(12.dp))
+                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+                        }
+                    }
+                }
+                else -> {
                     Text(
-                        modifier = alignmentStartModifier,
-                        text = viewModel.recipe.value.description,
+                        text = "Failed to load recipe",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = alignmentStartModifier
                     )
                 }
-
             }
 
-            Text(
-                modifier = alignmentStartModifier,
-                text = "Likes: " + viewModel.recipe.value.recipeLikes.toString(),
-            )
-            Text(
-                modifier = alignmentStartModifier,
-                text = stringResource(id = R.string.time_to_cook) + ": " + viewModel.recipe.value.timeToCook,
-            )
-            Text(
-                modifier = alignmentStartModifier,
-                text = stringResource(id = R.string.ingredients) + ": " + viewModel.recipe.value.ingredients,
-            )
-//                Text(
-//                    text = "Recipe: " + recipe!!.ingredients,
-//                    style = MaterialTheme.typography.bodyLarge
-//                )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.align(Alignment.End).clickable {
-                    onComment(id)
-                }
-            ) {
-                Text("Comments")
-                Spacer(Modifier.size(12.dp))
-                Icon(Icons.Default.KeyboardArrowRight, contentDescription = null)
-            }
             Spacer(modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding) * 4))
         }
-
     }
 
-
+    // Диалог одобрения
     if (viewModel.isApproveShow.value) {
         AlertDialog(
             onDismissRequest = { viewModel.setIsApproveShow(false) },
             dismissButton = {
                 TextButton(onClick = { viewModel.setIsApproveShow(false) }) {
-                    Text(text = "dismiss")
+                    Text(text = "Dismiss")
                 }
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.approve() }) {
-                    Text(text = "confirm")
+                    Text(text = "Confirm")
                 }
             },
             text = {
@@ -195,17 +200,18 @@ fun RecipeScreen(
         )
     }
 
+    // Диалог отклонения
     if (viewModel.isRejectShow.value) {
         AlertDialog(
             onDismissRequest = { viewModel.setIsRejectShow(false) },
             dismissButton = {
                 TextButton(onClick = { viewModel.setIsRejectShow(false) }) {
-                    Text(text = "dismiss")
+                    Text(text = "Dismiss")
                 }
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.reject() }) {
-                    Text(text = "confirm")
+                    Text(text = "Confirm")
                 }
             },
             text = {
@@ -214,15 +220,11 @@ fun RecipeScreen(
                     Spacer(Modifier.size(8.dp))
                     CustomTextField(
                         stringRes = "Reason",
-                        text = viewModel.rejectReason.value
-                    ) {
-                        viewModel.setRejectReason(it)
-                    }
+                        text = viewModel.rejectReason.value,
+                        onValueChange = { viewModel.setRejectReason(it) }
+                    )
                 }
             }
         )
     }
-
-
 }
-

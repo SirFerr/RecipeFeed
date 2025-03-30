@@ -6,65 +6,77 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefeed.data.Ingredient
-import com.example.recipefeed.feature.main.accountScreen.convertToMultipart
+import com.example.recipefeed.data.models.RecipeIngredientCreate
+import com.example.recipefeed.data.repository.RecipeRepository
+import com.example.recipefeed.feature.UiIngredient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
-
 
 @HiltViewModel
 class NewRecipeScreenViewModel @Inject constructor(
-    private val repository: Repository,
+    private val repository: RecipeRepository,
     @ApplicationContext private val context: Context
-) :
-    ViewModel() {
+) : ViewModel() {
 
     private var _recipeName = mutableStateOf("")
     val recipeName: State<String> = _recipeName
+
     private var _description = mutableStateOf("")
     val description: State<String> = _description
-    private var _ingredients = mutableStateOf<List<Ingredient>>(listOf())
-    val ingredients: State<List<Ingredient>> = _ingredients
-    private var _timeToCook = mutableStateOf("")
-    val timeToCook: State<String> = _timeToCook
-    private var _selectImages = mutableStateOf<Any?>(null)
-    val selectImages: State<Any?> = _selectImages
 
+    private var _ingredients = mutableStateOf<List<UiIngredient>>(emptyList())
+    val ingredients: State<List<UiIngredient>> = _ingredients
 
-    fun addRecipes() {
+    private var _steps = mutableStateOf("")
+    val steps: State<String> = _steps
+
+    private var _selectedImageFile = mutableStateOf<File?>(null)
+    val selectedImageFile: State<File?> = _selectedImageFile
+
+    fun addRecipe() {
         viewModelScope.launch {
             try {
-                val response = convertToMultipart(_selectImages.value, context)?.let {
-                    repository.addRecipe(
-                        Recipe(
-                            recipeName = recipeName.value,
-                            description = description.value,
-                            timeToCook = timeToCook.value,
-//                            ingredients = ingredients.value
-                        ),
-                        it
-                    )
-                }
-                if (response?.isSuccessful == true) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "Successful", Toast.LENGTH_SHORT).show()
+                val recipeResult = repository.createRecipe(
+                    name = _recipeName.value,
+                    description = _description.value.takeIf { it.isNotBlank() },
+                    steps = _steps.value.takeIf { it.isNotBlank() },
+                    imageFile = _selectedImageFile.value
+                )
+                if (recipeResult.isSuccess) {
+                    val recipe = recipeResult.getOrNull() ?: return@launch
+                    val ingredientsList = _ingredients.value.mapNotNull { uiIngredient ->
+                        if (uiIngredient.name.isNotBlank() && uiIngredient.amount != null) {
+                            // Предполагаем, что ingredientId будет получен позже
+                            RecipeIngredientCreate(
+                                recipeId = recipe.id,
+                                ingredientId = 0, // Нужно заменить на реальный ID
+                                amount = uiIngredient.amount
+                            )
+                        } else null
                     }
+                    if (ingredientsList.isNotEmpty()) {
+                        repository.updateRecipeIngredients(recipe.id, ingredientsList)
+                    }
+                    Toast.makeText(context, "Recipe created successfully", Toast.LENGTH_SHORT)
+                        .show()
+                    _recipeName.value = ""
+                    _description.value = ""
+                    _steps.value = ""
+                    _ingredients.value = emptyList()
+                    _selectedImageFile.value = null
                 } else {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
-                    }
+                    Toast.makeText(context, "Error creating recipe", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    //Setters
+    // Setters
     fun setRecipeName(string: String) {
         _recipeName.value = string
     }
@@ -73,30 +85,27 @@ class NewRecipeScreenViewModel @Inject constructor(
         _description.value = string
     }
 
-    fun addIngredient(){
-        _ingredients.value += Ingredient()
+    fun addIngredient() {
+        _ingredients.value = _ingredients.value + UiIngredient()
     }
 
-    fun deleteIngredient(index: Int){
+    fun deleteIngredient(index: Int) {
         _ingredients.value = _ingredients.value.toMutableList().apply {
             removeAt(index)
         }
     }
 
-    fun changeIngredients(index: Int, ingredient: Ingredient) {
+    fun changeIngredient(index: Int, ingredient: UiIngredient) {
         _ingredients.value = _ingredients.value.toMutableList().also {
             it[index] = ingredient
         }
     }
 
-
-    fun setTimeToCook(string: String) {
-        _timeToCook.value = string
+    fun setSteps(string: String) {
+        _steps.value = string
     }
 
-    fun setSelectImages(any: Any?) {
-        _selectImages.value = any
+    fun setSelectedImageFile(file: File?) {
+        _selectedImageFile.value = file
     }
-
-
 }

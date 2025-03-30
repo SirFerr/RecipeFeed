@@ -52,7 +52,12 @@ fun PreviewListItemCard() {
             userId = 1,
             name = "Sample Recipe",
             addDate = java.util.Date(),
-            isOnApprove = false
+            isOnApprove = false,
+            rejectReason = "",
+            description = "",
+            imageData = null,
+            likes = 1,
+            steps = null
         )
     )
 }

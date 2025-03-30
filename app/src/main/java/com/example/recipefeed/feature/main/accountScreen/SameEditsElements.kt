@@ -42,14 +42,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.Ingredient
+import com.example.recipefeed.feature.UiIngredient
 import com.example.recipefeed.feature.composable.cards.PickerPopup
 
 @Composable
 fun ImagePickerCard(
-    selectImages: Any?,
+    image: Any?,
     galleryLauncher: ManagedActivityResultLauncher<String, Uri?>,
-    onDeleteImageClick: () -> Unit
+    onImageCleared: () -> Unit
 ) {
     Column(
         Modifier.fillMaxSize(),
@@ -63,17 +63,17 @@ fun ImagePickerCard(
                 .height(200.dp)
                 .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
         ) {
-            if (selectImages != null) {
+            if (image != null) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
                     AsyncImage(
-                        model = selectImages,
+                        model = image,
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
                         contentScale = ContentScale.Crop
                     )
-                    IconButton(onClick = onDeleteImageClick) {
+                    IconButton(onClick = onImageCleared) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                     }
                 }
@@ -99,21 +99,21 @@ fun ImagePickerCard(
 fun MainInformationSection(
     recipeName: String,
     description: String,
-    ingredients: List<Ingredient>,
-    ingredientsBase: List<String>,
-    timeToCook: String,
+    ingredients: List<UiIngredient>,
+    ingredientsBase: List<String>, // Список доступных имен ингредиентов для выбора
+    steps: String,
     onRecipeNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
-    onIngredientsChange: (Int,Ingredient) -> Unit,
-    onIngredientDelete: (Int) ->Unit,
-    onTimeToCookChange: (String) -> Unit
+    onIngredientsChange: (Int, UiIngredient) -> Unit,
+    onIngredientDelete: (Int) -> Unit,
+    onStepsChange: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
-            dimensionResource(id = R.dimen.main_padding) * 2
-        )
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding) * 2)
     ) {
         Text(text = "Main information", style = MaterialTheme.typography.titleLarge)
+
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = recipeName,
@@ -138,88 +138,101 @@ fun MainInformationSection(
             }
         )
 
-
-        ingredients.forEachIndexed {index,ingredient->
+        ingredients.forEachIndexed { index, ingredient ->
             var anchorCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
-
             var showPicker by remember { mutableStateOf(false) }
             val interactionSource = remember { MutableInteractionSource() }
             val isFocused by interactionSource.collectIsFocusedAsState()
-            LaunchedEffect(isFocused) { if (isFocused) showPicker = true }
 
-            Box(
-            ) {
-                Row {
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onGloballyPositioned { coordinates ->
-                                anchorCoordinates = coordinates
-                            },
-                        value = ingredient.name,
-                        onValueChange = { name -> onIngredientsChange(index,ingredient.copy(name = name)) },
-                        interactionSource = interactionSource,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.ingredients),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
-                    )
-
-                    Spacer(Modifier.size(12.dp))
-                    OutlinedTextField(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onGloballyPositioned { coordinates ->
-                                anchorCoordinates = coordinates
-                            },
-                        value = ingredient.amount,
-                        onValueChange = { amount -> onIngredientsChange(index,ingredient.copy(amount = amount)) },
-                        interactionSource = interactionSource,
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.ingredients),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
-                    )
-
-                    Spacer(Modifier.size(12.dp))
-                    IconButton(
-                        onClick = { onIngredientDelete(index) }
-                    ) {
-                        Icon(Icons.Default.Clear, contentDescription = null)
-                    }
-
-                    if (showPicker && anchorCoordinates != null)
-                        PickerPopup(
-                            anchorCoordinates!!,
-                            onDismiss = { showPicker = false },
-                            current = "",
-                            onItemSelected = { name -> onIngredientsChange(index,Ingredient(name = name)) },
-                            list = ingredientsBase
-                        )
-                }
-
+            LaunchedEffect(isFocused) {
+                if (isFocused) showPicker = true
             }
 
-        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    modifier = Modifier
+                        .weight(1f)
+                        .onGloballyPositioned { coordinates ->
+                            anchorCoordinates = coordinates
+                        },
+                    value = ingredient.name,
+                    onValueChange = { name ->
+                        onIngredientsChange(index, ingredient.copy(name = name))
+                    },
+                    interactionSource = interactionSource,
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.ingredients),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                )
 
+                Spacer(Modifier.size(12.dp))
+
+                OutlinedTextField(
+                    modifier = Modifier.weight(1f),
+                    value = ingredient.amount?.toString() ?: "",
+                    onValueChange = { amount ->
+                        val newAmount = amount.toDoubleOrNull()
+                        onIngredientsChange(index, ingredient.copy(amount = newAmount))
+                    },
+                    label = {
+                        Text(
+                            text = "Amount",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                )
+
+                Spacer(Modifier.size(12.dp))
+
+                IconButton(onClick = { onIngredientDelete(index) }) {
+                    Icon(Icons.Default.Clear, contentDescription = "Delete ingredient")
+                }
+
+                if (showPicker && anchorCoordinates != null) {
+                    PickerPopup(
+                        anchorCoordinates = anchorCoordinates!!,
+                        onDismiss = { showPicker = false },
+                        current = ingredient.name,
+                        onItemSelected = { name ->
+                            onIngredientsChange(index, ingredient.copy(name = name))
+                            showPicker = false
+                        },
+                        list = ingredientsBase
+                    )
+                }
+            }
+        }
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = timeToCook,
-            onValueChange = onTimeToCookChange,
+            value = steps,
+            onValueChange = onStepsChange,
             label = {
                 Text(
-                    text = stringResource(id = R.string.time_to_cook),
+                    text = stringResource(id = R.string.steps),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
         )
     }
+}
 
+// Заглушка для PickerPopup
+@Composable
+fun PickerPopup(
+    anchorCoordinates: LayoutCoordinates,
+    onDismiss: () -> Unit,
+    current: String,
+    onItemSelected: (String) -> Unit,
+    list: List<String>
+) {
+    // Здесь должна быть реализация выпадающего списка
 }
 
 @Composable

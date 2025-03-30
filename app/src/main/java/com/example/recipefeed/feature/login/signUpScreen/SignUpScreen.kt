@@ -75,19 +75,19 @@ fun SignUpScreen(
                 CustomTextField(
                     stringResource(id = R.string.username_field),
                     viewModel.textUsername.value,
-                    onChange = { viewModel.setTextUsername(it) }
+                    onValueChange = { viewModel.setTextUsername(it) }
 
                 )
                 CustomTextField(
                     stringResource(id = R.string.password_field),
                     viewModel.textPassword.value,
-                    onChange = { viewModel.setTextPassword(it) }
+                    onValueChange = { viewModel.setTextPassword(it) }
 
                 )
                 CustomTextField(
                     stringResource(id = R.string.password_again_field),
                     viewModel.textPasswordAgain.value,
-                    onChange = { viewModel.setTextPasswordAgain(it) }
+                    onValueChange = { viewModel.setTextPasswordAgain(it) }
                 )
 
                 ErrorMessage(viewModel.errorMessage.value)

@@ -19,8 +19,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.ErrorNetworkCard
+import com.example.recipefeed.feature.composable.UpdateBox
 import com.example.recipefeed.feature.composable.cards.CommentCard
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,48 +29,42 @@ fun Comments(
     recipeId: Int,
     onBackPressed: () -> Unit
 ) {
-    viewModel.fetchComments(recipeId)
-    Scaffold(topBar = {
-        TopAppBar(title = { },
-            navigationIcon = {
-                IconButton(
-                    onClick = onBackPressed,
-                    modifier = Modifier
-                ) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-                }
-            },
-            actions = {
-
-            })
-    }) {
-
-        LazyColumn(
-            state = rememberLazyListState(),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-        ) {
-            if (viewModel.isSuccessful.value)
-                items(viewModel.comments.value) { comment ->
-                    CommentCard(
-                        comment = comment,
-                        isModerator = viewModel.isModerator.value,
-                        onDelete = { id, reason -> viewModel.deleteComment(id, reason) }
-                    )
-                }
-            else
-                item {
-                    ErrorNetworkCard {
-                        viewModel.fetchComments(recipeId)
+    UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.fetchComments(recipeId) }) {
+        Scaffold(topBar = {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    IconButton(onClick = onBackPressed) {
+                        Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                actions = {}
+            )
+        }) { paddingValues ->
+            LazyColumn(
+                state = rememberLazyListState(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+            ) {
+                if (viewModel.isSuccessful.value && viewModel.comments.value.isNotEmpty()) {
+                    items(viewModel.comments.value) { comment ->
+                        CommentCard(
+                            comment = comment,
+                            isModerator = viewModel.isModerator.value,
+                            onDelete = { id, reason -> viewModel.deleteComment(id, reason) }
+                        )
+                    }
+                } else if (!viewModel.isSuccessful.value) {
+                    item {
+                        ErrorNetworkCard {
+                            viewModel.fetchComments(recipeId)
+                        }
                     }
                 }
-
+            }
         }
-
     }
 }
-
-
