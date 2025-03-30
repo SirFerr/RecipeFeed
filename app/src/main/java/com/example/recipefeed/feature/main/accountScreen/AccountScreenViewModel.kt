@@ -1,7 +1,6 @@
 package com.example.recipefeed.view.mainMenu.accountScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

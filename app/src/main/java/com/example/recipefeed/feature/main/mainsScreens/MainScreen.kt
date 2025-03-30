@@ -13,13 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.CircularLoad
 import com.example.recipefeed.feature.composable.ErrorNetworkCard
 import com.example.recipefeed.feature.composable.MainScreenButtons
+import com.example.recipefeed.feature.composable.cards.MainScreenCard
 import com.example.recipefeed.feature.composable.cards.SwipeCard
-import com.example.recipefeed.feature.navigation.Destinations
 
 
 @SuppressLint("StateFlowValueCalledInComposition")

@@ -1,6 +1,6 @@
-@file:OptIn(ExperimentalEncodingApi::class, ExperimentalEncodingApi::class)
+@file:OptIn(ExperimentalEncodingApi::class)
 
-package com.example.recipefeed.view.mainMenu.mainsScreens
+package com.example.recipefeed.feature.composable.cards
 
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
@@ -34,15 +34,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.remote.Recipe
-import com.example.recipefeed.feature.navigation.Destinations
+import com.example.recipefeed.data.models.Recipe
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun MainScreenCard(
     recipe: Recipe,
@@ -53,16 +50,12 @@ fun MainScreenCard(
             .padding(dimensionResource(id = R.dimen.main_padding))
             .fillMaxSize(0.95f)
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-            .clickable {
-                onRecipeClick()
-            }
+            .clickable { onRecipeClick() }
     ) {
-        val imageBytes = Base64.decode(recipe.imageData)
-        val image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        val imageBytes = recipe.imageData?.let { Base64.decode(it) }
+        val image = imageBytes?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
 
-        var isOpened by remember {
-            mutableStateOf(false)
-        }
+        var isOpened by remember { mutableStateOf(false) }
 
         LaunchedEffect(key1 = recipe) {
             isOpened = false
@@ -70,10 +63,10 @@ fun MainScreenCard(
 
         SubcomposeAsyncImage(
             model = image,
-            contentDescription = null,
+            contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
-            loading = { },
+            loading = { }
         )
 
         Card(
@@ -98,34 +91,29 @@ fun MainScreenCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = recipe.recipeName,
-                        modifier = Modifier,
+                        text = recipe.name,
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center
                     )
-                    IconButton(modifier = Modifier.wrapContentSize(),
-                        onClick = { isOpened = !isOpened }) {
+                    IconButton(
+                        modifier = Modifier.wrapContentSize(),
+                        onClick = { isOpened = !isOpened }
+                    ) {
                         Icon(
                             imageVector = if (isOpened) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
-                            contentDescription = null
+                            contentDescription = "Expand or collapse description"
                         )
                     }
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
 
-                if (isOpened) {
+                if (isOpened && recipe.description != null) {
                     Text(
                         text = recipe.description,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth()
                     )
                     HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
-
                 }
-
-                Text(
-                    text = "Likes: " + recipe.recipeLikes.toString(),
-                    modifier = Modifier.fillMaxWidth(),
-                )
             }
         }
     }

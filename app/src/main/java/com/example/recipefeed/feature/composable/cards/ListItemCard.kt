@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalEncodingApi::class)
+
 package com.example.recipefeed.feature.composable.cards
 
 import android.graphics.BitmapFactory
@@ -36,29 +38,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
-import com.example.recipefeed.data.remote.Recipe
+import com.example.recipefeed.data.models.Recipe
 import com.example.recipefeed.feature.composable.ShimmerEffect
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewListItemCard(){
-    ListItemCard(recipe = Recipe(), reason = "12312")
+fun PreviewListItemCard() {
+    ListItemCard(
+        recipe = Recipe(
+            id = 1,
+            userId = 1,
+            name = "Sample Recipe",
+            addDate = java.util.Date(),
+            isOnApprove = false
+        )
+    )
 }
 
-
-@OptIn(ExperimentalEncodingApi::class)
 @Composable
 fun ListItemCard(
     recipe: Recipe,
     icon: ImageVector? = Icons.Filled.Favorite,
-    isOnApprove: Boolean = false,
-    reason: String = "",
+    isOnApprove: Boolean = recipe.isOnApprove,
+    reason: String = recipe.rejectReason ?: "",
     onRecipeClick: () -> Unit = {},
     onEditClick: () -> Unit = {}
 ) {
     var showShimmer by remember { mutableStateOf(true) }
+
     Card(onClick = { onRecipeClick() }) {
         Column(
             Modifier
@@ -67,62 +76,64 @@ fun ListItemCard(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
         ) {
-            val imageBytes = Base64.decode(recipe.imageData)
+            val imageBytes = recipe.imageData?.let { Base64.decode(it) }
             val image by remember {
-                mutableStateOf(BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size))
+                mutableStateOf(imageBytes?.let {
+                    BitmapFactory.decodeByteArray(
+                        it,
+                        0,
+                        it.size
+                    )
+                })
             }
+
             SubcomposeAsyncImage(
                 model = image,
-                contentDescription = null,
+                contentDescription = recipe.name,
                 modifier = Modifier
                     .height(200.dp)
-                    .background(
-                        ShimmerEffect(showShimmer)
-                    )
+                    .background(ShimmerEffect(showShimmer))
                     .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))),
                 contentScale = ContentScale.Crop,
-                onLoading = { showShimmer = true }, onSuccess = { showShimmer = false }
+                onLoading = { showShimmer = true },
+                onSuccess = { showShimmer = false }
             )
-            Text(text = recipe.recipeName, style = MaterialTheme.typography.titleLarge)
+            Text(text = recipe.name, style = MaterialTheme.typography.titleLarge)
 
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                // В модели Recipe нет поля recipeLikes, поэтому убираем отображение лайков
                 Text(
-                    text = "Likes: " + recipe.recipeLikes.toString(),
+                    text = "ID: ${recipe.id}", // Пример замены, так как recipeLikes отсутствует
                     style = MaterialTheme.typography.bodyMedium
                 )
-                if (isOnApprove)
-                    Icon(Icons.Filled.Check, contentDescription = null)
-                else
-                    if (icon != null) {
-                        IconButton(modifier = Modifier, onClick = {
-                            if (icon == Icons.Filled.Edit) {
-                                onEditClick()
-                            }
-                        }) {
-                            Icon(imageVector = icon, contentDescription = null)
+                if (isOnApprove) {
+                    Icon(Icons.Filled.Check, contentDescription = "Recipe on approval")
+                } else if (icon != null) {
+                    IconButton(onClick = {
+                        if (icon == Icons.Filled.Edit) {
+                            onEditClick()
                         }
+                    }) {
+                        Icon(imageVector = icon, contentDescription = "Action icon")
                     }
-
+                }
             }
             if (reason.isNotEmpty()) {
                 Spacer(Modifier.size(8.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         Icons.Filled.Info,
-                        contentDescription = null,
+                        contentDescription = "Rejection reason",
                         tint = MaterialTheme.colorScheme.error
                     )
                     Spacer(Modifier.size(12.dp))
-                    Text(reason)
+                    Text(text = reason, style = MaterialTheme.typography.bodyMedium)
                 }
             }
-
         }
     }
 }
-
-

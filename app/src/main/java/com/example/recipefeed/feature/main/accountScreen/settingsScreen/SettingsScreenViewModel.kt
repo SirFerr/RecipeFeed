@@ -1,7 +1,6 @@
 package com.example.recipefeed.feature.main.accountScreen.settingsScreen
 
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject

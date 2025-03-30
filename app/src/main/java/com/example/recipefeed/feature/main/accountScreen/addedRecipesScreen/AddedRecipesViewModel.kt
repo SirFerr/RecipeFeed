@@ -3,8 +3,6 @@ package com.example.recipefeed.view.mainMenu.addedRecipesScreen
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.recipefeed.data.Repository
-import com.example.recipefeed.data.remote.Recipe
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
