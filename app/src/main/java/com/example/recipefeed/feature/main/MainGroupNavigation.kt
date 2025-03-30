@@ -78,6 +78,7 @@ fun MainGroupNavigation(
                     onSettings = { navController.navigate(Destinations.MainGroup.Settings.route) },
                     onLogout = {
                         navHostController.popBackStack()
+                        navHostController.navigate(Destinations.LoginGroup.route)
                     })
             }
             composable(
@@ -86,7 +87,10 @@ fun MainGroupNavigation(
             ) { backStackEntry ->
                 val id = backStackEntry.arguments?.getInt("id")
                 if (id != null) {
-                    RecipeScreen(id = id, onClickBack = { navController.popBackStack() }, onComment = {})
+                    RecipeScreen(
+                        id = id,
+                        onClickBack = { navController.popBackStack() },
+                        onComment = {})
                 }
             }
             composable(Destinations.MainGroup.NewRecipe.route) {

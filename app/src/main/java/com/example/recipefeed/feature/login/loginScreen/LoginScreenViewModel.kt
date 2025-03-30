@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.local.RoleSharedPreferencesManager
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
     private val repository: RecipeRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val roleSharedPreferencesManager: RoleSharedPreferencesManager
 ) : ViewModel() {
 
     private val _textUsername = mutableStateOf("")
@@ -64,6 +66,7 @@ class LoginScreenViewModel @Inject constructor(
                             _isSuccessful.value = true
                             setErrorMessage()
                             isSuccess()
+                            roleSharedPreferencesManager.setRoleIsModerator(false)
                         }
                     } else {
                         _isSuccessful.value = false

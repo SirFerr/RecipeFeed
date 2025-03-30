@@ -105,7 +105,9 @@ fun EditRecipeScreen(
                     viewModel.changeIngredient(index, ingredient)
                 },
                 onIngredientDelete = { viewModel.deleteIngredient(it) },
-                onStepsChange = { viewModel.setSteps(it) }
+                onStepsChange = { viewModel.setSteps(it) },
+                onIngredientAdd = { viewModel.addIngredient() }
+
             )
 
             Text(

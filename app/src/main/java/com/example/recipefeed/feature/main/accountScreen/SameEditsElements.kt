@@ -2,6 +2,7 @@ package com.example.recipefeed.feature.main.accountScreen
 
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -104,6 +105,7 @@ fun MainInformationSection(
     steps: String,
     onRecipeNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
+    onIngredientAdd: () -> Unit,
     onIngredientsChange: (Int, UiIngredient) -> Unit,
     onIngredientDelete: (Int) -> Unit,
     onStepsChange: (String) -> Unit
@@ -207,8 +209,12 @@ fun MainInformationSection(
                     )
                 }
             }
-        }
 
+        }
+        Text(
+            text = "Add ingredient",
+            modifier = Modifier.clickable { onIngredientAdd() }
+        )
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = steps,

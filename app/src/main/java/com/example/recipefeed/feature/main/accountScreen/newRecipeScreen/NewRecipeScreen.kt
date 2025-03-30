@@ -92,13 +92,11 @@ fun NewRecipeScreen(
                     viewModel.changeIngredient(index, ingredient)
                 },
                 onIngredientDelete = { viewModel.deleteIngredient(it) },
-                onStepsChange = { viewModel.setSteps(it) }
+                onStepsChange = { viewModel.setSteps(it) },
+                onIngredientAdd = {viewModel.addIngredient()}
             )
 
-            Text(
-                text = "Add ingredient",
-                modifier = Modifier.clickable { viewModel.addIngredient() }
-            )
+
 
             Spacer(Modifier.weight(1f))
 
