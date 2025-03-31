@@ -59,10 +59,9 @@ fun AddedRecipesScreen(
                     items(viewModel.recipes.value) { recipe ->
                         ListItemCard(
                             recipe = recipe,
-                            icon = Icons.Filled.Edit,
                             onRecipeClick = { onRecipeClick(recipe.id) },
                             onEditClick = { onEditClick(recipe.id) },
-                            isModerator = false
+                            isEdit = true
                         )
                     }
                 } else if (!viewModel.isSuccessful.value) {

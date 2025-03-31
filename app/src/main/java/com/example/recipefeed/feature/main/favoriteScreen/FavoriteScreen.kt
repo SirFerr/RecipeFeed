@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.example.recipefeed.view.mainMenu.favoriteScreen
 
@@ -10,8 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -23,7 +20,6 @@ import com.example.recipefeed.feature.composable.ErrorNetworkCard
 import com.example.recipefeed.feature.composable.UpdateBox
 import com.example.recipefeed.feature.composable.cards.ListItemCard
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FavoriteScreen(
     viewModel: FavoriteRecipesViewModel = hiltViewModel(),
@@ -47,9 +43,8 @@ fun FavoriteScreen(
                         recipe = recipe,
                         onRecipeClick = { onRecipeClick(recipe.id) },
                         onEditClick = { },
-                        onFavoriteClick = { viewModel.toggleFavorite(recipe.id) }, // Добавляем переключение избранного
-                        isFavorite = true, // Изначально все рецепты в списке избранные
-                        isModerator = false
+                        onFavoriteClick = { viewModel.toggleFavorite(recipe.id) },
+                        isFavorite = viewModel.favoriteStatus.value[recipe.id] ?: false,
                     )
                 }
             } else if (!viewModel.isSuccessful.value) {

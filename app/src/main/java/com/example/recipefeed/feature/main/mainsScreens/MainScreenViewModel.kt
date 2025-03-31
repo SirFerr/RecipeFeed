@@ -10,6 +10,7 @@ import com.example.recipefeed.data.models.Recipe
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,29 +59,29 @@ class MainScreenViewModel @Inject constructor(
                             updateState()
                         }.onFailure { exception ->
                             Log.e("MainViewModel", "Fetch failed: ${exception.message}", exception)
-                            if (recipeQueue.isEmpty()) {
-                                if (exception.message?.contains("No suitable recipes found") == true) {
-                                    _mainState.value = MainState.AllFavourited
-                                } else {
-                                    _mainState.value = MainState.Error(exception.message ?: "Unknown error")
-                                }
+                            if (exception.message?.contains("404") == true) {
+                                _mainState.value = MainState.AllFavourited
+                                Log.d("MainViewModel", "All recipes favorited (404)")
+                            } else if (recipeQueue.isEmpty()) {
+                                _mainState.value = MainState.Error(exception.message ?: "Unknown error")
                             }
                             return@launch
                         }
                     }
                 } catch (e: Exception) {
                     Log.e("MainViewModel", "Exception: ${e.message}", e)
-                    if (recipeQueue.isEmpty()) {
-                        if (e.message?.contains("No suitable recipes found") == true) {
-                            _mainState.value = MainState.AllFavourited
-                        } else {
-                            _mainState.value = MainState.Error(e.message ?: "Unknown error")
-                        }
+                    if (e.message?.contains("404") == true) {
+                        _mainState.value = MainState.AllFavourited
+                        Log.d("MainViewModel", "All recipes favorited (404)")
+                    } else if (recipeQueue.isEmpty()) {
+                        _mainState.value = MainState.Error(e.message ?: "Unknown error")
                     }
                 }
             }
         }
     }
+
+
 
     private fun updateState() {
         _mainState.value = if (recipeQueue.isNotEmpty()) {

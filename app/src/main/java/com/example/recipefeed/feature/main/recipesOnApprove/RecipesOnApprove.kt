@@ -18,7 +18,6 @@ import com.example.recipefeed.feature.composable.cards.ListItemCard
 @Composable
 fun RecipesOnApprove(
     viewModel: RecipesOnApproveViewModel = hiltViewModel(),
-    onClickBack: () -> Unit,
     onRecipeClick: (Int) -> Unit
 ) {
     UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getRecipesOnApprove() }) {
@@ -38,11 +37,14 @@ fun RecipesOnApprove(
                     }
                 } else {
                     items(viewModel.recipes.value) { recipe ->
-                        ListItemCard(recipe = recipe,
-                            icon = null,
+                        ListItemCard(
+                            recipe = recipe,
                             onRecipeClick = { onRecipeClick(recipe.id) },
-                            onEditClick = {},// Если редактирование не нужно, оставляем пустым
-                            isModerator = true)
+                            onEditClick = {}, // Если редактирование не нужно, оставляем пустым
+                            onFavoriteClick = { viewModel.toggleFavorite(recipe.id) },
+                            isFavorite = viewModel.favoriteStatus.value[recipe.id] ?: false,
+                            showFavorite = false
+                        )
                     }
                 }
             } else {

@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipefeed.feature.main.accountScreen.settingsScreen.SettingsScreen
 import com.example.recipefeed.feature.main.comments.Comments
+import com.example.recipefeed.feature.main.recipesOnApprove.RecipesOnApprove
 import com.example.recipefeed.feature.main.scaffold.ScaffoldWithBottom
 import com.example.recipefeed.feature.navigation.Destinations
 import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
@@ -130,6 +131,9 @@ fun MainGroupNavigation(
                 if (id != null) {
                     Comments(recipeId = id, onBackPressed = { navController.popBackStack() })
                 }
+            }
+            composable(Destinations.MainGroup.RecipesOnApprove.route){
+                RecipesOnApprove { id -> navController.navigate("${Destinations.MainGroup.Recipe.route}/${id}") }
             }
         }
     })

@@ -99,7 +99,6 @@ fun SearchScreen(
             }
         }
 
-        // Display selected tag below the search bar
         viewModel.selectedTag.value?.let { tag ->
             Text(
                 text = "Selected Tag: $tag",
@@ -114,9 +113,7 @@ fun SearchScreen(
         if (viewModel.recipes.value.isEmpty() && viewModel.selectedTag.value == null) {
             TagsGrid(
                 list = viewModel.tags.value.map { it.name },
-                onClick = { tagName ->
-                    viewModel.setSelectedTag(tagName)
-                }
+                onClick = { tagName -> viewModel.setSelectedTag(tagName) }
             )
         } else {
             LazyColumn(
@@ -140,12 +137,13 @@ fun SearchScreen(
                                 )
                             }
                         } else {
-                            items(viewModel.recipes.value) {
+                            items(viewModel.recipes.value) { recipe ->
                                 ListItemCard(
-                                    it,
-                                    onRecipeClick = { onListItemClick(it.id) },
+                                    recipe = recipe,
+                                    onRecipeClick = { onListItemClick(recipe.id) },
                                     onEditClick = {},
-                                    isModerator = false
+                                    onFavoriteClick = { viewModel.toggleFavorite(recipe.id) },
+                                    isFavorite = viewModel.favoriteStatus.value[recipe.id] ?: false,
                                 )
                             }
                         }
@@ -161,9 +159,7 @@ fun SearchScreen(
                         }
                     }
                 } else {
-                    item {
-                        CircularLoad()
-                    }
+                    item { CircularLoad() }
                 }
                 item { Spacer(modifier = Modifier.height(200.dp)) }
             }

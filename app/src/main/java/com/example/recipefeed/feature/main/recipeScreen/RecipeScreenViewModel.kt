@@ -59,8 +59,30 @@ class RecipeScreenViewModel @Inject constructor(
     }
 
     fun toggleLike() {
-        _isLiked.value = !_isLiked.value
-        addToFavourites()  // Trigger the add/remove action immediately
+        viewModelScope.launch {
+            try {
+                val currentUserResult = repository.getCurrentUser()
+                if (currentUserResult.isSuccess) {
+                    val userId = currentUserResult.getOrNull()?.id ?: return@launch
+                    val recipeId = _recipe.value?.id ?: return@launch
+                    val isFavorite = _isLiked.value
+                    val result = if (isFavorite) {
+                        repository.deleteFavorite(recipeId)
+                    } else {
+                        repository.addFavorite(FavoriteCreate(userId = userId, recipeId = recipeId))
+                    }
+                    if (result.isSuccess) {
+                        _isLiked.value = !isFavorite
+                        _recipe.value = _recipe.value?.copy(
+                            likes = if (!isFavorite) recipe.value!!.likes + 1 else recipe.value!!.likes - 1
+                        )
+                        _isSuccessful.value = true
+                    }
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки
+            }
+        }
     }
 
     fun getIsModerator() {
@@ -85,48 +107,12 @@ class RecipeScreenViewModel @Inject constructor(
         }
     }
 
-    fun addToFavourites() {
-        viewModelScope.launch {
-            try {
-                val currentUserResult = repository.getCurrentUser()
-                if (currentUserResult.isSuccess) {
-                    val userId = currentUserResult.getOrNull()?.id ?: return@launch
-                    val recipeId = _recipe.value?.id ?: return@launch
-                    val result = if (_isLiked.value) {
-                        // Add to favorites
-                        val favorite = FavoriteCreate(userId = userId, recipeId = recipeId)
-                        repository.addFavorite(favorite)
-                    } else {
-                        // Remove from favorites
-                        repository.deleteFavorite(recipeId)
-                    }
-                    if (result.isSuccess) {
-                        // Update recipe likes count locally
-                        _recipe.value = _recipe.value?.copy(
-                            likes = if (_isLiked.value) recipe.value!!.likes + 1 else recipe.value!!.likes - 1
-                        )
-                        _isSuccessful.value = true
-                    } else {
-                        // Revert like state on failure
-                        _isLiked.value = !_isLiked.value
-                        _isSuccessful.value = false
-                    }
-                }
-            } catch (e: Exception) {
-                // Revert like state on exception
-                _isLiked.value = !_isLiked.value
-                _isSuccessful.value = false
-            }
-        }
-    }
-
     private fun checkIfLiked() {
         viewModelScope.launch {
             try {
-                val favoritesResult = repository.getFavorites()
-                if (favoritesResult.isSuccess) {
-                    _isLiked.value = favoritesResult.getOrNull()?.any { it.recipeId == _recipe.value?.id } == true
-                }
+                val recipeId = _recipe.value?.id ?: return@launch
+                val isFavoriteResult = repository.isRecipeFavorite(recipeId)
+                _isLiked.value = isFavoriteResult.getOrNull() ?: false
             } catch (e: Exception) {
                 _isLiked.value = false
             }

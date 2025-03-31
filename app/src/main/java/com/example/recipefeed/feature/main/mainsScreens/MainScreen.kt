@@ -90,7 +90,7 @@ fun MainScreen(
 
                 is MainState.AllFavourited -> Text(
                     text = "You added all to favorite",
-                    modifier = Modifier.clickable { viewModel.onSwipeLeft() }
+                    modifier = Modifier.clickable { viewModel.preloadRecipes() }
                         .wrapContentSize()
                         .padding(dimensionResource(id = R.dimen.main_padding)),
                     style = MaterialTheme.typography.headlineMedium,

@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.models.FavoriteCreate
 import com.example.recipefeed.data.models.Recipe
 import com.example.recipefeed.data.models.Tag
 import com.example.recipefeed.data.repository.RecipeRepository
@@ -43,10 +44,13 @@ class SearchRecipesViewModel @Inject constructor(
     private var _tags = mutableStateOf<List<Tag>>(emptyList())
     val tags: State<List<Tag>> = _tags
 
+    private var _favoriteStatus = mutableStateOf<Map<Int, Boolean>>(emptyMap())
+    val favoriteStatus: State<Map<Int, Boolean>> = _favoriteStatus
+
     init {
         viewModelScope.launch {
             _searchHistory.value = repository.getSearchHistory()
-            fetchTags()  // Load tags on initialization
+            fetchTags()
         }
     }
 
@@ -58,9 +62,10 @@ class SearchRecipesViewModel @Inject constructor(
                 _searchHistory.value = repository.getSearchHistory()
             }
         } else if (_selectedTag.value != null) {
-            getByTag()  // Search by tag if no text but a tag is selected
+            getByTag()
         } else {
             _recipes.value = emptyList()
+            _favoriteStatus.value = emptyMap()
         }
         _isSearching.value = false
     }
@@ -76,13 +81,17 @@ class SearchRecipesViewModel @Inject constructor(
                 )
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
-                    _recipes.value = result.getOrNull() ?: emptyList()
-                    _isFound.value = _recipes.value.isNotEmpty()
+                    val recipesList = result.getOrNull() ?: emptyList()
+                    _recipes.value = recipesList
+                    _isFound.value = recipesList.isNotEmpty()
+                    checkFavoriteStatus(recipesList)
                 } else {
                     _isSuccessful.value = false
+                    _favoriteStatus.value = emptyMap()
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
+                _favoriteStatus.value = emptyMap()
             } finally {
                 _isLoading.value = false
             }
@@ -103,14 +112,18 @@ class SearchRecipesViewModel @Inject constructor(
                     )
                     _isSuccessful.value = result.isSuccess
                     if (result.isSuccess) {
-                        _recipes.value = result.getOrNull() ?: emptyList()
-                        _isFound.value = _recipes.value.isNotEmpty()
+                        val recipesList = result.getOrNull() ?: emptyList()
+                        _recipes.value = recipesList
+                        _isFound.value = recipesList.isNotEmpty()
+                        checkFavoriteStatus(recipesList)
                     } else {
                         _isSuccessful.value = false
+                        _favoriteStatus.value = emptyMap()
                     }
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
+                _favoriteStatus.value = emptyMap()
             } finally {
                 _isLoading.value = false
             }
@@ -120,7 +133,7 @@ class SearchRecipesViewModel @Inject constructor(
     private fun fetchTags() {
         viewModelScope.launch {
             try {
-                val result = repository.getTagsList(skip = 0, limit = 100)  // Adjust limit as needed
+                val result = repository.getTagsList(skip = 0, limit = 100)
                 if (result.isSuccess) {
                     _tags.value = result.getOrNull() ?: emptyList()
                 }
@@ -130,16 +143,48 @@ class SearchRecipesViewModel @Inject constructor(
         }
     }
 
-    // Setters
+    private suspend fun checkFavoriteStatus(recipes: List<Recipe>) {
+        val statusMap = mutableMapOf<Int, Boolean>()
+        recipes.forEach { recipe ->
+            val isFavoriteResult = repository.isRecipeFavorite(recipe.id)
+            statusMap[recipe.id] = isFavoriteResult.getOrNull() ?: false
+        }
+        _favoriteStatus.value = statusMap
+    }
+
+    fun toggleFavorite(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val currentUserResult = repository.getCurrentUser()
+                if (currentUserResult.isSuccess) {
+                    val userId = currentUserResult.getOrNull()?.id ?: return@launch
+                    val isFavorite = _favoriteStatus.value[recipeId] ?: false
+                    val result = if (isFavorite) {
+                        repository.deleteFavorite(recipeId)
+                    } else {
+                        repository.addFavorite(FavoriteCreate(userId = userId, recipeId = recipeId))
+                    }
+                    if (result.isSuccess) {
+                        _favoriteStatus.value = _favoriteStatus.value.toMutableMap().apply {
+                            this[recipeId] = !isFavorite
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки
+            }
+        }
+    }
+
     fun setSearchText(string: String) {
         _searchText.value = string
-        _selectedTag.value = null  // Clear selected tag when typing
+        _selectedTag.value = null
     }
 
     fun setSelectedTag(tag: String) {
         _selectedTag.value = tag
-        _searchText.value = ""  // Clear search text when selecting a tag
-        search()  // Trigger search immediately
+        _searchText.value = ""
+        search()
     }
 
     fun setIsSearching(boolean: Boolean? = null) {
