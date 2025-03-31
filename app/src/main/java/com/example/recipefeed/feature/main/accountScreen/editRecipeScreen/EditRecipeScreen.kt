@@ -110,11 +110,6 @@ fun EditRecipeScreen(
 
             )
 
-            Text(
-                text = "Add ingredient",
-                modifier = Modifier.clickable { viewModel.addIngredient() }
-            )
-
             Spacer(Modifier.weight(1f))
 
             Button(

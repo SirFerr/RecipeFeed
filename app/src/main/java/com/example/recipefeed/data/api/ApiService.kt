@@ -33,8 +33,8 @@ interface ApiService {
     @POST("recipes/create")
     suspend fun createRecipe(
         @Query("name") name: String,
-        @Part("description") description: String?,
-        @Part("steps") steps: String?,
+        @Query("description") description: String?,
+        @Query("steps") steps: String?,
         @Part image: MultipartBody.Part?
     ): Response<Recipe>
 
@@ -42,9 +42,9 @@ interface ApiService {
     @PUT("recipes/{recipe_id}/edit")
     suspend fun editRecipe(
         @Path("recipe_id") recipeId: Int,
-        @Part("name") name: String?,
-        @Part("description") description: String?,
-        @Part("steps") steps: String?,
+        @Query("name") name: String?,
+        @Query("description") description: String?,
+        @Query("steps") steps: String?,
         @Part image: MultipartBody.Part?
     ): Response<Recipe>
 

@@ -68,8 +68,8 @@ class NewRecipeScreenViewModel @Inject constructor(
             try {
                 val recipeResult = repository.createRecipe(
                     name = _recipeName.value,
-                    description = _description.value.takeIf { it.isNotBlank() },
-                    steps = _steps.value.takeIf { it.isNotBlank() },
+                    description = _description.value,
+                    steps = _steps.value,
                     imageFile = _selectedImageFile.value
                 )
                 if (recipeResult.isSuccess) {
@@ -81,7 +81,7 @@ class NewRecipeScreenViewModel @Inject constructor(
                             RecipeIngredientCreate(
                                 recipeId = recipe.id,
                                 ingredientId = matchingIngredient?.id
-                                    ?: 0, // Используем существующий ID или 0
+                                    ?: 0,
                                 amount = uiIngredient.amount
                             )
                         } else null

@@ -1,6 +1,7 @@
 package com.example.recipefeed.view.mainMenu.editRecipeScreen
 
 import android.content.Context
+import android.util.Base64
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
@@ -15,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,6 +46,27 @@ class EditRecipeScreenViewModel @Inject constructor(
     private var _selectedImageFile = mutableStateOf<File?>(null)
     val selectedImageFile: State<File?> = _selectedImageFile
 
+    fun setImageFromBase64(base64String: String) {
+        try {
+            // Декодируем строку Base64 в массив байтов
+            val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+
+            // Создаем временный файл в кэше приложения
+            val file = File(context.cacheDir, "recipe_image_${System.currentTimeMillis()}.jpg")
+
+            // Записываем байты в файл
+            FileOutputStream(file).use { outputStream ->
+                outputStream.write(imageBytes)
+            }
+
+            // Устанавливаем файл в состояние
+            _selectedImageFile.value = file
+        } catch (e: Exception) {
+            e.printStackTrace()
+            _selectedImageFile.value = null // В случае ошибки можно сбросить состояние
+        }
+    }
+
     fun getById(id: Int) {
         viewModelScope.launch {
             try {
@@ -63,7 +86,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                                 )
                             } ?: emptyList()
                         }
-                        // Изображение остается null, если не выбрано новое
+                        recipe.imageData?.let { setImageFromBase64(it) }
                     }
                 }
             } catch (e: Exception) {
@@ -99,7 +122,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                     Toast.makeText(context, "Recipe updated successfully", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    Toast.makeText(context, "Error updating recipe", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error updating recipe " + editResult.toString(), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
