@@ -61,7 +61,8 @@ fun AddedRecipesScreen(
                             recipe = recipe,
                             icon = Icons.Filled.Edit,
                             onRecipeClick = { onRecipeClick(recipe.id) },
-                            onEditClick = { onEditClick(recipe.id) }
+                            onEditClick = { onEditClick(recipe.id) },
+                            isModerator = false
                         )
                     }
                 } else if (!viewModel.isSuccessful.value) {

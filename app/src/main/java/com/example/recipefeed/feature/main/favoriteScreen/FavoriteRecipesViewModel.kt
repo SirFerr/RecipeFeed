@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.models.FavoriteCreate
 import com.example.recipefeed.data.models.Recipe
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,6 @@ class FavoriteRecipesViewModel @Inject constructor(
                 val favoritesResult = repository.getFavorites()
                 if (favoritesResult.isSuccess) {
                     val favoriteRecipes = favoritesResult.getOrNull() ?: emptyList()
-                    // Получаем рецепты по их ID из избранного
                     val recipesList = mutableListOf<Recipe>()
                     for (favorite in favoriteRecipes) {
                         val recipeResult = repository.getRecipeById(favorite.recipeId)
@@ -52,6 +52,23 @@ class FavoriteRecipesViewModel @Inject constructor(
                 _isSuccessful.value = false
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    fun toggleFavorite(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val currentUserResult = repository.getCurrentUser()
+                if (currentUserResult.isSuccess) {
+                    val result = repository.deleteFavorite(recipeId)
+                    if (result.isSuccess) {
+                        _recipes.value = _recipes.value.filter { it.id != recipeId }
+                        _isSuccessful.value = true
+                    }
+                }
+            } catch (e: Exception) {
+                _isSuccessful.value = false
             }
         }
     }

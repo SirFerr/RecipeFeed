@@ -26,7 +26,7 @@ class CommentsViewModel @Inject constructor(
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
-    private val _isSuccessful = mutableStateOf(false)
+    private val _isSuccessful = mutableStateOf(true)
     val isSuccessful: State<Boolean> = _isSuccessful
 
     init {

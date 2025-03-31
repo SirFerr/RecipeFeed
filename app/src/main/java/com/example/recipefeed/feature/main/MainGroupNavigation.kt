@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.recipefeed.feature.main.accountScreen.settingsScreen.SettingsScreen
+import com.example.recipefeed.feature.main.comments.Comments
 import com.example.recipefeed.feature.main.scaffold.ScaffoldWithBottom
 import com.example.recipefeed.feature.navigation.Destinations
 import com.example.recipefeed.view.mainMenu.accountScreen.AccountScreen
@@ -25,6 +26,7 @@ import com.example.recipefeed.view.mainMenu.favoriteScreen.FavoriteRecipesViewMo
 import com.example.recipefeed.view.mainMenu.favoriteScreen.FavoriteScreen
 import com.example.recipefeed.view.mainMenu.mainsScreens.MainScreen
 import com.example.recipefeed.view.mainMenu.mainsScreens.MainScreenViewModel
+import com.example.recipefeed.view.mainMenu.mainsScreens.MainState
 import com.example.recipefeed.view.mainMenu.newRecipeScreen.NewRecipeScreen
 import com.example.recipefeed.view.mainMenu.recipeScreen.RecipeScreen
 import com.example.recipefeed.view.mainMenu.searchScreen.SearchScreen
@@ -53,9 +55,15 @@ fun MainGroupNavigation(
             enterTransition = { enterTransition },
             exitTransition = { exitTransition }) {
             composable(Destinations.MainGroup.Main.route) {
-                MainScreen(viewModel = mainScreenViewModel, onRecipeClick = {
-                    navController.navigate("${Destinations.MainGroup.Recipe.route}/${mainScreenViewModel.nextRecipe.value.id}")
-                })
+                MainScreen(
+                    viewModel = mainScreenViewModel,
+                    onRecipeClick = {
+                        val state = mainScreenViewModel.mainState.value
+                        if (state is MainState.Success) {
+                            navController.navigate("${Destinations.MainGroup.Recipe.route}/${state.currentRecipe.id}")
+                        }
+                    }
+                )
             }
             composable(Destinations.MainGroup.Favorite.route) {
                 FavoriteScreen(viewModel = favoriteRecipesViewModel,
@@ -90,7 +98,7 @@ fun MainGroupNavigation(
                     RecipeScreen(
                         id = id,
                         onClickBack = { navController.popBackStack() },
-                        onComment = {})
+                        onComment = { navController.navigate(Destinations.MainGroup.Comments.route + "/$it") })
                 }
             }
             composable(Destinations.MainGroup.NewRecipe.route) {
@@ -112,6 +120,15 @@ fun MainGroupNavigation(
                 val id = backStackEntry.arguments?.getInt("id")
                 if (id != null) {
                     EditRecipeScreen(id = id, onClickBack = { navController.popBackStack() })
+                }
+            }
+            composable(
+                Destinations.MainGroup.Comments.route + "/{id}",
+                listOf(navArgument("id") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getInt("id")
+                if (id != null) {
+                    Comments(recipeId = id, onBackPressed = { navController.popBackStack() })
                 }
             }
         }

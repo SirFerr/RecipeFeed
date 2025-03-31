@@ -19,7 +19,6 @@ import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.CustomTextField
 import com.example.recipefeed.feature.composable.ErrorMessage
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LogInScreen(
@@ -28,56 +27,41 @@ fun LogInScreen(
     onSuccess: () -> Unit,
     onSignUp: () -> Unit,
 ) {
-
     if (viewModel.token.value.isNotEmpty()) {
-
         onTokenIsNotEmpty()
     }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-
         Column(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.large_padding)),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        )
-        {
-
+        ) {
             CustomTextField(
-                stringResource(id = R.string.username_field),
-                viewModel.textUsername.value, onValueChange = { viewModel.setTextUsername(it) }
+                stringRes = stringResource(id = R.string.username_field),
+                text = viewModel.textUsername.value,
+                onValueChange = { viewModel.setTextUsername(it) }
             )
             CustomTextField(
-                stringResource(id = R.string.password_field),
-                viewModel.textPassword.value, onValueChange = {
-                    viewModel.setTextPassword(it)
-                }
+                stringRes = stringResource(id = R.string.password_field),
+                text = viewModel.textPassword.value,
+                onValueChange = { viewModel.setTextPassword(it) }
             )
 
             ErrorMessage(viewModel.errorMessage.value)
 
             Button(onClick = {
-                viewModel.signIn(
-                    isSuccess = {
-                        onSuccess()
-
-                    },
-                )
-
+                viewModel.signIn(isSuccess = { onSuccess() })
             }) {
                 Text(text = stringResource(id = R.string.login))
             }
 
-            TextButton(onClick = {
-                onSignUp()
-            }) {
+            TextButton(onClick = { onSignUp() }) {
                 Text(text = stringResource(id = R.string.signup))
             }
-
-
         }
-
     }
 }

@@ -83,7 +83,7 @@ fun ShimmerEffect(showShimmer: Boolean = true, targetValue: Float = 2000f): Brus
 }
 
 @Composable
-fun ErrorNetworkCard(modifier: Modifier = Modifier.fillMaxSize(), exec: () -> Unit) {
+fun ErrorNetworkCard(modifier: Modifier = Modifier.fillMaxSize(), onRetry: () -> Unit) {
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
@@ -107,7 +107,7 @@ fun ErrorNetworkCard(modifier: Modifier = Modifier.fillMaxSize(), exec: () -> Un
                 style = MaterialTheme.typography.titleMedium
             )
             Button(
-                onClick = { exec() },
+                onClick = { onRetry() },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onErrorContainer),
                 modifier = Modifier.wrapContentSize()
             ) {

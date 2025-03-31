@@ -30,9 +30,9 @@ interface ApiService {
     suspend fun getRandomRecipe(): Response<Recipe>
 
     @Multipart
-    @POST("recipes/create")
+    @POST("recipes/create?name={name}")
     suspend fun createRecipe(
-        @Part("name") name: String,
+        @Path("name") name: String,
         @Part("description") description: String?,
         @Part("steps") steps: String?,
         @Part image: MultipartBody.Part?
@@ -154,6 +154,9 @@ interface ApiService {
     @DELETE("favorites/{recipe_id}/delete")
     suspend fun deleteFavorite(@Path("recipe_id") recipeId: Int): Response<Map<String, String>>
 
+    @GET("favorites/{recipe_id}/is-favorite")
+    suspend fun isRecipeFavorite(@Path("recipe_id") recipeId: Int): Response<Boolean>
+
     // Comments
     @GET("comments/{recipe_id}/list")
     suspend fun getRecipeComments(
@@ -167,6 +170,16 @@ interface ApiService {
         @Query("recipe_id") recipeId: Int,
         @Body comment: CommentCreate
     ): Response<Comment>
+
+    // Moderators
+    @POST("moderators/{user_id}")
+    suspend fun addModerator(@Path("user_id") userId: Int): Response<Map<String, String>>
+
+    @GET("moderators/")
+    suspend fun getModerators(): Response<List<Int>>
+
+    @DELETE("moderators/{user_id}")
+    suspend fun removeModerator(@Path("user_id") userId: Int): Response<Map<String, String>>
 
     @DELETE("comments/{comment_id}/delete")
     suspend fun deleteComment(@Path("comment_id") commentId: Int): Response<Map<String, String>>

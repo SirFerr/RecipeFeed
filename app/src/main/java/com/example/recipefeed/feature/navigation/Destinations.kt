@@ -17,6 +17,7 @@ sealed class Destinations(val route: String) {
         object AddedRecipes : Destinations("ADDED_RECIPES")
         object EditRecipe : Destinations("EDIT_RECIPE")
         object Settings : Destinations("SETTINGS")
+        object Comments : Destinations("Comments")
     }
 
     object ServerNotAvailable : Destinations("SERVER_NOT_AVAILABLE")

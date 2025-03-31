@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.Recipe
+import com.example.recipefeed.data.models.Tag
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,6 +18,9 @@ class SearchRecipesViewModel @Inject constructor(
 
     private var _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
+
+    private var _selectedTag = mutableStateOf<String?>(null)
+    val selectedTag: State<String?> = _selectedTag
 
     private var _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
@@ -36,26 +40,15 @@ class SearchRecipesViewModel @Inject constructor(
     private var _searchHistory = mutableStateOf<List<String>>(emptyList())
     val searchHistory: State<List<String>> = _searchHistory
 
-    val tags = mutableStateOf(
-        listOf(
-            "1", "Vegan", "Gluten-Free", "Dairy-Free", "Nut-Free", "Low-Carb", "High-Protein",
-            "Organic", "Non-GMO", "Paleo", "Keto", "Whole30", "Pescatarian", "Halal", "Kosher",
-            "Low-Sugar", "Low-Sodium", "Sugar-Free", "Raw", "Plant-Based", "Fair Trade",
-            "Locally Sourced", "Sustainable", "Seasonal", "Farm-To-Table", "Spicy", "Mild",
-            "Medium", "Hot", "Sweet", "Savory", "Tangy", "Umami", "Fusion", "Comfort Food",
-            "Street Food", "Gourmet", "Fast Food", "Healthy", "Quick & Easy", "Kid-Friendly",
-            "Family-Style", "Party Food", "Finger Food", "BBQ", "Grilled", "Roasted", "Baked",
-            "Fried", "Steamed", "Boiled", "Slow-Cooked", "Raw", "Fresh", "Frozen", "Canned",
-            "Fermented", "Pickled", "Smoked"
-        )
-    )
+    private var _tags = mutableStateOf<List<Tag>>(emptyList())
+    val tags: State<List<Tag>> = _tags
 
     init {
         viewModelScope.launch {
             _searchHistory.value = repository.getSearchHistory()
+            fetchTags()  // Load tags on initialization
         }
     }
-
 
     fun search() {
         if (searchText.value.isNotBlank()) {
@@ -64,6 +57,8 @@ class SearchRecipesViewModel @Inject constructor(
                 repository.saveSearchRequest(searchText.value)
                 _searchHistory.value = repository.getSearchHistory()
             }
+        } else if (_selectedTag.value != null) {
+            getByTag()  // Search by tag if no text but a tag is selected
         } else {
             _recipes.value = emptyList()
         }
@@ -94,9 +89,57 @@ class SearchRecipesViewModel @Inject constructor(
         }
     }
 
+    fun getByTag() {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                val selectedTagName = _selectedTag.value ?: return@launch
+                val tag = _tags.value.find { it.name == selectedTagName }
+                if (tag != null) {
+                    val result = repository.searchRecipesByTags(
+                        tagIds = listOf(tag.id),
+                        skip = 0,
+                        limit = 20
+                    )
+                    _isSuccessful.value = result.isSuccess
+                    if (result.isSuccess) {
+                        _recipes.value = result.getOrNull() ?: emptyList()
+                        _isFound.value = _recipes.value.isNotEmpty()
+                    } else {
+                        _isSuccessful.value = false
+                    }
+                }
+            } catch (e: Exception) {
+                _isSuccessful.value = false
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    private fun fetchTags() {
+        viewModelScope.launch {
+            try {
+                val result = repository.getTagsList(skip = 0, limit = 100)  // Adjust limit as needed
+                if (result.isSuccess) {
+                    _tags.value = result.getOrNull() ?: emptyList()
+                }
+            } catch (e: Exception) {
+                _tags.value = emptyList()
+            }
+        }
+    }
+
     // Setters
     fun setSearchText(string: String) {
         _searchText.value = string
+        _selectedTag.value = null  // Clear selected tag when typing
+    }
+
+    fun setSelectedTag(tag: String) {
+        _selectedTag.value = tag
+        _searchText.value = ""  // Clear search text when selecting a tag
+        search()  // Trigger search immediately
     }
 
     fun setIsSearching(boolean: Boolean? = null) {

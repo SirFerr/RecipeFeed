@@ -6,6 +6,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipefeed.data.models.Ingredient
 import com.example.recipefeed.data.models.RecipeIngredientCreate
 import com.example.recipefeed.data.repository.RecipeRepository
 import com.example.recipefeed.feature.UiIngredient
@@ -36,6 +37,32 @@ class NewRecipeScreenViewModel @Inject constructor(
     private var _selectedImageFile = mutableStateOf<File?>(null)
     val selectedImageFile: State<File?> = _selectedImageFile
 
+    private var _availableIngredients = mutableStateOf<List<Ingredient>>(emptyList())
+    val availableIngredients: State<List<Ingredient>> = _availableIngredients
+
+    init {
+    }
+
+    private fun loadAvailableIngredients() {
+        viewModelScope.launch {
+            try {
+                val result = repository.getIngredientsList(
+                    skip = 0,
+                    limit = 100
+                ) // Можно настроить пагинацию
+                if (result.isSuccess) {
+                    _availableIngredients.value = result.getOrNull() ?: emptyList()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    "Error loading ingredients: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
     fun addRecipe() {
         viewModelScope.launch {
             try {
@@ -48,11 +75,13 @@ class NewRecipeScreenViewModel @Inject constructor(
                 if (recipeResult.isSuccess) {
                     val recipe = recipeResult.getOrNull() ?: return@launch
                     val ingredientsList = _ingredients.value.mapNotNull { uiIngredient ->
+                        val matchingIngredient =
+                            _availableIngredients.value.find { it.name == uiIngredient.name }
                         if (uiIngredient.name.isNotBlank() && uiIngredient.amount != null) {
-                            // Предполагаем, что ingredientId будет получен позже
                             RecipeIngredientCreate(
                                 recipeId = recipe.id,
-                                ingredientId = 0, // Нужно заменить на реальный ID
+                                ingredientId = matchingIngredient?.id
+                                    ?: 0, // Используем существующий ID или 0
                                 amount = uiIngredient.amount
                             )
                         } else null

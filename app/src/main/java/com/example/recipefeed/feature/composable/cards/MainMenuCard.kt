@@ -2,7 +2,6 @@
 
 package com.example.recipefeed.feature.composable.cards
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,13 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,23 +30,22 @@ import androidx.compose.ui.text.style.TextAlign
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.data.models.Recipe
-import kotlin.io.encoding.Base64
+import com.example.recipefeed.utils.base64ToBitmap
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Composable
 fun MainScreenCard(
     recipe: Recipe,
-    onRecipeClick: () -> Unit
+    onRecipeClick: () -> Unit,
+    modifier: Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(dimensionResource(id = R.dimen.main_padding))
             .fillMaxSize(0.95f)
             .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
             .clickable { onRecipeClick() }
     ) {
-        val imageBytes = recipe.imageData?.let { Base64.decode(it) }
-        val image = imageBytes?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
 
         var isOpened by remember { mutableStateOf(false) }
 
@@ -62,7 +54,7 @@ fun MainScreenCard(
         }
 
         SubcomposeAsyncImage(
-            model = image,
+            model = base64ToBitmap(recipe.imageData),
             contentDescription = recipe.name,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
@@ -95,25 +87,25 @@ fun MainScreenCard(
                         style = MaterialTheme.typography.headlineMedium,
                         textAlign = TextAlign.Center
                     )
-                    IconButton(
-                        modifier = Modifier.wrapContentSize(),
-                        onClick = { isOpened = !isOpened }
-                    ) {
-                        Icon(
-                            imageVector = if (isOpened) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
-                            contentDescription = "Expand or collapse description"
-                        )
-                    }
+//                    IconButton(
+//                        modifier = Modifier.wrapContentSize(),
+//                        onClick = { isOpened = !isOpened }
+//                    ) {
+//                        Icon(
+//                            imageVector = if (isOpened) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowUp,
+//                            contentDescription = "Expand or collapse description"
+//                        )
+//                    }
                 }
-                HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
-
-                if (isOpened && recipe.description != null) {
-                    Text(
-                        text = recipe.description,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
+//                HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+//
+//                if (isOpened && recipe.description != null) {
+//                    Text(
+//                        text = recipe.description,
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
+//                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurfaceVariant)
+//                }
             }
         }
     }

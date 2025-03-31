@@ -64,6 +64,7 @@ dependencies {
 
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.49")
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.3")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
@@ -78,6 +79,7 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")// или новее
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")

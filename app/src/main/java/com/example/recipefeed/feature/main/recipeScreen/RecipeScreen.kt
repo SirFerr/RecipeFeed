@@ -2,16 +2,9 @@
 
 package com.example.recipefeed.view.mainMenu.recipeScreen
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -22,18 +15,10 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.CustomTextField
+import com.example.recipefeed.utils.base64ToBitmap
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalEncodingApi::class)
@@ -54,7 +40,7 @@ fun RecipeScreen(
     onClickBack: () -> Unit,
     onComment: (Int) -> Unit,
 ) {
-    viewModel.getById(id)
+    LaunchedEffect(Unit) { viewModel.getById(id) }
 
     Scaffold(topBar = {
         TopAppBar(
@@ -84,13 +70,10 @@ fun RecipeScreen(
                         }
                     }
                 }
-                IconButton(onClick = {
-                    viewModel.changeLike()
-                    viewModel.addToFavourites()
-                }) {
+                IconButton(onClick = { viewModel.toggleLike() }) {
                     Icon(
                         imageVector = if (viewModel.isLiked.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                        contentDescription = "Favorite"
+                        contentDescription = if (viewModel.isLiked.value) "Remove from favorites" else "Add to favorites"
                     )
                 }
             }
@@ -111,21 +94,23 @@ fun RecipeScreen(
                 viewModel.isLoading.value -> {
                     CircularProgressIndicator()
                 }
+
                 viewModel.isSuccessful.value && viewModel.recipe.value != null -> {
                     viewModel.recipe.value?.let { recipe ->
                         // Изображение рецепта
-                        recipe.imageData?.let { base64Image ->
-                            val decodedImage = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
-                            SubcomposeAsyncImage(
-                                model = decodedImage,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
-                                    .height(250.dp),
-                                loading = { CircularProgressIndicator() },
-                                contentScale = ContentScale.FillWidth
-                            )
+                        val bitmap: Bitmap? = remember(recipe.imageData) {
+                            recipe.imageData?.let { base64ToBitmap(it) }
                         }
+
+                        SubcomposeAsyncImage(
+                            model = bitmap,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner)))
+                                .height(250.dp),
+                            loading = { CircularProgressIndicator() },
+                            contentScale = ContentScale.FillWidth
+                        )
 
                         Text(
                             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -163,10 +148,14 @@ fun RecipeScreen(
                         ) {
                             Text("Comments")
                             Spacer(Modifier.size(12.dp))
-                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null)
+                            Icon(
+                                Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                contentDescription = null
+                            )
                         }
                     }
                 }
+
                 else -> {
                     Text(
                         text = "Failed to load recipe",

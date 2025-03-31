@@ -1,12 +1,14 @@
-package com.example.recipefeed.feature.main.accountScreen
+package com.example.recipefeed.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 fun convertToMultipart(image: Any?, context: Context): MultipartBody.Part? {
     return when (image) {
@@ -30,4 +32,9 @@ fun convertToMultipart(image: Any?, context: Context): MultipartBody.Part? {
     }
 }
 
+@OptIn(ExperimentalEncodingApi::class)
+fun base64ToBitmap(base64String: String?): Bitmap? {
+    val imageBytes = base64String?.let { kotlin.io.encoding.Base64.decode(it) }
+    return imageBytes?.let { BitmapFactory.decodeByteArray(it, 0, it.size) }
+}
 

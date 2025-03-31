@@ -1,6 +1,7 @@
 package com.example.recipefeed.feature.login.loginScreen
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,8 @@ class LoginScreenViewModel @Inject constructor(
     init {
         val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
         _token.value = sharedPreferences.getString("access_token", "") ?: ""
+        Log.d("token-",_token.value)
+
     }
 
     fun setErrorMessage(string: String = "") {
@@ -51,26 +54,41 @@ class LoginScreenViewModel @Inject constructor(
         _textPassword.value = string
     }
 
+    fun addToken(string: String){
+        val sharedPreferences =
+            context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit()
+            .putString("access_token", string)
+            .apply()
+        Log.d("token",string)
+    }
+
     fun signIn(isSuccess: () -> Unit) {
         viewModelScope.launch {
             try {
                 if (textUsername.value.isNotEmpty() && textPassword.value.isNotEmpty()) {
-                    val response = repository.login(textUsername.value, textPassword.value)
-                    if (response.isSuccess) {
-                        response.getOrNull()?.let { token ->
+                    val loginResult = repository.login(textUsername.value, textPassword.value)
+                    if (loginResult.isSuccess) {
+                        loginResult.getOrNull()?.let { token ->
                             _token.value = token.accessToken
-                            val sharedPreferences =
-                                context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-                            sharedPreferences.edit().putString("access_token", token.accessToken)
-                                .apply()
+                            addToken(string = token.accessToken)
+                            // Проверяем, является ли пользователь модератором
+                            val moderatorResult = repository.isCurrentUserModerator()
+                            if (moderatorResult.isSuccess) {
+                                val isModerator = moderatorResult.getOrNull() ?: false
+                                roleSharedPreferencesManager.setRoleIsModerator(isModerator)
+                            } else {
+                                // Если не удалось проверить, устанавливаем false
+                                roleSharedPreferencesManager.setRoleIsModerator(false)
+                            }
+
                             _isSuccessful.value = true
                             setErrorMessage()
                             isSuccess()
-                            roleSharedPreferencesManager.setRoleIsModerator(false)
                         }
                     } else {
                         _isSuccessful.value = false
-                        setErrorMessage(response.exceptionOrNull()?.message ?: "Login failed")
+                        setErrorMessage(loginResult.exceptionOrNull()?.message ?: "Login failed")
                     }
                 } else {
                     setErrorMessage("All fields must be filled!")

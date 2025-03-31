@@ -25,6 +25,7 @@ fun SwipeCard(
     onSwipeRight: () -> Unit = {},
     swipeThreshold: Float = 400f,
     sensitivityFactor: Float = 3f,
+    modifier: Modifier,
     content: @Composable () -> Unit
 ) {
     var offset by remember { mutableStateOf(0f) }
@@ -46,7 +47,7 @@ fun SwipeCard(
         }
     }
 
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .offset { IntOffset(offset.roundToInt(), 0) }
         .pointerInput(Unit) {
             detectHorizontalDragGestures(

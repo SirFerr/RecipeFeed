@@ -38,12 +38,11 @@ fun RecipesOnApprove(
                     }
                 } else {
                     items(viewModel.recipes.value) { recipe ->
-                        ListItemCard(
-                            recipe = recipe,
+                        ListItemCard(recipe = recipe,
                             icon = null,
                             onRecipeClick = { onRecipeClick(recipe.id) },
-                            onEditClick = {} // Если редактирование не нужно, оставляем пустым
-                        )
+                            onEditClick = {},// Если редактирование не нужно, оставляем пустым
+                            isModerator = true)
                     }
                 }
             } else {

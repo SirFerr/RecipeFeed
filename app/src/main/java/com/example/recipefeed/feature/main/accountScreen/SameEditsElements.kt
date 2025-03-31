@@ -3,8 +3,6 @@ package com.example.recipefeed.feature.main.accountScreen
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +18,10 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +29,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,15 +37,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.UiIngredient
-import com.example.recipefeed.feature.composable.cards.PickerPopup
 
 @Composable
 fun ImagePickerCard(
@@ -96,12 +94,13 @@ fun ImagePickerCard(
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainInformationSection(
     recipeName: String,
     description: String,
     ingredients: List<UiIngredient>,
-    ingredientsBase: List<String>, // Список доступных имен ингредиентов для выбора
+    ingredientsBase: List<String>, // Список доступных имен ингредиентов
     steps: String,
     onRecipeNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -141,37 +140,56 @@ fun MainInformationSection(
         )
 
         ingredients.forEachIndexed { index, ingredient ->
-            var anchorCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
-            var showPicker by remember { mutableStateOf(false) }
-            val interactionSource = remember { MutableInteractionSource() }
-            val isFocused by interactionSource.collectIsFocusedAsState()
-
-            LaunchedEffect(isFocused) {
-                if (isFocused) showPicker = true
-            }
+            var expanded by remember { mutableStateOf(false) }
+            var searchQuery by remember { mutableStateOf(ingredient.name) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .weight(1f)
-                        .onGloballyPositioned { coordinates ->
-                            anchorCoordinates = coordinates
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = { expanded = !expanded },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { query ->
+                            searchQuery = query
+                            onIngredientsChange(index, ingredient.copy(name = query))
+                            expanded = true
                         },
-                    value = ingredient.name,
-                    onValueChange = { name ->
-                        onIngredientsChange(index, ingredient.copy(name = name))
-                    },
-                    interactionSource = interactionSource,
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.ingredients),
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                        label = {
+                            Text(
+                                text = stringResource(id = R.string.ingredients),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(),
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        val filteredIngredients = ingredientsBase.filter {
+                            it.contains(searchQuery, ignoreCase = true)
+                        }
+                        filteredIngredients.forEach { name ->
+                            DropdownMenuItem(
+                                text = { Text(name) },
+                                onClick = {
+                                    searchQuery = name
+                                    onIngredientsChange(index, ingredient.copy(name = name))
+                                    expanded = false
+                                }
+                            )
+                        }
                     }
-                )
+                }
 
                 Spacer(Modifier.size(12.dp))
 
@@ -195,26 +213,14 @@ fun MainInformationSection(
                 IconButton(onClick = { onIngredientDelete(index) }) {
                     Icon(Icons.Default.Clear, contentDescription = "Delete ingredient")
                 }
-
-                if (showPicker && anchorCoordinates != null) {
-                    PickerPopup(
-                        anchorCoordinates = anchorCoordinates!!,
-                        onDismiss = { showPicker = false },
-                        current = ingredient.name,
-                        onItemSelected = { name ->
-                            onIngredientsChange(index, ingredient.copy(name = name))
-                            showPicker = false
-                        },
-                        list = ingredientsBase
-                    )
-                }
             }
-
         }
+
         Text(
             text = "Add ingredient",
             modifier = Modifier.clickable { onIngredientAdd() }
         )
+
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = steps,
@@ -227,18 +233,6 @@ fun MainInformationSection(
             }
         )
     }
-}
-
-// Заглушка для PickerPopup
-@Composable
-fun PickerPopup(
-    anchorCoordinates: LayoutCoordinates,
-    onDismiss: () -> Unit,
-    current: String,
-    onItemSelected: (String) -> Unit,
-    list: List<String>
-) {
-    // Здесь должна быть реализация выпадающего списка
 }
 
 @Composable

@@ -14,6 +14,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +30,9 @@ fun Comments(
     recipeId: Int,
     onBackPressed: () -> Unit
 ) {
+    LaunchedEffect(recipeId) {
+        viewModel.fetchComments(recipeId)
+    }
     UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.fetchComments(recipeId) }) {
         Scaffold(topBar = {
             TopAppBar(

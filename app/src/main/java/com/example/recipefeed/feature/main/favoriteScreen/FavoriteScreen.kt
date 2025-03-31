@@ -13,14 +13,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.ErrorNetworkCard
-import com.example.recipefeed.feature.composable.cards.ListItemCard
 import com.example.recipefeed.feature.composable.UpdateBox
+import com.example.recipefeed.feature.composable.cards.ListItemCard
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -28,6 +29,9 @@ fun FavoriteScreen(
     viewModel: FavoriteRecipesViewModel = hiltViewModel(),
     onRecipeClick: (Int) -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.getFavouritesRecipes()
+    }
     UpdateBox(isLoading = viewModel.isLoading.value, exec = { viewModel.getFavouritesRecipes() }) {
         LazyColumn(
             state = rememberLazyListState(),
@@ -39,7 +43,14 @@ fun FavoriteScreen(
             item { }
             if (viewModel.isSuccessful.value && viewModel.recipes.value.isNotEmpty()) {
                 items(viewModel.recipes.value) { recipe ->
-                    ListItemCard(recipe, onRecipeClick = { onRecipeClick(recipe.id) }, onEditClick = { })
+                    ListItemCard(
+                        recipe = recipe,
+                        onRecipeClick = { onRecipeClick(recipe.id) },
+                        onEditClick = { },
+                        onFavoriteClick = { viewModel.toggleFavorite(recipe.id) }, // Добавляем переключение избранного
+                        isFavorite = true, // Изначально все рецепты в списке избранные
+                        isModerator = false
+                    )
                 }
             } else if (!viewModel.isSuccessful.value) {
                 item {

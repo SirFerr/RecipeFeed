@@ -1,6 +1,7 @@
 package com.example.recipefeed.di
 
 import android.content.Context
+import android.util.Log
 import com.example.recipefeed.data.api.ApiService
 import com.example.recipefeed.utils.Constants.BASE_URL
 import dagger.Module
@@ -10,6 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -23,10 +25,21 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
-        val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        // Создаем HttpLoggingInterceptor для логирования
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY // Показывает тело запроса и ответа
+            // Другие варианты:
+            // Level.BASIC - базовая информация
+            // Level.HEADERS - только заголовки
+            // Level.NONE - без логов
+        }
+
         return OkHttpClient.Builder()
             .addInterceptor(Interceptor { chain ->
+                val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("access_token", null)
+                Log.d("token2", token.toString())
+
                 val request = chain.request().newBuilder()
                     .apply {
                         if (token != null) {
@@ -36,6 +49,7 @@ object NetworkModule {
                     .build()
                 chain.proceed(request)
             })
+            .addInterceptor(loggingInterceptor) // Добавляем логгирование
             .build()
     }
 
