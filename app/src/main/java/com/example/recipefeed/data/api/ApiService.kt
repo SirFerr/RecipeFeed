@@ -30,9 +30,9 @@ interface ApiService {
     suspend fun getRandomRecipe(): Response<Recipe>
 
     @Multipart
-    @POST("recipes/create?name={name}")
+    @POST("recipes/create")
     suspend fun createRecipe(
-        @Path("name") name: String,
+        @Query("name") name: String,
         @Part("description") description: String?,
         @Part("steps") steps: String?,
         @Part image: MultipartBody.Part?

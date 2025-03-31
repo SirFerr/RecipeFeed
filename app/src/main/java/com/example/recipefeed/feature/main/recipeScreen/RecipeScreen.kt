@@ -158,20 +158,20 @@ fun RecipeScreen(
                             modifier = alignmentStartModifier,
                             text = "Steps: ${recipe.steps ?: "No steps provided"}",
                         )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .clickable { onComment(id) }
-                        ) {
-                            Text("Comments")
-                            Spacer(Modifier.size(12.dp))
-                            Icon(
-                                Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null
-                            )
-                        }
+                        if (viewModel.recipe.value?.isOnApprove == false)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                                    .clickable { onComment(id) }
+                            ) {
+                                Text("Comments")
+                                Spacer(Modifier.size(12.dp))
+                                Icon(
+                                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                                    contentDescription = null
+                                )
+                            }
                     }
                 }
 

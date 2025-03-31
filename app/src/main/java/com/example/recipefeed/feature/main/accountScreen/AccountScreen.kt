@@ -48,7 +48,6 @@ fun AccountScreen(
 
             items(personalListItems) {
                 AccountListCard(title = it.title, onClick = {
-                    viewModel.deleteToken()
                     it.onClick()
                 })
             }
@@ -57,7 +56,6 @@ fun AccountScreen(
             }
             item {
                 AccountListCard(title = "Settings", onClick = {
-                    viewModel.deleteToken()
                     onSettings()
                 })
             }

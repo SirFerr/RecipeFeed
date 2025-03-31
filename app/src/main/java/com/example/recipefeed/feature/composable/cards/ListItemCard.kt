@@ -81,18 +81,35 @@ fun ListItemCard(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = recipe.description ?: "No description",
+                    text = "Likes: ${recipe.likes}",
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
                 )
+                if (recipe.isOnApprove){
+                    Text(
+                        text = "On approve",
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        color = MaterialTheme.colorScheme.onErrorContainer
+                    )
+                }
+                if (recipe.rejectReason?.isNotEmpty() == true){
+                    Text(
+                        text = "Rejected: "+ recipe.rejectReason,
+                        style = MaterialTheme.typography.bodySmall,
+                        maxLines = 1,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.sub_padding))
             ) {
+
                 // Иконка избранного
-                if (showFavorite)
+                if (showFavorite and !isEdit)
                     IconButton(onClick = onFavoriteClick) {
                         Icon(
                             imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
