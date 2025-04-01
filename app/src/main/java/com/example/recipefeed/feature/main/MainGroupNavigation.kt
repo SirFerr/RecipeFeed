@@ -71,13 +71,15 @@ fun MainGroupNavigation(
                     onRecipeClick = { id -> navController.navigate("${Destinations.MainGroup.Recipe.route}/${id}") })
             }
             composable(
-                Destinations.MainGroup.Search.route + "?name={name}", listOf(navArgument("name") {
+                Destinations.MainGroup.Search.route + "?tag={tag}",
+                listOf(navArgument("tag") {
                     type = NavType.StringType
                     defaultValue = ""
                 })
             ) {
-                val name = it.arguments?.getString("name").orEmpty()
-                SearchScreen(name = name,
+                val tag = it.arguments?.getString("tag").orEmpty()
+                SearchScreen(
+                    tagName = tag,
                     onListItemClick = { id -> navController.navigate("${Destinations.MainGroup.Recipe.route}/${id}") })
             }
             composable(Destinations.MainGroup.Account.route) {
@@ -99,7 +101,10 @@ fun MainGroupNavigation(
                     RecipeScreen(
                         id = id,
                         onClickBack = { navController.popBackStack() },
-                        onComment = { navController.navigate(Destinations.MainGroup.Comments.route + "/$it") })
+                        onComment = { navController.navigate(Destinations.MainGroup.Comments.route + "/$it") },
+                        onTagClick = { navController.navigate(Destinations.MainGroup.Search.route + "?tag=$it") }
+
+                    )
                 }
             }
             composable(Destinations.MainGroup.NewRecipe.route) {
@@ -132,7 +137,7 @@ fun MainGroupNavigation(
                     Comments(recipeId = id, onBackPressed = { navController.popBackStack() })
                 }
             }
-            composable(Destinations.MainGroup.RecipesOnApprove.route){
+            composable(Destinations.MainGroup.RecipesOnApprove.route) {
                 RecipesOnApprove { id -> navController.navigate("${Destinations.MainGroup.Recipe.route}/${id}") }
             }
         }

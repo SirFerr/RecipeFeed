@@ -50,6 +50,9 @@ class RecipeScreenViewModel @Inject constructor(
     private var _nutrition = mutableStateOf<Nutrition?>(null)
     val nutrition: State<Nutrition?> = _nutrition
 
+    private var _tags = mutableStateOf<List<String>>(emptyList())
+    val tags: State<List<String>> = _tags
+
     init {
         getIsModerator()
     }
@@ -108,6 +111,7 @@ class RecipeScreenViewModel @Inject constructor(
                     checkIfLiked()
                     loadIngredients(id)
                     loadNutrition(id)
+                    loadTags(id) // Загружаем теги
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
@@ -148,6 +152,21 @@ class RecipeScreenViewModel @Inject constructor(
                 val result = repository.calculateNutrition(recipeId)
                 if (result.isSuccess) {
                     _nutrition.value = result.getOrNull()
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки
+            }
+        }
+    }
+
+    private fun loadTags(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val tagsResult = repository.getRecipeTags(recipeId)
+                if (tagsResult.isSuccess) {
+                    _tags.value = tagsResult.getOrNull()?.mapNotNull { tagId ->
+                        repository.getTagById(tagId.tagId).getOrNull()?.name
+                    } ?: emptyList()
                 }
             } catch (e: Exception) {
                 // Обработка ошибки

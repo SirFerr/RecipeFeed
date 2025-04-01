@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.dp
 import com.example.recipefeed.R
 
 @Composable
-fun TagItem(string: String, onClick:()->Unit) {
+fun TagItem(string: String, onClick:(String)->Unit) {
     Card(
-        onClick = onClick,
+        onClick = { onClick(string) },
         shape = RoundedCornerShape(50.dp),
         modifier = Modifier
             .wrapContentWidth()
@@ -23,7 +23,7 @@ fun TagItem(string: String, onClick:()->Unit) {
         Text(
             text = string,
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding)),
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.sub_padding)),
             maxLines = 1
 
         )

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,27 +20,15 @@ import com.example.recipefeed.feature.composable.cards.TagItem
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TagsGrid(list: List<String>, onClick: (String) -> Unit) {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
     ) {
-        FlowRow(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = dimensionResource(id = R.dimen.main_padding)),
-            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            list.forEach {
-                TagItem(string = it, onClick = {
-                    onClick(it)
-                })
-            }
+        list.forEach { tag ->
+            TagItem(string = tag, onClick = { onClick(tag) })
         }
-        Spacer(modifier = Modifier.size(dimensionResource(id = R.dimen.main_padding)))
-
     }
-
-
 }

@@ -6,6 +6,8 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,16 +50,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.composable.CustomTextField
+import com.example.recipefeed.feature.composable.cards.TagItem
 import com.example.recipefeed.utils.base64ToBitmap
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-@OptIn(ExperimentalEncodingApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalEncodingApi::class,
+    ExperimentalLayoutApi::class
+)
 @Composable
 fun RecipeScreen(
     id: Int = -1,
     viewModel: RecipeScreenViewModel = hiltViewModel(),
     onClickBack: () -> Unit,
     onComment: (Int) -> Unit,
+    onTagClick: (String) -> Unit
 ) {
     LaunchedEffect(Unit) { viewModel.getById(id) }
 
@@ -152,6 +160,23 @@ fun RecipeScreen(
                             }
                         }
 
+                        // Отображение тегов
+                        Text(
+                            modifier = alignmentStartModifier,
+                            text = "Tags:",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        FlowRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+                        ) {
+                            viewModel.tags.value.forEach { tag ->
+                                TagItem(
+                                    string = tag,
+                                    onClick = {onTagClick(it)}) // Теги только для отображения, без удаления
+                            }
+                        }
+
                         Text(
                             modifier = alignmentStartModifier,
                             text = "Likes: ${recipe.likes}",
@@ -163,18 +188,22 @@ fun RecipeScreen(
                             text = "Ingredients:",
                             style = MaterialTheme.typography.titleMedium
                         )
-                        viewModel.ingredients.value.forEach { ingredient ->
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = "${ingredient.ingredientName} - ${ingredient.amount} ${ingredient.unit}",
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                                HorizontalDivider()
-
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                        ) {
+                            viewModel.ingredients.value.forEach { ingredient ->
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(dimensionResource(id = R.dimen.main_padding))
+                                ) {
+                                    Text(
+                                        text = "${ingredient.ingredientName} - ${ingredient.amount} ${ingredient.unit}",
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+                                    HorizontalDivider(color = MaterialTheme.colorScheme.onSurface)
+                                }
                             }
                         }
 

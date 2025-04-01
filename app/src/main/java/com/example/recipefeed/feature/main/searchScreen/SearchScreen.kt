@@ -28,12 +28,13 @@ import com.example.recipefeed.feature.composable.CircularLoad
 import com.example.recipefeed.feature.composable.ErrorNetworkCard
 import com.example.recipefeed.feature.composable.TagsGrid
 import com.example.recipefeed.feature.composable.cards.ListItemCard
+import com.example.recipefeed.feature.composable.cards.TagItem
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchRecipesViewModel = hiltViewModel(),
-    name: String,
+    tagName: String = "", // Новый параметр
     onListItemClick: (Int) -> Unit
 ) {
     val padding by animateDpAsState(
@@ -41,9 +42,8 @@ fun SearchScreen(
         animationSpec = tween(durationMillis = 300)
     )
 
-    if (name.isNotEmpty()) {
-        viewModel.setSearchText(name)
-        viewModel.search()
+   if (tagName.isNotEmpty()) {
+        viewModel.addSelectedTag(tagName)
     }
 
     Column(
@@ -99,21 +99,24 @@ fun SearchScreen(
             }
         }
 
-        viewModel.selectedTag.value?.let { tag ->
-            Text(
-                text = "Selected Tag: $tag",
-                style = MaterialTheme.typography.bodyMedium,
+        // Отображение выбранных тегов с возможностью удаления
+        if (viewModel.selectedTags.value.isNotEmpty()) {
+            FlowRow(
                 modifier = Modifier
-                    .padding(dimensionResource(id = R.dimen.sub_padding))
-                    .fillMaxWidth(),
-                textAlign = TextAlign.Center
-            )
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.sub_padding)),
+                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
+            ) {
+                viewModel.selectedTags.value.forEach { tag ->
+                    TagItem(string = tag) { viewModel.removeSelectedTag(tag) }
+                }
+            }
         }
 
-        if (viewModel.recipes.value.isEmpty() && viewModel.selectedTag.value == null) {
+        if (viewModel.recipes.value.isEmpty() && viewModel.selectedTags.value.isEmpty()) {
             TagsGrid(
                 list = viewModel.tags.value.map { it.name },
-                onClick = { tagName -> viewModel.setSelectedTag(tagName) }
+                onClick = { tagName -> viewModel.addSelectedTag(tagName) }
             )
         } else {
             LazyColumn(
@@ -150,8 +153,8 @@ fun SearchScreen(
                     } else {
                         item {
                             ErrorNetworkCard {
-                                if (viewModel.selectedTag.value != null) {
-                                    viewModel.getByTag()
+                                if (viewModel.selectedTags.value.isNotEmpty()) {
+                                    viewModel.getByTags()
                                 } else {
                                     viewModel.getByName()
                                 }

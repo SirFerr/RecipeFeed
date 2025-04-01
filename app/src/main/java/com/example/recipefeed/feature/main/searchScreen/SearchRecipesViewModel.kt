@@ -20,8 +20,8 @@ class SearchRecipesViewModel @Inject constructor(
     private var _searchText = mutableStateOf("")
     val searchText: State<String> = _searchText
 
-    private var _selectedTag = mutableStateOf<String?>(null)
-    val selectedTag: State<String?> = _selectedTag
+    private var _selectedTags = mutableStateOf<List<String>>(emptyList()) // Изменено на список
+    val selectedTags: State<List<String>> = _selectedTags
 
     private var _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
@@ -29,7 +29,7 @@ class SearchRecipesViewModel @Inject constructor(
     private var _isSearching = mutableStateOf(false)
     val isSearching: State<Boolean> = _isSearching
 
-    private var _isSuccessful = mutableStateOf(false)
+    private var _isSuccessful = mutableStateOf(true)
     val isSuccessful: State<Boolean> = _isSuccessful
 
     private var _isFound = mutableStateOf(false)
@@ -61,8 +61,8 @@ class SearchRecipesViewModel @Inject constructor(
                 repository.saveSearchRequest(searchText.value)
                 _searchHistory.value = repository.getSearchHistory()
             }
-        } else if (_selectedTag.value != null) {
-            getByTag()
+        } else if (_selectedTags.value.isNotEmpty()) {
+            getByTags()
         } else {
             _recipes.value = emptyList()
             _favoriteStatus.value = emptyMap()
@@ -98,15 +98,14 @@ class SearchRecipesViewModel @Inject constructor(
         }
     }
 
-    fun getByTag() {
+    fun getByTags() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                val selectedTagName = _selectedTag.value ?: return@launch
-                val tag = _tags.value.find { it.name == selectedTagName }
-                if (tag != null) {
+                val tagIds = _tags.value.filter { _selectedTags.value.contains(it.name) }.map { it.id }
+                if (tagIds.isNotEmpty()) {
                     val result = repository.searchRecipesByTags(
-                        tagIds = listOf(tag.id),
+                        tagIds = tagIds,
                         skip = 0,
                         limit = 20
                     )
@@ -178,13 +177,24 @@ class SearchRecipesViewModel @Inject constructor(
 
     fun setSearchText(string: String) {
         _searchText.value = string
-        _selectedTag.value = null
+        _selectedTags.value = emptyList() // Очищаем теги при вводе текста
     }
 
-    fun setSelectedTag(tag: String) {
-        _selectedTag.value = tag
-        _searchText.value = ""
-        search()
+    fun addSelectedTag(tag: String) {
+        if (!_selectedTags.value.contains(tag)) {
+            _selectedTags.value = _selectedTags.value + tag
+            search() // Автоматический поиск после добавления тега
+        }
+    }
+
+    fun removeSelectedTag(tag: String) {
+        _selectedTags.value = _selectedTags.value.filter { it != tag }
+        if (_selectedTags.value.isNotEmpty()) {
+            search() // Обновляем поиск, если остались теги
+        } else {
+            _recipes.value = emptyList()
+            _favoriteStatus.value = emptyMap()
+        }
     }
 
     fun setIsSearching(boolean: Boolean? = null) {

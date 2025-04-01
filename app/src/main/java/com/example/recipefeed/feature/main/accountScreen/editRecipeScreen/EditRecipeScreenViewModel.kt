@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.models.Recipe
-import com.example.recipefeed.data.models.RecipeIngredient
 import com.example.recipefeed.data.models.RecipeIngredientCreate
+import com.example.recipefeed.data.models.TagCreate
 import com.example.recipefeed.data.repository.RecipeRepository
 import com.example.recipefeed.feature.UiIngredient
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,8 +53,22 @@ class EditRecipeScreenViewModel @Inject constructor(
     private var _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
+    private var _tags = mutableStateOf<List<String>>(emptyList())
+    val tags: State<List<String>> = _tags
+
+    private var _availableTags = mutableStateOf<List<String>>(emptyList())
+    val availableTags: State<List<String>> = _availableTags
+
+    private var _tagText = mutableStateOf("")
+    val tagText: State<String> = _tagText
+
     init {
         searchExternalIngredients("") // Загружаем начальный список внешних ингредиентов
+        loadAvailableTags() // Загружаем начальный список тегов
+    }
+
+    fun setTagText(string: String) {
+        _tagText.value = string
     }
 
     fun setImageFromBase64(base64String: String) {
@@ -86,6 +100,40 @@ class EditRecipeScreenViewModel @Inject constructor(
         }
     }
 
+    fun loadAvailableTags(query: String = "") {
+        viewModelScope.launch {
+            try {
+                val result = repository.getTagsList(0, 100)
+                if (result.isSuccess) {
+                    _availableTags.value = result.getOrNull()?.map { it.name }?.filter { it.contains(query, ignoreCase = true) } ?: emptyList()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error loading tags: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun addTag(tagName: String) {
+        viewModelScope.launch {
+            try {
+                val result = repository.createTag(TagCreate(name = tagName))
+                if (result.isSuccess) {
+                    val newTag = result.getOrNull()?.name ?: tagName
+                    if (!_tags.value.contains(newTag)) {
+                        _tags.value = _tags.value + newTag
+                    }
+                    loadAvailableTags()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error creating tag: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun removeTag(tagName: String) {
+        _tags.value = _tags.value.filter { it != tagName }
+    }
+
     fun getById(id: Int) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -99,36 +147,28 @@ class EditRecipeScreenViewModel @Inject constructor(
                         _steps.value = recipe.steps ?: ""
                         recipe.imageData?.let { setImageFromBase64(it) }
 
-                        // Загружаем ингредиенты после успешной загрузки рецепта
                         val ingredientsResult = repository.getRecipeIngredients(id)
-                        Log.d("EditRecipe", "Recipe ingredients result: $ingredientsResult")
                         if (ingredientsResult.isSuccess) {
-                            val recipeIngredients = ingredientsResult.getOrNull() ?: emptyList()
-                            Log.d("EditRecipe", "Loaded recipe ingredients: $recipeIngredients")
-                            val uiIngredients = recipeIngredients.map { ingredient ->
+                            _ingredients.value = ingredientsResult.getOrNull()?.map { ingredient ->
                                 UiIngredient(
                                     name = ingredient.ingredientName,
                                     amount = ingredient.amount,
                                     unit = ingredient.unit,
-                                    possibleUnits = _externalIngredients.value
-                                        .find { it["name"] == ingredient.ingredientName }
-                                        ?.get("possible_units") as? List<String> ?: emptyList()
+                                    possibleUnits = _externalIngredients.value.find { it["name"] == ingredient.ingredientName }?.get("possible_units") as? List<String> ?: emptyList()
                                 )
-                            }
-                            _ingredients.value = uiIngredients
-                            Log.d("EditRecipe", "Updated UI ingredients: $_ingredients")
-                        } else {
-                            Toast.makeText(context, "Failed to load ingredients: ${ingredientsResult.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
-                            Log.e("EditRecipe", "Failed to load ingredients: ${ingredientsResult.exceptionOrNull()?.message}")
+                            } ?: emptyList()
+                        }
+
+                        val tagsResult = repository.getRecipeTags(id)
+                        if (tagsResult.isSuccess) {
+                            _tags.value = tagsResult.getOrNull()?.mapNotNull { tagId ->
+                                repository.getTagById(tagId.tagId).getOrNull()?.name
+                            } ?: emptyList()
                         }
                     }
-                } else {
-                    Toast.makeText(context, "Failed to load recipe: ${recipeResult.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
-                    Log.e("EditRecipe", "Failed to load recipe: ${recipeResult.exceptionOrNull()?.message}")
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, "Error loading recipe: ${e.message}", Toast.LENGTH_SHORT).show()
-                Log.e("EditRecipe", "Error fetching recipe: ${e.message}")
             } finally {
                 _isLoading.value = false
             }
@@ -144,7 +184,6 @@ class EditRecipeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val recipeId = _recipe.value?.id ?: return@launch
-
                 val editResult = repository.editRecipe(
                     recipeId = recipeId,
                     name = _recipeName.value,
@@ -166,9 +205,13 @@ class EditRecipeScreenViewModel @Inject constructor(
                     if (ingredientsList.isNotEmpty()) {
                         repository.updateRecipeIngredients(recipeId, ingredientsList)
                     }
+                    if (_tags.value.isNotEmpty()) {
+                        val tagIds = repository.getTagsList(0, 100).getOrNull()
+                            ?.filter { _tags.value.contains(it.name) }
+                            ?.map { it.id } ?: emptyList()
+                        repository.updateRecipeTags(recipeId, tagIds)
+                    }
                     Toast.makeText(context, "Recipe updated successfully", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, "Error updating recipe: ${editResult.exceptionOrNull()?.message}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
