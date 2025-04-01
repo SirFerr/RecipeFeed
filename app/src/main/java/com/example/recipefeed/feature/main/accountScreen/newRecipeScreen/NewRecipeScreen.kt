@@ -101,7 +101,12 @@ fun NewRecipeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
-                onClick = { viewModel.addRecipe() }
+                onClick = { viewModel.addRecipe() },
+                enabled = viewModel.recipeName.value.isNotBlank() &&
+                        viewModel.steps.value.isNotBlank() &&
+                        viewModel.ingredients.value.any {
+                            it.name.isNotBlank() && it.amount != null && it.amount > 0
+                        }
             ) {
                 Text(
                     text = stringResource(id = R.string.complete),

@@ -41,6 +41,7 @@ class NewRecipeScreenViewModel @Inject constructor(
     val availableIngredients: State<List<Ingredient>> = _availableIngredients
 
     init {
+        loadAvailableIngredients()
     }
 
     private fun loadAvailableIngredients() {
@@ -49,7 +50,7 @@ class NewRecipeScreenViewModel @Inject constructor(
                 val result = repository.getIngredientsList(
                     skip = 0,
                     limit = 100
-                ) // Можно настроить пагинацию
+                )
                 if (result.isSuccess) {
                     _availableIngredients.value = result.getOrNull() ?: emptyList()
                 }
@@ -64,6 +65,11 @@ class NewRecipeScreenViewModel @Inject constructor(
     }
 
     fun addRecipe() {
+        if (!validateFields()) {
+            Toast.makeText(context, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         viewModelScope.launch {
             try {
                 val recipeResult = repository.createRecipe(
@@ -80,8 +86,7 @@ class NewRecipeScreenViewModel @Inject constructor(
                         if (uiIngredient.name.isNotBlank() && uiIngredient.amount != null) {
                             RecipeIngredientCreate(
                                 recipeId = recipe.id,
-                                ingredientId = matchingIngredient?.id
-                                    ?: 0,
+                                ingredientId = matchingIngredient?.id ?: 0,
                                 amount = uiIngredient.amount
                             )
                         } else null
@@ -91,11 +96,7 @@ class NewRecipeScreenViewModel @Inject constructor(
                     }
                     Toast.makeText(context, "Recipe created successfully", Toast.LENGTH_SHORT)
                         .show()
-                    _recipeName.value = ""
-                    _description.value = ""
-                    _steps.value = ""
-                    _ingredients.value = emptyList()
-                    _selectedImageFile.value = null
+                    clearFields()
                 } else {
                     Toast.makeText(context, "Error creating recipe", Toast.LENGTH_SHORT).show()
                 }
@@ -103,6 +104,30 @@ class NewRecipeScreenViewModel @Inject constructor(
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun validateFields(): Boolean {
+        // Check if recipe name is not blank
+        if (_recipeName.value.isBlank()) return false
+
+        // Check if there is at least one valid ingredient
+        val hasValidIngredient = _ingredients.value.any {
+            it.name.isNotBlank() && it.amount != null && it.amount > 0
+        }
+        if (!hasValidIngredient) return false
+
+        // Check if steps are not blank
+        if (_steps.value.isBlank()) return false
+
+        return true
+    }
+
+    private fun clearFields() {
+        _recipeName.value = ""
+        _description.value = ""
+        _steps.value = ""
+        _ingredients.value = emptyList()
+        _selectedImageFile.value = null
     }
 
     // Setters

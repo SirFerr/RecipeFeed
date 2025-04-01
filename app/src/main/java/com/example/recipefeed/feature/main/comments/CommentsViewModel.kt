@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.local.RoleSharedPreferencesManager
 import com.example.recipefeed.data.models.Comment
+import com.example.recipefeed.data.models.CommentCreate
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,6 +24,9 @@ class CommentsViewModel @Inject constructor(
     private var _isModerator = mutableStateOf(false)
     val isModerator: State<Boolean> = _isModerator
 
+    private var _currentUserId = mutableStateOf<Int?>(null)
+    val currentUserId: State<Int?> = _currentUserId
+
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
@@ -31,20 +35,57 @@ class CommentsViewModel @Inject constructor(
 
     init {
         _isModerator.value = roleSharedPreferencesManager.isModerator()
+        fetchCurrentUser()
     }
 
-    fun deleteComment(id: Int, reason: String) {
-        if (_isModerator.value) {
-            viewModelScope.launch {
-                try {
-                    val result = repository.rejectComment(id, reason)
+    private fun fetchCurrentUser() {
+        viewModelScope.launch {
+            try {
+                val result = repository.getCurrentUser()
+                if (result.isSuccess) {
+                    _currentUserId.value = result.getOrNull()?.id
+                }
+            } catch (e: Exception) {
+                // Handle error if needed
+            }
+        }
+    }
+
+    fun createComment(recipeId: Int, text: String) {
+        viewModelScope.launch {
+            try {
+                val commentCreate = CommentCreate(commentText = text)
+                val result = repository.createComment(recipeId, commentCreate)
+                if (result.isSuccess) {
+                    result.getOrNull()?.let { newComment ->
+                        _comments.value = listOf(newComment) + _comments.value
+                    }
+                }
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
+    }
+
+    fun deleteComment(id: Int, reason: String = "") {
+        viewModelScope.launch {
+            try {
+                val comment = _comments.value.find { it.id == id }
+                val isAuthor = comment?.userId == _currentUserId.value
+
+                if (_isModerator.value || isAuthor) {
+                    val result = if (_isModerator.value && reason.isNotEmpty()) {
+                        repository.rejectComment(id, reason)
+                    } else {
+                        repository.deleteComment(id)
+                    }
+
                     if (result.isSuccess) {
-                        // Обновляем список комментариев, исключая отклоненный
                         _comments.value = _comments.value.filter { it.id != id }
                     }
-                } catch (e: Exception) {
-                    // Можно добавить обработку ошибки, например, уведомление пользователя
                 }
+            } catch (e: Exception) {
+                // Handle error
             }
         }
     }
@@ -57,7 +98,7 @@ class CommentsViewModel @Inject constructor(
                     recipeId,
                     skip = 0,
                     limit = 100
-                ) // Можно настроить skip и limit
+                )
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
                     _comments.value = result.getOrNull() ?: emptyList()

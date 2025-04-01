@@ -168,7 +168,6 @@ fun MainInformationSection(
                         modifier = Modifier
                             .menuAnchor()
                             .fillMaxWidth(),
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
                     )
 
                     ExposedDropdownMenu(
@@ -222,7 +221,7 @@ fun MainInformationSection(
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().height(200.dp),
             value = steps,
             onValueChange = onStepsChange,
             label = {

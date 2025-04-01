@@ -9,7 +9,7 @@ data class Comment(
     @SerializedName("user_id") val userId: Int,
     @SerializedName("recipe_id") val recipeId: Int,
     @SerializedName("comment_text") val commentText: String,
-    @SerializedName("add_date") val addDate: Date,
+    @SerializedName("add_date") val addDate: String,
     @SerializedName("reject_reason") val rejectReason: String?
 )
 

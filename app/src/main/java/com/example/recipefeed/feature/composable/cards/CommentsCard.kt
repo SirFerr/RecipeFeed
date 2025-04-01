@@ -8,11 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -31,17 +32,27 @@ import com.example.recipefeed.data.models.Comment
 import com.example.recipefeed.feature.composable.CustomTextField
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.text.ParseException
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentCard(
     comment: Comment,
     isModerator: Boolean = false,
-    isAuthor: Boolean = false, // Добавляем параметр для проверки авторства
+    isAuthor: Boolean = false,
     onDelete: (Int, String) -> Unit = { _, _ -> }
 ) {
     var isDeleteShow by remember { mutableStateOf(false) }
     var rejectReason by remember { mutableStateOf("") }
+
+    // Parse ISO 8601 date string and format to desired pattern
+    val formattedDate = try {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+        val date = inputFormat.parse(comment.addDate)
+        date?.let { outputFormat.format(it) } ?: comment.addDate
+    } catch (e: ParseException) {
+        comment.addDate // Fallback to original string if parsing fails
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -59,12 +70,10 @@ fun CommentCard(
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Предполагаем, что имя пользователя нужно получать отдельно, здесь заглушка
-                Text("User ${comment.userId}", maxLines = 1)
+                Text("${comment.userId}", maxLines = 1, style = MaterialTheme.typography.subtitle1)
                 Spacer(Modifier.width(12.dp))
-                // Форматируем дату
-                val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-                Text(dateFormat.format(comment.addDate))
+                Text(formattedDate, style = MaterialTheme.typography.caption)
+
                 if (isModerator || isAuthor) {
                     val iconSize = 24.dp
                     Spacer(Modifier.weight(1f))
@@ -79,6 +88,10 @@ fun CommentCard(
                     }
                 }
             }
+            Spacer(Modifier.size(dimensionResource(id = R.dimen.sub_padding)))
+
+
+
             Spacer(Modifier.size(dimensionResource(id = R.dimen.main_padding)))
             Text(comment.commentText)
         }
@@ -99,7 +112,7 @@ fun CommentCard(
                             onDelete(comment.id, rejectReason)
                             isDeleteShow = false
                         } else if (isAuthor) {
-                            onDelete(comment.id, "") // Автору не нужен reason
+                            onDelete(comment.id, "")
                             isDeleteShow = false
                         }
                     },
