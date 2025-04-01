@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipefeed.data.local.RoleSharedPreferencesManager
 import com.example.recipefeed.data.models.FavoriteCreate
+import com.example.recipefeed.data.models.Nutrition
 import com.example.recipefeed.data.models.Recipe
+import com.example.recipefeed.data.models.RecipeIngredient
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -41,6 +43,12 @@ class RecipeScreenViewModel @Inject constructor(
 
     private var _isSuccessful = mutableStateOf(false)
     val isSuccessful: State<Boolean> = _isSuccessful
+
+    private var _ingredients = mutableStateOf<List<RecipeIngredient>>(emptyList())
+    val ingredients: State<List<RecipeIngredient>> = _ingredients
+
+    private var _nutrition = mutableStateOf<Nutrition?>(null)
+    val nutrition: State<Nutrition?> = _nutrition
 
     init {
         getIsModerator()
@@ -98,6 +106,8 @@ class RecipeScreenViewModel @Inject constructor(
                 if (result.isSuccess) {
                     _recipe.value = result.getOrNull()
                     checkIfLiked()
+                    loadIngredients(id)
+                    loadNutrition(id)
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
@@ -115,6 +125,32 @@ class RecipeScreenViewModel @Inject constructor(
                 _isLiked.value = isFavoriteResult.getOrNull() ?: false
             } catch (e: Exception) {
                 _isLiked.value = false
+            }
+        }
+    }
+
+    private fun loadIngredients(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val result = repository.getRecipeIngredients(recipeId)
+                if (result.isSuccess) {
+                    _ingredients.value = result.getOrNull() ?: emptyList()
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки
+            }
+        }
+    }
+
+    private fun loadNutrition(recipeId: Int) {
+        viewModelScope.launch {
+            try {
+                val result = repository.calculateNutrition(recipeId)
+                if (result.isSuccess) {
+                    _nutrition.value = result.getOrNull()
+                }
+            } catch (e: Exception) {
+                // Обработка ошибки
             }
         }
     }

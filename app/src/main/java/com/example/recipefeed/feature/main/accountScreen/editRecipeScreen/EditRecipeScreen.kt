@@ -6,8 +6,8 @@ import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,6 +38,7 @@ import com.example.recipefeed.R
 import com.example.recipefeed.feature.main.accountScreen.DeleteRecipeDialog
 import com.example.recipefeed.feature.main.accountScreen.ImagePickerCard
 import com.example.recipefeed.feature.main.accountScreen.MainInformationSection
+import com.example.recipefeed.utils.uriToFile
 import java.io.File
 import java.io.FileOutputStream
 
@@ -74,78 +76,81 @@ fun EditRecipeScreen(
             }
         )
     }) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
-        ) {
-            Spacer(modifier = Modifier)
-
-            ImagePickerCard(
-                image = viewModel.selectedImageFile.value,
-                galleryLauncher = galleryLauncher,
-                onImageCleared = { viewModel.setSelectedImageFile(null) }
-            )
-
-            HorizontalDivider()
-
-            MainInformationSection(
-                recipeName = viewModel.recipeName.value,
-                description = viewModel.description.value,
-                ingredients = viewModel.ingredients.value,
-                ingredientsBase = emptyList(), // Здесь можно передать список имен ингредиентов
-                steps = viewModel.steps.value,
-                onRecipeNameChange = { viewModel.setRecipeName(it) },
-                onDescriptionChange = { viewModel.setDescription(it) },
-                onIngredientsChange = { index, ingredient ->
-                    viewModel.changeIngredient(index, ingredient)
-                },
-                onIngredientDelete = { viewModel.deleteIngredient(it) },
-                onStepsChange = { viewModel.setSteps(it) },
-                onIngredientAdd = { viewModel.addIngredient() }
-
-            )
-
-            Spacer(Modifier.weight(1f))
-
-            Button(
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                onClick = { viewModel.editRecipe() }
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = dimensionResource(id = R.dimen.main_padding))
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
             ) {
-                Text(
-                    text = stringResource(id = R.string.complete),
-                    modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding))
+                Spacer(modifier = Modifier)
+
+                ImagePickerCard(
+                    image = viewModel.selectedImageFile.value,
+                    galleryLauncher = galleryLauncher,
+                    onImageCleared = { viewModel.setSelectedImageFile(null) }
+                )
+
+                HorizontalDivider()
+
+                MainInformationSection(
+                    recipeName = viewModel.recipeName.value,
+                    description = viewModel.description.value,
+                    ingredients = viewModel.ingredients.value,
+                    externalIngredients = viewModel.externalIngredients.value.map { it["name"] as String },
+                    steps = viewModel.steps.value,
+                    onRecipeNameChange = { viewModel.setRecipeName(it) },
+                    onDescriptionChange = { viewModel.setDescription(it) },
+                    onIngredientsChange = { index, ingredient ->
+                        viewModel.changeIngredient(index, ingredient)
+                    },
+                    onIngredientDelete = { viewModel.deleteIngredient(it) },
+                    onStepsChange = { viewModel.setSteps(it) },
+                    onIngredientAdd = { viewModel.addIngredient() },
+                    onSearchQueryChange = { query -> viewModel.searchExternalIngredients(query) }
+                )
+
+                Spacer(Modifier.weight(1f))
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally),
+                    onClick = { viewModel.editRecipe() },
+                    enabled = viewModel.recipeName.value.isNotBlank() &&
+                            viewModel.steps.value.isNotBlank() &&
+                            viewModel.ingredients.value.any {
+                                it.name.isNotBlank() && it.amount != null && it.amount > 0 && it.unit.isNotBlank()
+                            }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.complete),
+                        modifier = Modifier.padding(dimensionResource(id = R.dimen.main_padding))
+                    )
+                }
+
+                Spacer(modifier = Modifier)
+            }
+
+            if (viewModel.isLoading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
 
-            Spacer(modifier = Modifier)
-        }
-
-        if (viewModel.isDelete.value) {
-            DeleteRecipeDialog(
-                onDismiss = { viewModel.changeIsDelete() },
-                onConfirm = {
-                    viewModel.changeIsDelete()
-                    viewModel.deleteRecipeById(id)
-                    onClickBack()
-                }
-            )
+            if (viewModel.isDelete.value) {
+                DeleteRecipeDialog(
+                    onDismiss = { viewModel.changeIsDelete() },
+                    onConfirm = {
+                        viewModel.changeIsDelete()
+                        viewModel.deleteRecipeById(id)
+                        onClickBack()
+                    }
+                )
+            }
         }
     }
-}
-
-private fun uriToFile(uri: Uri, context: Context): File {
-    val file = File(context.cacheDir, "recipe_image_${System.currentTimeMillis()}.jpg")
-    context.contentResolver.openInputStream(uri)?.use { input ->
-        FileOutputStream(file).use { output ->
-            input.copyTo(output)
-        }
-    }
-    return file
 }

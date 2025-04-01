@@ -6,7 +6,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipefeed.data.models.Ingredient
 import com.example.recipefeed.data.models.RecipeIngredientCreate
 import com.example.recipefeed.data.repository.RecipeRepository
 import com.example.recipefeed.feature.UiIngredient
@@ -37,27 +36,24 @@ class NewRecipeScreenViewModel @Inject constructor(
     private var _selectedImageFile = mutableStateOf<File?>(null)
     val selectedImageFile: State<File?> = _selectedImageFile
 
-    private var _availableIngredients = mutableStateOf<List<Ingredient>>(emptyList())
-    val availableIngredients: State<List<Ingredient>> = _availableIngredients
+    private var _externalIngredients = mutableStateOf<List<Map<String, Any>>>(emptyList())
+    val externalIngredients: State<List<Map<String, Any>>> = _externalIngredients
 
     init {
-        loadAvailableIngredients()
+        searchExternalIngredients("") // Загружаем начальный список ингредиентов
     }
 
-    private fun loadAvailableIngredients() {
+    fun searchExternalIngredients(query: String) {
         viewModelScope.launch {
             try {
-                val result = repository.getIngredientsList(
-                    skip = 0,
-                    limit = 100
-                )
+                val result = repository.getExternalIngredients(query)
                 if (result.isSuccess) {
-                    _availableIngredients.value = result.getOrNull() ?: emptyList()
+                    _externalIngredients.value = result.getOrNull() ?: emptyList()
                 }
             } catch (e: Exception) {
                 Toast.makeText(
                     context,
-                    "Error loading ingredients: ${e.message}",
+                    "Error loading external ingredients: ${e.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -78,24 +74,22 @@ class NewRecipeScreenViewModel @Inject constructor(
                     steps = _steps.value,
                     imageFile = _selectedImageFile.value
                 )
+
                 if (recipeResult.isSuccess) {
                     val recipe = recipeResult.getOrNull() ?: return@launch
                     val ingredientsList = _ingredients.value.mapNotNull { uiIngredient ->
-                        val matchingIngredient =
-                            _availableIngredients.value.find { it.name == uiIngredient.name }
-                        if (uiIngredient.name.isNotBlank() && uiIngredient.amount != null) {
+                        if (uiIngredient.name.isNotBlank() && uiIngredient.amount != null && uiIngredient.unit.isNotBlank()) {
                             RecipeIngredientCreate(
-                                recipeId = recipe.id,
-                                ingredientId = matchingIngredient?.id ?: 0,
-                                amount = uiIngredient.amount
+                                ingredientName = uiIngredient.name,
+                                amount = uiIngredient.amount,
+                                unit = uiIngredient.unit
                             )
                         } else null
                     }
                     if (ingredientsList.isNotEmpty()) {
                         repository.updateRecipeIngredients(recipe.id, ingredientsList)
                     }
-                    Toast.makeText(context, "Recipe created successfully", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(context, "Recipe created successfully", Toast.LENGTH_SHORT).show()
                     clearFields()
                 } else {
                     Toast.makeText(context, "Error creating recipe", Toast.LENGTH_SHORT).show()
@@ -107,18 +101,12 @@ class NewRecipeScreenViewModel @Inject constructor(
     }
 
     private fun validateFields(): Boolean {
-        // Check if recipe name is not blank
         if (_recipeName.value.isBlank()) return false
-
-        // Check if there is at least one valid ingredient
         val hasValidIngredient = _ingredients.value.any {
-            it.name.isNotBlank() && it.amount != null && it.amount > 0
+            it.name.isNotBlank() && it.amount != null && it.amount > 0 && it.unit.isNotBlank()
         }
         if (!hasValidIngredient) return false
-
-        // Check if steps are not blank
         if (_steps.value.isBlank()) return false
-
         return true
     }
 
@@ -150,8 +138,10 @@ class NewRecipeScreenViewModel @Inject constructor(
     }
 
     fun changeIngredient(index: Int, ingredient: UiIngredient) {
+        val possibleUnits = _externalIngredients.value.find { it["name"] == ingredient.name }
+            ?.get("possible_units") as? List<String> ?: emptyList()
         _ingredients.value = _ingredients.value.toMutableList().also {
-            it[index] = ingredient
+            it[index] = ingredient.copy(possibleUnits = possibleUnits)
         }
     }
 

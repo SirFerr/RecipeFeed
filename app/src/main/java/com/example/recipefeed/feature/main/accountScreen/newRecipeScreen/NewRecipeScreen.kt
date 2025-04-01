@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.recipefeed.R
 import com.example.recipefeed.feature.main.accountScreen.ImagePickerCard
 import com.example.recipefeed.feature.main.accountScreen.MainInformationSection
+import com.example.recipefeed.utils.uriToFile
 import java.io.File
 import java.io.FileOutputStream
 
@@ -83,7 +84,7 @@ fun NewRecipeScreen(
                 recipeName = viewModel.recipeName.value,
                 description = viewModel.description.value,
                 ingredients = viewModel.ingredients.value,
-                ingredientsBase = viewModel.availableIngredients.value.map { it.name },
+                externalIngredients = viewModel.externalIngredients.value.map { it["name"] as String }, // Внешние ингредиенты
                 steps = viewModel.steps.value,
                 onRecipeNameChange = { viewModel.setRecipeName(it) },
                 onDescriptionChange = { viewModel.setDescription(it) },
@@ -92,7 +93,8 @@ fun NewRecipeScreen(
                 },
                 onIngredientDelete = { viewModel.deleteIngredient(it) },
                 onStepsChange = { viewModel.setSteps(it) },
-                onIngredientAdd = { viewModel.addIngredient() }
+                onIngredientAdd = { viewModel.addIngredient() },
+                onSearchQueryChange = { query -> viewModel.searchExternalIngredients(query) } // Поиск по внешним ингредиентам
             )
 
             Spacer(Modifier.weight(1f))
@@ -105,7 +107,7 @@ fun NewRecipeScreen(
                 enabled = viewModel.recipeName.value.isNotBlank() &&
                         viewModel.steps.value.isNotBlank() &&
                         viewModel.ingredients.value.any {
-                            it.name.isNotBlank() && it.amount != null && it.amount > 0
+                            it.name.isNotBlank() && it.amount != null && it.amount > 0 && it.unit.isNotBlank()
                         }
             ) {
                 Text(
@@ -119,12 +121,3 @@ fun NewRecipeScreen(
     }
 }
 
-private fun uriToFile(uri: Uri, context: Context): File {
-    val file = File(context.cacheDir, "recipe_image_${System.currentTimeMillis()}.jpg")
-    context.contentResolver.openInputStream(uri)?.use { input ->
-        FileOutputStream(file).use { output ->
-            input.copyTo(output)
-        }
-    }
-    return file
-}

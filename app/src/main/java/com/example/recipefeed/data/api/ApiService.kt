@@ -115,23 +115,8 @@ interface ApiService {
         @Body tagIds: List<Int>
     ): Response<List<RecipeTag>>
 
-    // Ingredients
-    @GET("ingredients/{ingredient_id}")
-    suspend fun getIngredientById(@Path("ingredient_id") ingredientId: Int): Response<Ingredient>
-
-    @POST("ingredients/create")
-    suspend fun createIngredient(@Body ingredient: IngredientCreate): Response<Ingredient>
-
-    @GET("ingredients/list")
-    suspend fun getIngredientsList(
-        @Query("skip") skip: Int,
-        @Query("limit") limit: Int
-    ): Response<List<Ingredient>>
-
-    @DELETE("ingredients/{ingredient_id}/delete")
-    suspend fun deleteIngredient(@Path("ingredient_id") ingredientId: Int): Response<Map<String, String>>
-
-    @GET("ingredients/external")
+    // Ingredients (удалены методы, связанные с управлением ингредиентами)
+    @GET("ingredients/external/search")
     suspend fun getExternalIngredients(@Query("query") query: String): Response<List<Map<String, Any>>>
 
     // Recipe Ingredients

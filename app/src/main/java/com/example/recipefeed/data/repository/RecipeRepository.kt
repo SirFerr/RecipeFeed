@@ -2,22 +2,7 @@ package com.example.recipefeed.data.repository
 
 import com.example.recipefeed.data.api.ApiService
 import com.example.recipefeed.data.local.SearchHistorySharedPreferencesManager
-import com.example.recipefeed.data.models.Comment
-import com.example.recipefeed.data.models.CommentCreate
-import com.example.recipefeed.data.models.Favorite
-import com.example.recipefeed.data.models.FavoriteCreate
-import com.example.recipefeed.data.models.Ingredient
-import com.example.recipefeed.data.models.IngredientCreate
-import com.example.recipefeed.data.models.Nutrition
-import com.example.recipefeed.data.models.Recipe
-import com.example.recipefeed.data.models.RecipeIngredient
-import com.example.recipefeed.data.models.RecipeIngredientCreate
-import com.example.recipefeed.data.models.RecipeTag
-import com.example.recipefeed.data.models.Tag
-import com.example.recipefeed.data.models.TagCreate
-import com.example.recipefeed.data.models.Token
-import com.example.recipefeed.data.models.User
-import com.example.recipefeed.data.models.UserCreate
+import com.example.recipefeed.data.models.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -133,19 +118,7 @@ class RecipeRepository @Inject constructor(
     suspend fun updateRecipeTags(recipeId: Int, tagIds: List<Int>): Result<List<RecipeTag>> =
         handleResponse { apiService.updateRecipeTags(recipeId, tagIds) }
 
-    // Ingredients
-    suspend fun getIngredientById(ingredientId: Int): Result<Ingredient> =
-        handleResponse { apiService.getIngredientById(ingredientId) }
-
-    suspend fun createIngredient(ingredient: IngredientCreate): Result<Ingredient> =
-        handleResponse { apiService.createIngredient(ingredient) }
-
-    suspend fun getIngredientsList(skip: Int, limit: Int): Result<List<Ingredient>> =
-        handleResponse { apiService.getIngredientsList(skip, limit) }
-
-    suspend fun deleteIngredient(ingredientId: Int): Result<Map<String, String>> =
-        handleResponse { apiService.deleteIngredient(ingredientId) }
-
+    // Ingredients (удалены методы, связанные с управлением ингредиентами)
     suspend fun getExternalIngredients(query: String): Result<List<Map<String, Any>>> =
         handleResponse { apiService.getExternalIngredients(query) }
 
@@ -185,7 +158,6 @@ class RecipeRepository @Inject constructor(
     suspend fun rejectComment(commentId: Int, reason: String): Result<Comment> =
         handleResponse { apiService.rejectComment(commentId, reason) }
 
-
     // Moderators
     suspend fun addModerator(userId: Int): Result<Map<String, String>> =
         handleResponse { apiService.addModerator(userId) }
@@ -223,11 +195,11 @@ class RecipeRepository @Inject constructor(
     }
 
     // Методы для работы с историей поиска
-     fun getSearchHistory(): List<String> {
+    fun getSearchHistory(): List<String> {
         return searchHistoryManager.getSearchHistory()
     }
 
-     fun saveSearchRequest(value: String) {
+    fun saveSearchRequest(value: String) {
         searchHistoryManager.saveRequest(value)
     }
 

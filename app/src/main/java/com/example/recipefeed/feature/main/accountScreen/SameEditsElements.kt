@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -90,24 +91,23 @@ fun ImagePickerCard(
             }
         }
     }
-
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainInformationSection(
     recipeName: String,
     description: String,
     ingredients: List<UiIngredient>,
-    ingredientsBase: List<String>, // Список доступных имен ингредиентов
+    externalIngredients: List<String>,
     steps: String,
     onRecipeNameChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onIngredientAdd: () -> Unit,
     onIngredientsChange: (Int, UiIngredient) -> Unit,
     onIngredientDelete: (Int) -> Unit,
-    onStepsChange: (String) -> Unit
+    onStepsChange: (String) -> Unit,
+    onSearchQueryChange: (String) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -119,117 +119,159 @@ fun MainInformationSection(
             modifier = Modifier.fillMaxWidth(),
             value = recipeName,
             onValueChange = onRecipeNameChange,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.title_recipe),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+            label = { Text(text = stringResource(id = R.string.title_recipe)) }
         )
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = description,
             onValueChange = onDescriptionChange,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.description_recipe),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+            label = { Text(text = stringResource(id = R.string.description_recipe)) }
+        )
+
+        Text(
+            text = "Ingredients",
+            style = MaterialTheme.typography.titleMedium
         )
 
         ingredients.forEachIndexed { index, ingredient ->
-            var expanded by remember { mutableStateOf(false) }
-            var searchQuery by remember { mutableStateOf(ingredient.name) }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
             ) {
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded },
-                    modifier = Modifier.weight(1f)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(id = R.dimen.main_padding)),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    OutlinedTextField(
-                        value = searchQuery,
-                        onValueChange = { query ->
-                            searchQuery = query
-                            onIngredientsChange(index, ingredient.copy(name = query))
-                            expanded = true
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.ingredients),
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        },
+                    Column(
                         modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth(),
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                            .weight(1f)
+                            .padding(end = 8.dp)
                     ) {
-                        val filteredIngredients = ingredientsBase.filter {
-                            it.contains(searchQuery, ignoreCase = true)
-                        }
-                        filteredIngredients.forEach { name ->
-                            DropdownMenuItem(
-                                text = { Text(name) },
-                                onClick = {
-                                    searchQuery = name
-                                    onIngredientsChange(index, ingredient.copy(name = name))
-                                    expanded = false
-                                }
+                        var expandedIngredient by remember { mutableStateOf(false) }
+                        var searchQuery by remember { mutableStateOf(ingredient.name) }
+
+                        Text(
+                            text = "Ingredient",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        ExposedDropdownMenuBox(
+                            expanded = expandedIngredient,
+                            onExpandedChange = { expandedIngredient = !expandedIngredient },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            OutlinedTextField(
+                                value = searchQuery,
+                                onValueChange = { query ->
+                                    searchQuery = query
+                                    onSearchQueryChange(query)
+                                    expandedIngredient = true
+                                },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedIngredient) }
                             )
+
+                            ExposedDropdownMenu(
+                                expanded = expandedIngredient,
+                                onDismissRequest = { expandedIngredient = false }
+                            ) {
+                                externalIngredients.forEach { name ->
+                                    DropdownMenuItem(
+                                        text = { Text(name) },
+                                        onClick = {
+                                            searchQuery = name
+                                            onIngredientsChange(index, ingredient.copy(name = name))
+                                            expandedIngredient = false
+                                        }
+                                    )
+                                }
+                            }
                         }
-                    }
-                }
 
-                Spacer(Modifier.size(12.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                OutlinedTextField(
-                    modifier = Modifier.weight(1f),
-                    value = ingredient.amount?.toString() ?: "",
-                    onValueChange = { amount ->
-                        val newAmount = amount.toDoubleOrNull()
-                        onIngredientsChange(index, ingredient.copy(amount = newAmount))
-                    },
-                    label = {
                         Text(
                             text = "Amount",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = ingredient.amount?.toString() ?: "",
+                            onValueChange = { amount ->
+                                val newAmount = amount.toDoubleOrNull()
+                                onIngredientsChange(index, ingredient.copy(amount = newAmount))
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        var expandedUnit by remember { mutableStateOf(false) }
+
+                        Text(
+                            text = "Unit",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        ExposedDropdownMenuBox(
+                            expanded = expandedUnit,
+                            onExpandedChange = { expandedUnit = !expandedUnit },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            OutlinedTextField(
+                                value = ingredient.unit,
+                                onValueChange = {},
+                                readOnly = true,
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedUnit) }
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expandedUnit,
+                                onDismissRequest = { expandedUnit = false }
+                            ) {
+                                ingredient.possibleUnits.forEach { unit ->
+                                    DropdownMenuItem(
+                                        text = { Text(unit) },
+                                        onClick = {
+                                            onIngredientsChange(index, ingredient.copy(unit = unit))
+                                            expandedUnit = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
-                )
 
-                Spacer(Modifier.size(12.dp))
-
-                IconButton(onClick = { onIngredientDelete(index) }) {
-                    Icon(Icons.Default.Clear, contentDescription = "Delete ingredient")
+                    IconButton(onClick = { onIngredientDelete(index) }) {
+                        Icon(Icons.Default.Clear, contentDescription = "Delete ingredient")
+                    }
                 }
             }
         }
 
         Text(
             text = "Add ingredient",
-            modifier = Modifier.clickable { onIngredientAdd() }
+            modifier = Modifier.clickable { onIngredientAdd() },
+            style = MaterialTheme.typography.bodyMedium
         )
 
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().height(200.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
             value = steps,
             onValueChange = onStepsChange,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.steps),
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
+            label = { Text(text = stringResource(id = R.string.steps)) }
         )
     }
 }

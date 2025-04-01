@@ -27,6 +27,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -89,13 +90,14 @@ fun RecipeScreen(
                             }
                         }
                     }
-                } else
+                } else {
                     IconButton(onClick = { viewModel.toggleLike() }) {
                         Icon(
                             imageVector = if (viewModel.isLiked.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                             contentDescription = if (viewModel.isLiked.value) "Remove from favorites" else "Add to favorites"
                         )
                     }
+                }
             }
         )
     }) { paddingValues ->
@@ -142,9 +144,10 @@ fun RecipeScreen(
                             shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
                         ) {
                             Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
+                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    modifier = alignmentStartModifier,
                                     text = recipe.description ?: "No description",
+                                    style = MaterialTheme.typography.bodyLarge
                                 )
                             }
                         }
@@ -154,11 +157,66 @@ fun RecipeScreen(
                             text = "Likes: ${recipe.likes}",
                         )
 
+                        // Отображение ингредиентов
                         Text(
                             modifier = alignmentStartModifier,
-                            text = "Steps: ${recipe.steps ?: "No steps provided"}",
+                            text = "Ingredients:",
+                            style = MaterialTheme.typography.titleMedium
                         )
-                        if (viewModel.recipe.value?.isOnApprove == false)
+                        viewModel.ingredients.value.forEach { ingredient ->
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = "${ingredient.ingredientName} - ${ingredient.amount} ${ingredient.unit}",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                                HorizontalDivider()
+
+                            }
+                        }
+
+                        // Отображение питательной ценности
+                        viewModel.nutrition.value?.let { nutrition ->
+                            Text(
+                                modifier = alignmentStartModifier,
+                                text = "Nutrition (per serving):",
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                            ) {
+                                Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
+                                    Text(text = "Protein: ${nutrition.protein} g")
+                                    Text(text = "Carbs: ${nutrition.carbs} g")
+                                    Text(text = "Fat: ${nutrition.fat} g")
+                                    Text(text = "Calories: ${nutrition.calories} kcal")
+                                }
+                            }
+                        }
+
+                        // Отображение шагов в карточке
+                        Text(
+                            modifier = alignmentStartModifier,
+                            text = "Steps:",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
+                        ) {
+                            Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
+                                Text(
+                                    text = recipe.steps ?: "No steps provided",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+
+                        if (viewModel.recipe.value?.isOnApprove == false) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
@@ -172,6 +230,7 @@ fun RecipeScreen(
                                     contentDescription = null
                                 )
                             }
+                        }
                     }
                 }
 
