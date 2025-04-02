@@ -211,7 +211,7 @@ fun RecipeScreen(
                         viewModel.nutrition.value?.let { nutrition ->
                             Text(
                                 modifier = alignmentStartModifier,
-                                text = "Nutrition (per serving):",
+                                text = "Nutrition (per 100g):",
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Card(
