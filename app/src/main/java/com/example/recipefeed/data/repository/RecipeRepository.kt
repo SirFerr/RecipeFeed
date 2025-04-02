@@ -12,8 +12,11 @@ import javax.inject.Inject
 
 class RecipeRepository @Inject constructor(
     private val apiService: ApiService,
-    private val searchHistoryManager: SearchHistorySharedPreferencesManager
+    private val searchHistoryManager: SearchHistorySharedPreferencesManager,
 ) {
+
+    suspend fun getLastNotification(): Result<Map<String, String?>> =
+        handleResponse { apiService.getLastNotification() }
 
     // Users
     suspend fun getUserById(userId: Int): Result<User> =

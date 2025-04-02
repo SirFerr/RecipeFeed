@@ -70,7 +70,8 @@ fun CommentCard(
                 horizontalArrangement = Arrangement.Start,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${comment.userId}", maxLines = 1, style = MaterialTheme.typography.subtitle1)
+                // Replace userId with username
+                Text(comment.username, maxLines = 1, style = MaterialTheme.typography.subtitle1)
                 Spacer(Modifier.width(12.dp))
                 Text(formattedDate, style = MaterialTheme.typography.caption)
 
@@ -89,9 +90,6 @@ fun CommentCard(
                 }
             }
             Spacer(Modifier.size(dimensionResource(id = R.dimen.sub_padding)))
-
-
-
             Spacer(Modifier.size(dimensionResource(id = R.dimen.main_padding)))
             Text(comment.commentText)
         }

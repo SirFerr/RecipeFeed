@@ -94,14 +94,17 @@ class CommentsViewModel @Inject constructor(
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val result = repository.getRecipeComments(
-                    recipeId,
-                    skip = 0,
-                    limit = 100
-                )
+                val result = repository.getRecipeComments(recipeId, skip = 0, limit = 100)
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
-                    _comments.value = result.getOrNull() ?: emptyList()
+                    val comments = result.getOrNull() ?: emptyList()
+                    // Fetch usernames for each comment
+                    val commentsWithUsernames = comments.map { comment ->
+                        val userResult = repository.getUserById(comment.userId)
+                        val username = userResult.getOrNull()?.username ?: "User ${comment.userId}"
+                        comment.copy(username = username)
+                    }
+                    _comments.value = commentsWithUsernames
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false

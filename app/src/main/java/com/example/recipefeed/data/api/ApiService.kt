@@ -8,6 +8,9 @@ import retrofit2.http.*
 
 interface ApiService {
 
+    @GET("recipes/notifications")
+    suspend fun getLastNotification(): Response<Map<String, String?>>
+
     // Users
     @GET("users/{user_id}")
     suspend fun getUserById(@Path("user_id") userId: Int): Response<User>
