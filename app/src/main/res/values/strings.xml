@@ -1,32 +1,38 @@
 <resources>
     <string name="app_name">RecipeFeed</string>
-    <string name="recipe_on_approve">Approve</string>
-    <string name="home_title">Home</string>
-    <string name="search_title">Search</string>
-    <string name="favorite_title">Favorite</string>
-    <string name="account_title">Account</string>
+    <string name="recipe_on_approve">Удтвердить</string>
+    <string name="home_title">Главный экран</string>
+    <string name="search_title">Поиск</string>
+    <string name="favorite_title">Избранные</string>
+    <string name="account_title">Аккаунт</string>
 
-    <string name="username_field">Username</string>
-    <string name="password_field">Password</string>
-    <string name="password_again_field">Password again</string>
-    <string name="login">LogIn</string>
-    <string name="signup">SignUp</string>
-    <string name="steps">Steps</string>
-    <string name="field_not_fill">Field not fill!</string>
-    <string name="password_not_compared">Password not compared!</string>
+    <string name="username_field">Псевдоним</string>
+    <string name="password_field">Пароль</string>
+    <string name="password_again_field">Пароль снова</string>
+    <string name="login">Вход</string>
+    <string name="signup">Регистрация</string>
+    <string name="steps">Шаги</string>
+    <string name="field_not_fill">Поле не заполненно!</string>
+    <string name="password_not_compared">Пароли не совпадают</string>
 
     <string name="complete">Complete</string>
 
-    <string name="refresh">Refresh</string>
-    <string name="network_error">Network error</string>
-    <string name="server_error">Server error</string>
+    <string name="refresh">Обновить</string>
+    <string name="network_error">Ошибка соединения</string>
+    <string name="server_error">Ошибка сервера</string>
 
-    <string name="nothing_found">Nothing found</string>
+    <string name="nothing_found">Ничего не найденно</string>
 
-    <string name="title_recipe">Title</string>
-    <string name="description_recipe">Description</string>
-    <string name="ingredients">Ingredients</string>
+    <string name="title_recipe">Название</string>
+    <string name="description_recipe">Описание</string>
+    <string name="ingredients">Ингридиенты</string>
     <string name="time_to_cook">Time to cook</string>
 
-    <string name="pick_image">Pick Image From Gallery</string>
+    <string name="pick_image">Выберете изображение из галлереи</string>
+
+    <string name="tags">Теги</string>
+    <string name="search_or_create_tag">Найдите или создайте тег</string>
+    <string name="tags">Теги</string>
+    <string name="tags">Теги</string>
+
 </resources>

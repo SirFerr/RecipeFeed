@@ -66,7 +66,7 @@ class NewRecipeScreenViewModel @Inject constructor(
                         ?.filter { it.contains(query, ignoreCase = true) } ?: emptyList()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error loading tags: ${e.message}", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Ошибка при загрузке тегов: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -84,7 +84,7 @@ class NewRecipeScreenViewModel @Inject constructor(
                     loadAvailableTags() // Обновляем список доступных тегов
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error creating tag: ${e.message}", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Ошибка при создании тега: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -96,7 +96,7 @@ class NewRecipeScreenViewModel @Inject constructor(
 
     fun addRecipe() {
         if (!validateFields()) {
-            Toast.makeText(context, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Пожалуйста, заполните все необходимые поля", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -129,12 +129,12 @@ class NewRecipeScreenViewModel @Inject constructor(
                             ?.map { it.id } ?: emptyList()
                         repository.updateRecipeTags(recipe.id, tagIds)
                     }
-                    Toast.makeText(context, "Recipe created successfully", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, "Рецепт создан успешно", Toast.LENGTH_SHORT)
                         .show()
                     clearFields()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -158,7 +158,7 @@ class NewRecipeScreenViewModel @Inject constructor(
             } catch (e: Exception) {
                 Toast.makeText(
                     context,
-                    "Error loading external ingredients: ${e.message}",
+                    "Ошибка при загрузке ингредиентов: ${e.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }

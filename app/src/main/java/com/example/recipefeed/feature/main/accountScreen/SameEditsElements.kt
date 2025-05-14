@@ -55,7 +55,7 @@ fun ImagePickerCard(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding) * 2)
     ) {
-        Text(text = "Photo", style = MaterialTheme.typography.titleLarge)
+        Text(text = "Фото", style = MaterialTheme.typography.titleLarge)
         Card(
             onClick = { galleryLauncher.launch("image/*") },
             modifier = Modifier
@@ -113,7 +113,7 @@ fun MainInformationSection(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding) * 2)
     ) {
-        Text(text = "Main information", style = MaterialTheme.typography.titleLarge)
+        Text(text = "Основная информация", style = MaterialTheme.typography.titleLarge)
 
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -198,7 +198,7 @@ fun MainInformationSection(
                         Spacer(modifier = Modifier.height(8.dp))
 
                         Text(
-                            text = "Amount",
+                            text = "Количество",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
@@ -260,7 +260,7 @@ fun MainInformationSection(
         }
 
         Text(
-            text = "Add ingredient",
+            text = "Добавить ингредиент",
             modifier = Modifier.clickable { onIngredientAdd() },
             style = MaterialTheme.typography.bodyMedium
         )
@@ -282,16 +282,16 @@ fun DeleteRecipeDialog(onDismiss: () -> Unit, onConfirm: () -> Unit) {
         onDismissRequest = onDismiss,
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = "dismiss")
+                Text(text = "Отменить")
             }
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(text = "confirm")
+                Text(text = "Подтвердить")
             }
         },
         text = {
-            Text(text = "Are you sure you want to delete the recipe?")
+            Text(text = "Вы уверены, что хотите удалить рецепт?")
         }
     )
 }

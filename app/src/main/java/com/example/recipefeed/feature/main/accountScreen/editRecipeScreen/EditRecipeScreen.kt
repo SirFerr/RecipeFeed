@@ -118,7 +118,7 @@ fun EditRecipeScreen(
 
                 item {
                     HorizontalDivider()
-                    Text("Tags", style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.tags), style = MaterialTheme.typography.titleMedium)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -136,7 +136,7 @@ fun EditRecipeScreen(
                                     viewModel.loadAvailableTags(it)
                                     expanded = true
                                 },
-                                label = { Text("Search or create tag") },
+                                label = { Text(stringResource(R.string.search_or_create_tag)) },
                                 modifier = Modifier
                                     .menuAnchor()
                                     .fillMaxWidth(),

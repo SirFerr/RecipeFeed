@@ -58,17 +58,17 @@ class SignUpScreenViewModel @Inject constructor(
                             isSuccess()
                         } else {
                             setErrorMessage(
-                                response.exceptionOrNull()?.message ?: "Registration failed"
+                                response.exceptionOrNull()?.message ?: "Регистрация не удалась"
                             )
                         }
                     } else {
-                        setErrorMessage("Passwords do not match!")
+                        setErrorMessage("Пароли не совпадают!")
                     }
                 } else {
-                    setErrorMessage("All fields must be filled!")
+                    setErrorMessage("Все поля должны быть заполнены!")
                 }
             } catch (e: Exception) {
-                setErrorMessage("Error: ${e.message}")
+                setErrorMessage("Ошибка: ${e.message}")
             }
         }
     }

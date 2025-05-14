@@ -108,7 +108,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                     _availableTags.value = result.getOrNull()?.map { it.name }?.filter { it.contains(query, ignoreCase = true) } ?: emptyList()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error loading tags: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка при загрузке тегов: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -125,7 +125,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                     loadAvailableTags()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error creating tag: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка при создании тега: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -168,7 +168,7 @@ class EditRecipeScreenViewModel @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error loading recipe: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка при загрузке рецепта: ${e.message}", Toast.LENGTH_SHORT).show()
             } finally {
                 _isLoading.value = false
             }
@@ -177,7 +177,7 @@ class EditRecipeScreenViewModel @Inject constructor(
 
     fun editRecipe() {
         if (!validateFields()) {
-            Toast.makeText(context, "Please fill all required fields", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Пожалуйста, заполните все необходимые поля", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -211,10 +211,10 @@ class EditRecipeScreenViewModel @Inject constructor(
                             ?.map { it.id } ?: emptyList()
                         repository.updateRecipeTags(recipeId, tagIds)
                     }
-                    Toast.makeText(context, "Recipe updated successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Рецепт успешно обновлен ", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Ошибка: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

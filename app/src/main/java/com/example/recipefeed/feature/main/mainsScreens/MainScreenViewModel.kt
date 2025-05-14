@@ -63,7 +63,7 @@ class MainScreenViewModel @Inject constructor(
                                 _mainState.value = MainState.AllFavourited
                                 Log.d("MainViewModel", "All recipes favorited (404)")
                             } else if (recipeQueue.isEmpty()) {
-                                _mainState.value = MainState.Error(exception.message ?: "Unknown error")
+                                _mainState.value = MainState.Error(exception.message ?: "Неизвестная ошибка")
                             }
                             return@launch
                         }
@@ -74,7 +74,7 @@ class MainScreenViewModel @Inject constructor(
                         _mainState.value = MainState.AllFavourited
                         Log.d("MainViewModel", "All recipes favorited (404)")
                     } else if (recipeQueue.isEmpty()) {
-                        _mainState.value = MainState.Error(e.message ?: "Unknown error")
+                        _mainState.value = MainState.Error(e.message ?: "Неизвестная ошибка")
                     }
                 }
             }

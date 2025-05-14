@@ -64,7 +64,7 @@ fun SettingsScreen(
             ) {
                 val isThemeDark by viewModel.isThemeDark.collectAsState()
 
-                Text(text = "Dark theme")
+                Text(text = "Темная тема")
 
                 Switch(checked = isThemeDark, onCheckedChange = {
                     viewModel.changeThemeIsDark()

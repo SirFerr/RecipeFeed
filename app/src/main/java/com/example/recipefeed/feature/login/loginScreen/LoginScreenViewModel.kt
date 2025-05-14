@@ -88,14 +88,14 @@ class LoginScreenViewModel @Inject constructor(
                         }
                     } else {
                         _isSuccessful.value = false
-                        setErrorMessage(loginResult.exceptionOrNull()?.message ?: "Login failed")
+                        setErrorMessage(loginResult.exceptionOrNull()?.message ?: "Вход в систему не удался")
                     }
                 } else {
-                    setErrorMessage("All fields must be filled!")
+                    setErrorMessage("Все поля должны быть заполнены!")
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
-                setErrorMessage("Error: ${e.message}")
+                setErrorMessage("Ошибка: ${e.message}")
             }
         }
     }

@@ -54,7 +54,7 @@ fun AccountListCard(title: String, isLogOut: Boolean = false, onClick: () -> Uni
                 TextButton(onClick = {
                     isLogOutShow = false
                 }) {
-                    Text(text = "dismiss")
+                    Text(text = "Отклонить")
                 }
             },
             confirmButton = {
@@ -62,10 +62,10 @@ fun AccountListCard(title: String, isLogOut: Boolean = false, onClick: () -> Uni
                     isLogOutShow = false
                     onClick()
                 }) {
-                    Text(text = "confirm")
+                    Text(text = "Подтвердить")
                 }
             }, text = {
-                Text(text = "Are you sure you want to logOut?")
+                Text(text = "Вы уверены, что хотите выйти из системы?")
             })
 
     }

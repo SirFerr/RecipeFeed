@@ -100,7 +100,7 @@ fun CommentCard(
             onDismissRequest = { isDeleteShow = false },
             dismissButton = {
                 TextButton(onClick = { isDeleteShow = false }) {
-                    Text(text = "Dismiss")
+                    Text(text = "Отклонить")
                 }
             },
             confirmButton = {
@@ -116,16 +116,16 @@ fun CommentCard(
                     },
                     enabled = (isModerator && rejectReason.isNotEmpty()) || isAuthor
                 ) {
-                    Text(text = "Confirm")
+                    Text(text = "Подтвердить")
                 }
             },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Are you sure you want to delete this comment?")
+                    Text(text = "Вы уверены, что хотите удалить этот комментарий?")
                     Spacer(Modifier.size(8.dp))
                     if (isModerator) {
                         CustomTextField(
-                            stringRes = "Reason",
+                            stringRes = "Причина",
                             text = rejectReason,
                             onValueChange = { rejectReason = it }
                         )

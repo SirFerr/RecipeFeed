@@ -72,7 +72,7 @@ fun Comments(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = dimensionResource(id = R.dimen.main_padding)),
-                        placeholder = { Text("Add a comment...") },
+                        placeholder = { Text("Добавить комментарий...") },
                         singleLine = true
                     )
                     IconButton(

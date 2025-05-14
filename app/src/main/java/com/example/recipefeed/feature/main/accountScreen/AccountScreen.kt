@@ -26,8 +26,8 @@ fun AccountScreen(
 ) {
 
     val personalListItems = listOf(
-        AccountScreenCards("Create recipe", onCreateRecipe),
-        AccountScreenCards("Show created recipes", onShowCreatedRecipes),
+        AccountScreenCards("Создать рецепт", onCreateRecipe),
+        AccountScreenCards("Показать созданные рецепты", onShowCreatedRecipes),
     )
 
     Column(
@@ -43,7 +43,7 @@ fun AccountScreen(
 
             }
             item {
-                CategoryText(text = "Personal")
+                CategoryText(text = "Личное")
             }
 
             items(personalListItems) {
@@ -55,12 +55,12 @@ fun AccountScreen(
                 CategoryText(text = stringResource(id = R.string.app_name))
             }
             item {
-                AccountListCard(title = "Settings", onClick = {
+                AccountListCard(title = "Настройки", onClick = {
                     onSettings()
                 })
             }
             item {
-                AccountListCard(title = "LogOut", onClick = {
+                AccountListCard(title = "Выход из аккаунта", onClick = {
                     viewModel.deleteToken()
                     onLogout()
                 })

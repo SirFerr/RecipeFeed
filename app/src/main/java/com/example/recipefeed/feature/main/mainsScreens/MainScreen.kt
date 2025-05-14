@@ -89,7 +89,7 @@ fun MainScreen(
                 is MainState.Loading -> CircularLoad()
 
                 is MainState.AllFavourited -> Text(
-                    text = "You added all to favorite",
+                    text = "Вы добавили все в избранное",
                     modifier = Modifier.clickable { viewModel.preloadRecipes() }
                         .wrapContentSize()
                         .padding(dimensionResource(id = R.dimen.main_padding)),
