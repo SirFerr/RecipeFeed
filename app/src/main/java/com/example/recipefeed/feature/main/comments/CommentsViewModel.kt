@@ -98,13 +98,14 @@ class CommentsViewModel @Inject constructor(
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
                     val comments = result.getOrNull() ?: emptyList()
-                    // Fetch usernames for each comment
                     val commentsWithUsernames = comments.map { comment ->
                         val userResult = repository.getUserById(comment.userId)
                         val username = userResult.getOrNull()?.username ?: "User ${comment.userId}"
                         comment.copy(username = username)
                     }
-                    _comments.value = commentsWithUsernames
+
+                    val translated = commentsWithUsernames.map { it.translateToRussian() } // ⬅️ переводим
+                    _comments.value = translated
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
@@ -113,4 +114,5 @@ class CommentsViewModel @Inject constructor(
             }
         }
     }
+
 }

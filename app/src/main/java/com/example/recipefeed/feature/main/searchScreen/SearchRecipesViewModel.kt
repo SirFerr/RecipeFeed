@@ -47,6 +47,10 @@ class SearchRecipesViewModel @Inject constructor(
     private var _favoriteStatus = mutableStateOf<Map<Int, Boolean>>(emptyMap())
     val favoriteStatus: State<Map<Int, Boolean>> = _favoriteStatus
 
+    private var _translatedTags = mutableStateOf<Map<String, String>>(emptyMap())
+    val translatedTags: State<Map<String, String>> = _translatedTags
+
+
     init {
         viewModelScope.launch {
             _searchHistory.value = repository.getSearchHistory()
@@ -81,7 +85,7 @@ class SearchRecipesViewModel @Inject constructor(
                 )
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
-                    val recipesList = result.getOrNull() ?: emptyList()
+                    val recipesList = result.getOrNull()?.map { it.translateToRussian() } ?: emptyList() // ⬅️ Перевод
                     _recipes.value = recipesList
                     _isFound.value = recipesList.isNotEmpty()
                     checkFavoriteStatus(recipesList)
@@ -98,20 +102,17 @@ class SearchRecipesViewModel @Inject constructor(
         }
     }
 
+
     fun getByTags() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
                 val tagIds = _tags.value.filter { _selectedTags.value.contains(it.name) }.map { it.id }
                 if (tagIds.isNotEmpty()) {
-                    val result = repository.searchRecipesByTags(
-                        tagIds = tagIds,
-                        skip = 0,
-                        limit = 20
-                    )
+                    val result = repository.searchRecipesByTags(tagIds, 0, 20)
                     _isSuccessful.value = result.isSuccess
                     if (result.isSuccess) {
-                        val recipesList = result.getOrNull() ?: emptyList()
+                        val recipesList = result.getOrNull()?.map { it.translateToRussian() } ?: emptyList() // ⬅️ Перевод
                         _recipes.value = recipesList
                         _isFound.value = recipesList.isNotEmpty()
                         checkFavoriteStatus(recipesList)
@@ -129,18 +130,23 @@ class SearchRecipesViewModel @Inject constructor(
         }
     }
 
+
     private fun fetchTags() {
         viewModelScope.launch {
             try {
                 val result = repository.getTagsList(skip = 0, limit = 100)
                 if (result.isSuccess) {
-                    _tags.value = result.getOrNull() ?: emptyList()
+                    val tags = result.getOrNull() ?: emptyList()
+                    _tags.value = tags
+                    val translated = tags.associate { it.name to it.translateToRussian().name }
+                    _translatedTags.value = translated
                 }
             } catch (e: Exception) {
                 _tags.value = emptyList()
             }
         }
     }
+
 
     private suspend fun checkFavoriteStatus(recipes: List<Recipe>) {
         val statusMap = mutableMapOf<Int, Boolean>()

@@ -140,7 +140,8 @@ class EditRecipeScreenViewModel @Inject constructor(
             try {
                 val recipeResult = repository.getRecipeById(id)
                 if (recipeResult.isSuccess) {
-                    _recipe.value = recipeResult.getOrNull()
+                    val translatedRecipe = recipeResult.getOrNull()?.translateToRussian()
+                    _recipe.value = translatedRecipe
                     _recipe.value?.let { recipe ->
                         _recipeName.value = recipe.name
                         _description.value = recipe.description ?: ""
@@ -149,20 +150,28 @@ class EditRecipeScreenViewModel @Inject constructor(
 
                         val ingredientsResult = repository.getRecipeIngredients(id)
                         if (ingredientsResult.isSuccess) {
-                            _ingredients.value = ingredientsResult.getOrNull()?.map { ingredient ->
+                            val translatedIngredients = ingredientsResult.getOrNull()
+                                ?.map { it.translateToRussian() } ?: emptyList()
+
+                            _ingredients.value = translatedIngredients.map { ingredient ->
                                 UiIngredient(
                                     name = ingredient.ingredientName,
                                     amount = ingredient.amount,
                                     unit = ingredient.unit,
-                                    possibleUnits = _externalIngredients.value.find { it["name"] == ingredient.ingredientName }?.get("possible_units") as? List<String> ?: emptyList()
+                                    possibleUnits = _externalIngredients.value.find {
+                                        it["name"] == ingredient.ingredientName
+                                    }?.get("possible_units") as? List<String> ?: emptyList()
                                 )
-                            } ?: emptyList()
+                            }
                         }
 
                         val tagsResult = repository.getRecipeTags(id)
                         if (tagsResult.isSuccess) {
                             _tags.value = tagsResult.getOrNull()?.mapNotNull { tagId ->
-                                repository.getTagById(tagId.tagId).getOrNull()?.name
+                                repository.getTagById(tagId.tagId)
+                                    .getOrNull()
+                                    ?.translateToRussian()
+                                    ?.name
                             } ?: emptyList()
                         }
                     }

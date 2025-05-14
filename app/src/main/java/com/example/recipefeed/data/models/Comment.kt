@@ -1,8 +1,7 @@
 package com.example.recipefeed.data.models
 
-
+import com.example.recipefeed.data.api.Translator
 import com.google.gson.annotations.SerializedName
-import java.util.Date
 
 data class Comment(
     @SerializedName("id") val id: Int,
@@ -12,8 +11,20 @@ data class Comment(
     @SerializedName("add_date") val addDate: String,
     @SerializedName("reject_reason") val rejectReason: String?,
     val username: String
-)
+) {
+    suspend fun translateToRussian(): Comment {
+        return this.copy(
+            commentText = Translator.translate(commentText),
+            rejectReason = rejectReason?.let { Translator.translate(it) },
+            username = Translator.translate(username)
+        )
+    }
+}
 
 data class CommentCreate(
     @SerializedName("comment_text") val commentText: String
-)
+) {
+    suspend fun translateToRussian(): CommentCreate {
+        return this.copy(commentText = Translator.translate(commentText))
+    }
+}

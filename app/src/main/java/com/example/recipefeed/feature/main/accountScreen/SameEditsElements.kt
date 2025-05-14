@@ -130,7 +130,7 @@ fun MainInformationSection(
         )
 
         Text(
-            text = "Ingredients",
+            text = "Ингредиенты",
             style = MaterialTheme.typography.titleMedium
         )
 
@@ -156,7 +156,7 @@ fun MainInformationSection(
                         var searchQuery by remember { mutableStateOf(ingredient.name) }
 
                         Text(
-                            text = "Ingredient",
+                            text = "Ингредиент",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )
@@ -216,7 +216,7 @@ fun MainInformationSection(
                         var expandedUnit by remember { mutableStateOf(false) }
 
                         Text(
-                            text = "Unit",
+                            text = "Единица измерения",
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.padding(bottom = 4.dp)
                         )

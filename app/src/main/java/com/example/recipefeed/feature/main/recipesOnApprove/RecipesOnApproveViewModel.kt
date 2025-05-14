@@ -41,8 +41,9 @@ class RecipesOnApproveViewModel @Inject constructor(
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
                     val recipesList = result.getOrNull()?.filter { it.isOnApprove } ?: emptyList()
-                    _recipes.value = recipesList
-                    checkFavoriteStatus(recipesList)
+                    val translatedRecipes = recipesList.map { it.translateToRussian() } // ⬅️ Перевод
+                    _recipes.value = translatedRecipes
+                    checkFavoriteStatus(translatedRecipes)
                 } else {
                     _recipes.value = emptyList()
                     _favoriteStatus.value = emptyMap()
@@ -56,6 +57,7 @@ class RecipesOnApproveViewModel @Inject constructor(
             }
         }
     }
+
 
     private suspend fun checkFavoriteStatus(recipes: List<Recipe>) {
         val statusMap = mutableMapOf<Int, Boolean>()

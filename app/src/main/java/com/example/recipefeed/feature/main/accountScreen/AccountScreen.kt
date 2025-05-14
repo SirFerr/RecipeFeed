@@ -27,7 +27,7 @@ fun AccountScreen(
 
     val personalListItems = listOf(
         AccountScreenCards("Создать рецепт", onCreateRecipe),
-        AccountScreenCards("Показать созданные рецепты", onShowCreatedRecipes),
+        AccountScreenCards("Созданные рецепты", onShowCreatedRecipes),
     )
 
     Column(
@@ -43,7 +43,7 @@ fun AccountScreen(
 
             }
             item {
-                CategoryText(text = "Личное")
+                CategoryText(text = "Мои рецепты")
             }
 
             items(personalListItems) {

@@ -81,7 +81,7 @@ fun ListItemCard(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = "Likes: ${recipe.likes}",
+                    text = "Лайки: ${recipe.likes}",
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
                 )

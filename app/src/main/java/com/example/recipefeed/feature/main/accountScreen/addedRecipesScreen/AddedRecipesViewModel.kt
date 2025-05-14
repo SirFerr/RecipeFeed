@@ -32,10 +32,12 @@ class AddedRecipesViewModel @Inject constructor(
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val result = repository.getUserRecipes(skip = 0, limit = 100) // Можно настроить skip и limit
+                val result = repository.getUserRecipes(skip = 0, limit = 100)
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
-                    _recipes.value = result.getOrNull() ?: emptyList()
+                    val translated = result.getOrNull()
+                        ?.map { it.translateToRussian() } ?: emptyList()
+                    _recipes.value = translated
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
@@ -44,4 +46,5 @@ class AddedRecipesViewModel @Inject constructor(
             }
         }
     }
+
 }

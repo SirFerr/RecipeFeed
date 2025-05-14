@@ -60,17 +60,19 @@ class NewRecipeScreenViewModel @Inject constructor(
     fun loadAvailableTags(query: String = "") {
         viewModelScope.launch {
             try {
-                val result = repository.getTagsList(0, 100) // Загружаем все доступные теги
+                val result = repository.getTagsList(0, 100)
                 if (result.isSuccess) {
-                    _availableTags.value = result.getOrNull()?.map { it.name }
+                    val translatedTags = result.getOrNull()
+                        ?.map { it.translateToRussian().name }
                         ?.filter { it.contains(query, ignoreCase = true) } ?: emptyList()
+                    _availableTags.value = translatedTags
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "Ошибка при загрузке тегов: ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(context, "Ошибка при загрузке тегов: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     fun addTag(tagName: String) {
         viewModelScope.launch {

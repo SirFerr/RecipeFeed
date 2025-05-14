@@ -11,7 +11,9 @@ import com.example.recipefeed.data.models.Recipe
 import com.example.recipefeed.data.models.RecipeIngredient
 import com.example.recipefeed.data.repository.RecipeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,8 +52,8 @@ class RecipeScreenViewModel @Inject constructor(
     private var _nutrition = mutableStateOf<Nutrition?>(null)
     val nutrition: State<Nutrition?> = _nutrition
 
-    private var _tags = mutableStateOf<List<String>>(emptyList())
-    val tags: State<List<String>> = _tags
+    private var _tags = mutableStateOf<Map<String, String>>(emptyMap())
+    val tags: State<Map<String, String>> = _tags
 
     init {
         getIsModerator()
@@ -107,11 +109,14 @@ class RecipeScreenViewModel @Inject constructor(
                 val result = repository.getRecipeById(id)
                 _isSuccessful.value = result.isSuccess
                 if (result.isSuccess) {
-                    _recipe.value = result.getOrNull()
+                    val translatedRecipe = withContext(Dispatchers.IO) {
+                        result.getOrNull()?.translateToRussian()
+                    }
+                    _recipe.value = translatedRecipe
                     checkIfLiked()
                     loadIngredients(id)
                     loadNutrition(id)
-                    loadTags(id) // Загружаем теги
+                    loadTags(id)
                 }
             } catch (e: Exception) {
                 _isSuccessful.value = false
@@ -138,7 +143,10 @@ class RecipeScreenViewModel @Inject constructor(
             try {
                 val result = repository.getRecipeIngredients(recipeId)
                 if (result.isSuccess) {
-                    _ingredients.value = result.getOrNull() ?: emptyList()
+                    val translatedIngredients = withContext(Dispatchers.IO) {
+                        result.getOrNull()?.map { it.translateToRussian() } ?: emptyList()
+                    }
+                    _ingredients.value = translatedIngredients
                 }
             } catch (e: Exception) {
                 // Обработка ошибки
@@ -164,15 +172,21 @@ class RecipeScreenViewModel @Inject constructor(
             try {
                 val tagsResult = repository.getRecipeTags(recipeId)
                 if (tagsResult.isSuccess) {
-                    _tags.value = tagsResult.getOrNull()?.mapNotNull { tagId ->
-                        repository.getTagById(tagId.tagId).getOrNull()?.name
-                    } ?: emptyList()
+                    val translated = withContext(Dispatchers.IO) {
+                        tagsResult.getOrNull()?.mapNotNull { tagId ->
+                            repository.getTagById(tagId.tagId).getOrNull()?.let {
+                                it.name to it.translateToRussian().name
+                            }
+                        }?.toMap() ?: emptyMap()
+                    }
+                    _tags.value = translated
                 }
             } catch (e: Exception) {
-                // Обработка ошибки
+                // ignore
             }
         }
     }
+
 
     fun approve() {
         viewModelScope.launch {

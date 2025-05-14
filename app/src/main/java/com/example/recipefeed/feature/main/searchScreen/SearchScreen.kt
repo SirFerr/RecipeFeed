@@ -108,16 +108,23 @@ fun SearchScreen(
                 horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
             ) {
                 viewModel.selectedTags.value.forEach { tag ->
-                    TagItem(string = tag) { viewModel.removeSelectedTag(tag) }
+                    TagItem(string = viewModel.translatedTags.value[tag] ?: tag) {
+                        viewModel.removeSelectedTag(tag)
+                    }
                 }
             }
         }
 
         if (viewModel.recipes.value.isEmpty() && viewModel.selectedTags.value.isEmpty()) {
             TagsGrid(
-                list = viewModel.tags.value.map { it.name },
-                onClick = { tagName -> viewModel.addSelectedTag(tagName) }
+                list = viewModel.tags.value.map { viewModel.translatedTags.value[it.name] ?: it.name },
+                onClick = { translatedTagName ->
+                    val originalName = viewModel.translatedTags.value.entries
+                        .find { it.value == translatedTagName }?.key ?: translatedTagName
+                    viewModel.addSelectedTag(originalName)
+                }
             )
+
         } else {
             LazyColumn(
                 state = rememberLazyListState(),

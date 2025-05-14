@@ -83,12 +83,20 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.3.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")// или новее
+    implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
+
+    // Moshi
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     //worker
     implementation("androidx.work:work-runtime-ktx:2.8.1")
+
 
 // Тестовые зависимости для Android тестов
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

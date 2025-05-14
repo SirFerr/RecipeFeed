@@ -157,7 +157,7 @@ fun RecipeScreen(
                             ) {
                             Text(
                                 modifier = alignmentStartModifier.padding(dimensionResource(id = R.dimen.main_padding)),
-                                text = "On Approve",
+                                text = "На проверке",
                                 style = MaterialTheme.typography.bodyLarge
                             )}
 
@@ -183,7 +183,7 @@ fun RecipeScreen(
                             Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = recipe.description ?: "No description",
+                                    text = recipe.description ?: "",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }
@@ -193,29 +193,31 @@ fun RecipeScreen(
                         // Отображение тегов
                         Text(
                             modifier = alignmentStartModifier,
-                            text = "Tags:",
+                            text = "Теги:",
                             style = MaterialTheme.typography.titleMedium
                         )
                         FlowRow(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.main_padding))
                         ) {
-                            viewModel.tags.value.forEach { tag ->
+                            viewModel.tags.value.forEach { (originalName, translatedName) ->
                                 TagItem(
-                                    string = tag,
-                                    onClick = { onTagClick(it) }) // Теги только для отображения, без удаления
+                                    string = translatedName,
+                                    onClick = { onTagClick(originalName) } // Передаём английское значение
+                                )
                             }
+
                         }
 
                         Text(
                             modifier = alignmentStartModifier,
-                            text = "Likes: ${recipe.likes}",
+                            text = "Лайки: ${recipe.likes}",
                         )
 
                         // Отображение ингредиентов
                         Text(
                             modifier = alignmentStartModifier,
-                            text = "Ingredients:",
+                            text = "Ингредиенты:",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Card(
@@ -241,7 +243,7 @@ fun RecipeScreen(
                         viewModel.nutrition.value?.let { nutrition ->
                             Text(
                                 modifier = alignmentStartModifier,
-                                text = "Nutrition (per serving):",
+                                text = "Питательность (на 100г):",
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Card(
@@ -249,10 +251,10 @@ fun RecipeScreen(
                                 shape = RoundedCornerShape(dimensionResource(id = R.dimen.rounded_corner))
                             ) {
                                 Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
-                                    Text(text = "Protein: ${nutrition.protein} g")
-                                    Text(text = "Carbs: ${nutrition.carbs} g")
-                                    Text(text = "Fat: ${nutrition.fat} g")
-                                    Text(text = "Calories: ${nutrition.calories} kcal")
+                                    Text(text = "Белок: ${nutrition.protein} г")
+                                    Text(text = "Углеводы: ${nutrition.carbs} г")
+                                    Text(text = "Жиры: ${nutrition.fat} г")
+                                    Text(text = "Калории: ${nutrition.calories} ккал")
                                 }
                             }
                         }
@@ -260,7 +262,7 @@ fun RecipeScreen(
                         // Отображение шагов в карточке
                         Text(
                             modifier = alignmentStartModifier,
-                            text = "Steps:",
+                            text = "Шаги:",
                             style = MaterialTheme.typography.titleMedium
                         )
                         Card(
@@ -269,7 +271,7 @@ fun RecipeScreen(
                         ) {
                             Column(Modifier.padding(dimensionResource(id = R.dimen.main_padding))) {
                                 Text(
-                                    text = recipe.steps ?: "No steps provided",
+                                    text = recipe.steps ?: "",
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }
@@ -282,7 +284,7 @@ fun RecipeScreen(
                                     .align(Alignment.End)
                                     .clickable { onComment(id) }
                             ) {
-                                Text("Comments")
+                                Text("Комментарии")
                                 Spacer(Modifier.size(12.dp))
                                 Icon(
                                     Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -295,7 +297,7 @@ fun RecipeScreen(
 
                 else -> {
                     Text(
-                        text = "Failed to load recipe",
+                        text = "Не удалось загрузить рецепт",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = alignmentStartModifier
                     )
@@ -311,16 +313,16 @@ fun RecipeScreen(
             onDismissRequest = { viewModel.setIsApproveShow(false) },
             dismissButton = {
                 TextButton(onClick = { viewModel.setIsApproveShow(false) }) {
-                    Text(text = "Dismiss")
+                    Text(text = "Отклонить")
                 }
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.approve() }) {
-                    Text(text = "Confirm")
+                    Text(text = "Подтвердить")
                 }
             },
             text = {
-                Text(text = "Are you sure you want to approve the recipe?")
+                Text(text = "Вы уверены, что хотите одобрить рецепт?")
             }
         )
     }
@@ -330,20 +332,20 @@ fun RecipeScreen(
             onDismissRequest = { viewModel.setIsRejectShow(false) },
             dismissButton = {
                 TextButton(onClick = { viewModel.setIsRejectShow(false) }) {
-                    Text(text = "Dismiss")
+                    Text(text = "Отклонить")
                 }
             },
             confirmButton = {
                 TextButton(onClick = { viewModel.reject() }) {
-                    Text(text = "Confirm")
+                    Text(text = "Подтвердить")
                 }
             },
             text = {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "Are you sure you want to reject the recipe?")
+                    Text(text = "Вы уверены, что хотите отклонить этот рецепт?")
                     Spacer(Modifier.size(8.dp))
                     CustomTextField(
-                        stringRes = "Reason",
+                        stringRes = "Причина",
                         text = viewModel.rejectReason.value,
                         onValueChange = { viewModel.setRejectReason(it) }
                     )

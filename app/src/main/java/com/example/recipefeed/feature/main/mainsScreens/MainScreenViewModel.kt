@@ -55,7 +55,8 @@ class MainScreenViewModel @Inject constructor(
                     repeat(3 - recipeQueue.size) {
                         val result = repository.getRandomRecipe()
                         result.onSuccess { recipe ->
-                            recipeQueue.add(recipe)
+                            val translatedRecipe = recipe.translateToRussian() // 🔁 переводим
+                            recipeQueue.add(translatedRecipe)
                             updateState()
                         }.onFailure { exception ->
                             Log.e("MainViewModel", "Fetch failed: ${exception.message}", exception)

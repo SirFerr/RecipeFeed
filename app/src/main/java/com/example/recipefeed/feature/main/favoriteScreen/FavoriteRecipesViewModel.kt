@@ -45,7 +45,8 @@ class FavoriteRecipesViewModel @Inject constructor(
                         val recipeResult = repository.getRecipeById(favorite.recipeId)
                         if (recipeResult.isSuccess) {
                             recipeResult.getOrNull()?.let {
-                                recipesList.add(it)
+                                val translated = it.translateToRussian() // ⬅️ Перевод
+                                recipesList.add(translated)
                                 statusMap[it.id] = true
                             }
                         }
@@ -65,6 +66,7 @@ class FavoriteRecipesViewModel @Inject constructor(
             }
         }
     }
+
 
     fun toggleFavorite(recipeId: Int) {
         viewModelScope.launch {
